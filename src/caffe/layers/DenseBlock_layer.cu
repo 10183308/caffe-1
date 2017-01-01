@@ -5,7 +5,7 @@
 namespace caffe {
 
 template <typename Dtype>
-__global__ void DenseBlockForward(const int n, const Dtype* in, Dtype* out) {
+__global__ void DenseBlockForward(const int n, const float* in, Dtype* out) {
   CUDA_KERNEL_LOOP(index, n) {
     out[index] = sin(in[index]);
   }
@@ -15,11 +15,12 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   const Dtype* bottom_data = bottom[0]->gpu_data();
+  const float* bottom_FL_data = (const float*) bottom_data;
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
   // NOLINT_NEXT_LINE(whitespace/operators)
   DenseBlockForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
-      count, bottom_data, top_data);
+      count, bottom_FL_data, top_data);
   CUDA_POST_KERNEL_CHECK;
 }
 
