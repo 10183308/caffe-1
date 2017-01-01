@@ -7,7 +7,8 @@
 
 namespace caffe {
 
-__global__ void DenseBlockForward(const int n, const float* in, float* out) {
+template <typename Dtype>
+__global__ void DenseBlockForward(const int n, const Dtype* in, Dtype* out) {
   CUDA_KERNEL_LOOP(index, n){
     out[index] = sin(in[index]);
   } 
@@ -20,11 +21,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
     
-  const float* bottom_data_me;
-  cudaMalloc(&bottom_data_me,count * sizeof(float)); 
   // NOLINT_NEXT_LINE(whitespace/operators)
   DenseBlockForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
-      count, bottom_FL_data, top_data);
+      count, bottom_data, top_data);
   CUDA_POST_KERNEL_CHECK;
 }
 
