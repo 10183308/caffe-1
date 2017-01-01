@@ -1,23 +1,27 @@
 #include <vector>
+#include "cudnn.h"
+#include "cublas_v2.h"
+#include "cuda_runtime.h"
 
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
 
-template <typename Dtype>
-__global__ void DenseBlockForward(const int n, const float* in, Dtype* out) {
-  CUDA_KERNEL_LOOP(index, n) {
+__global__ void DenseBlockForward(const int n, const float* in, float* out) {
+  CUDA_KERNEL_LOOP(index, n){
     out[index] = sin(in[index]);
-  }
+  } 
 }
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   const Dtype* bottom_data = bottom[0]->gpu_data();
-  const float* bottom_FL_data = (const float*) bottom_data;
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
+    
+  const float* bottom_data_me;
+  cudaMalloc(&bottom_data_me,count * sizeof(float)); 
   // NOLINT_NEXT_LINE(whitespace/operators)
   DenseBlockForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
       count, bottom_FL_data, top_data);
