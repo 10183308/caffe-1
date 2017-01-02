@@ -6,7 +6,7 @@
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
-
+  /*
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                   const vector<Blob<Dtype>*>& top) 
@@ -38,11 +38,11 @@ namespace caffe {
       }
     }
     //NOT_IMPLEMENTED;
-  }
+  }*/
 
-#ifdef CPU_ONLY
+/*#ifdef CPU_ONLY
 STUB_GPU(DenseBlockLayer);
-#endif
+#endif*/
 
 INSTANTIATE_CLASS(DenseBlockLayer);
 REGISTER_LAYER_CLASS(DenseBlock);
