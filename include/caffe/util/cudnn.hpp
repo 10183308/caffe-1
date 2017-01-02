@@ -88,6 +88,14 @@ inline void setTensor4dDesc(cudnnTensorDescriptor_t* desc,
 }
 
 template <typename Dtype>
+inline void setTensor4dDescEx(cudnnTensorDescriptor_t* desc,
+    int n, int c, int h, int w, 
+    int stride_n, int stride_c, int stride_h, int stride_w){
+  CUDNN_CHECK(cudnnSetTensor4dDescriptorEx(*desc , dataType<Dtype>::type,
+        n, c, h, w, stride_n, stride_c, stride_h, stride_w));
+}
+
+template <typename Dtype>
 inline void createFilterDesc(cudnnFilterDescriptor_t* desc,
     int n, int c, int h, int w) {
   CUDNN_CHECK(cudnnCreateFilterDescriptor(desc));
