@@ -11,12 +11,14 @@ namespace caffe {
   void DenseBlockLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                   const vector<Blob<Dtype>*>& top) 
   { 
+    
     const Dtype* bottom_data = bottom[0]->cpu_data();
     Dtype* top_data = top[0]->mutable_cpu_data();
     const int count = bottom[0]->count();
     for (int i = 0; i < count; ++i) {
       top_data[i] = sin(bottom_data[i]);
     }
+    //NOT_IMPLEMENTED;
   }
 
   template <typename Dtype>
@@ -35,6 +37,7 @@ namespace caffe {
         bottom_diff[i] = top_diff[i] * cos(bottom_datum);
       }
     }
+    //NOT_IMPLEMENTED;
   }
 
 #ifdef CPU_ONLY
