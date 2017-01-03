@@ -306,7 +306,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 147 (last added: recurrent_param)
+// LayerParameter next available layer-specific ID: 148 (last added: recurrent_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -367,6 +367,7 @@ message LayerParameter {
   optional ConvolutionParameter convolution_param = 106;
   optional CropParameter crop_param = 144;
   optional DataParameter data_param = 107;
+  optional DenseBlockParameter denseblock_param = 147;
   optional DropoutParameter dropout_param = 108;
   optional DummyDataParameter dummy_data_param = 109;
   optional EltwiseParameter eltwise_param = 110;
@@ -403,6 +404,23 @@ message LayerParameter {
   optional ThresholdParameter threshold_param = 128;
   optional TileParameter tile_param = 138;
   optional WindowDataParameter window_data_param = 129;
+}
+
+message DenseBlockParameter {
+  optional int32 numTransition = 1 [default = 40];
+  optional int32 initChannel = 2 [default = 16];
+  optional int32 growthRate = 3 [default = 12];
+  //Convolution related parameters
+  optional int32 pad_h = 4 [default = 1];
+  optional int32 pad_w = 5 [default = 1];
+  optional int32 conv_verticalStride = 6 [default = 1];
+  optional int32 conv_horizentalStride = 7 [default = 2];
+  optional int32 filter_H = 8 [default = 3];
+  optional int32 filter_W = 9 [default = 3];
+  optional FillerParameter Filter_Filler = 10;
+  //BN related parameters
+  optional FillerParameter BN_Scaler_Filler = 11;
+  optional FillerParameter BN_Bias_Filler = 12;
 }
 
 // Message that stores parameters used to apply transformation
