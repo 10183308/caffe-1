@@ -35,9 +35,7 @@ class DenseBlockLayer : public Layer<Dtype> {
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
   //common Blobs for both CPU & GPU mode
-  //Blob<Dtype> BN_Scaler, BN_Bias;
-  //vector<Blob<Dtype>*> filter_Vec;
-  
+    
   //start GPU specific data section
   //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, this are not Blob because Descriptor is not traditional 
   float* postConv_data_gpu;
@@ -47,6 +45,10 @@ class DenseBlockLayer : public Layer<Dtype> {
   float* postReLU_data_gpu;
   float* postReLU_grad_gpu;
   float* workspace;
+  float* ResultRunningMean_gpu;
+  float* ResultRunningVariance_gpu;
+  float* ResultSaveMean_gpu;
+  float* ResultSaveInvVariance_gpu;
   
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase

@@ -20,27 +20,32 @@ namespace caffe {
         this->filter_W = dbParam.filter_w();
         this->workspace_size_bytes = 10000000;
         //Parameter Blobs
-        //blobs_[0] is BN scaler weights, blobs_[1] is BN bias weights
-        //blobs_[2:2+numTransition] is filter weights for convolution of each transition
-        this->blobs_.resize(2+this->numTransition);
-	int numChannelsTotal = this->initChannel + this->growthRate * this->numTransition;
-	int channelShape_Arr[] = {1,numChannelsTotal,1,1};
-        vector<int> channelShape(channelShape_Arr, channelShape_Arr+4);
-	this->blobs_[0].reset(new Blob<Dtype>(channelShape));
-	this->blobs_[1].reset(new Blob<Dtype>(channelShape));
-	shared_ptr<Filler<Dtype> > weight_filler0(GetFiller<Dtype>(dbParam.bn_scaler_filler()));
-        weight_filler0->Fill(this->blobs_[0].get());
-        shared_ptr<Filler<Dtype> > weight_filler1(GetFiller<Dtype>(dbParam.bn_bias_filler()));
-        weight_filler1->Fill(this->blobs_[1].get());
-        for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
+	//for transition i, 
+	//blobs_[i] is its filter blob
+	//blobs_[numTransition + i] is its scaler blob
+	//blobs_[2*numTransition + i] is its bias blob
+        this->blobs_.resize(3*this->numTransition);
+	for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
+	    //filter
 	    int inChannels = initChannel + transitionIdx * growthRate;
 	    int filterShape_Arr[] = {growthRate,inChannels,filter_H,filter_W};
 	    vector<int> filterShape (filterShape_Arr,filterShape_Arr+4);
-	    this->blobs_[2+transitionIdx].reset(new Blob<Dtype>(filterShape));
+	    this->blobs_[transitionIdx].reset(new Blob<Dtype>(filterShape));
 	    shared_ptr<Filler<Dtype> > filter_Filler(GetFiller<Dtype>(dbParam.filter_filler()));
-	    filter_Filler->Fill(this->blobs_[2+transitionIdx].get());
+	    filter_Filler->Fill(this->blobs_[transitionIdx].get());
+	    //scaler & bias
+	    int numChannel_local = (transitionIdx==0?this->initChannel,this->growthRate); 
+	    int BNparamShape_Arr [] = {1,numChannel_local,1,1};
+	    vector<int> BNparamShape (BNparamShape,BNparamShape_Arr+4);
+	    //scaler
+	    this->blobs_[numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
+	    shared_ptr<Filler<Dtype> > weight_filler0(GetFiller<Dtype>(dbParam.bn_scaler_filler()));
+	    weight_filler0->Fill(this->blobs_[numTransition+transitionIdx].get());
+	    //bias
+	    this->blobs_[2*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
+	    shared_ptr<Filler<Dtype> > weight_filler1(GetFiller<Dtype>(dbParam.bn_bias_filler()));
+	    weight_filler1->Fill(this->blobs_[2*numTransition+transitionIdx]).get(); 
 	}
-	
 	
 }
 
@@ -68,6 +73,17 @@ namespace caffe {
 	//workspace
 	CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
 	cudaMemset(this->workspace,0,this->workspace_size_bytes);
+	//Result Running/Saving Mean/Variance/InvVariance
+	int totalChannel = this->initChannel + this->growthRate*this->numTransition;
+	CUDA_CHECK(cudaMalloc(&this->ResultRunningMean_gpu,totalChannel*sizeof(Dtype)));
+        CUDA_CHECK(cudaMalloc(&this->ResultRunningVariance_gpu,totalChannel*sizeof(Dtype)));
+	CUDA_CHECK(cudaMalloc(&this->ResultSaveMean_gpu,totalChannel*sizeof(Dtype)));
+	CUDA_CHECK(cudaMalloc(&this->ResultSaveInvVariance_gpu,totalChannel*sizeof(Dtype)));
+		
+	cudaMemset(this->ResultRunningMean_gpu,0,totalChannel*sizeof(Dtype));
+	cudaMemset(this->ResultRunningVariance_gpu,0,totalChannel*sizeof(Dtype));
+	cudaMemset(this->ResultSaveMean_gpu,0,totalChannel*sizeof(Dtype));
+	cudaMemset(this->ResultSaveInvVariance_gpu,0,totalChannel*sizeof(Dtype));
 	//handles and descriptors
 	//cudnn handle
 	this->cudnnHandlePtr = new cudnnHandle_t;
