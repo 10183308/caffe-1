@@ -38,6 +38,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   //Blob<Dtype> BN_Scaler, BN_Bias;
   //vector<Blob<Dtype>*> filter_Vec;
   
+  //start GPU specific data section
   //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, this are not Blob because Descriptor is not traditional 
   float* postConv_data_gpu;
   float* postConv_grad_gpu;
@@ -57,10 +58,17 @@ class DenseBlockLayer : public Layer<Dtype> {
   int workspace_size_bytes;
   //gpu handles and descriptors
   cudnnHandle_t* cudnnHandlePtr;
-  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;
-  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;
-  cudnnTensorDescriptor_t * tensorDescriptor_conv_y;
+  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;//for BN & ReLU
+  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;//local Conv X
+  cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
+  cudnnTensorDescriptor_t * tensorDescriptor_BN_initChannel;//BN when transitionIdx = 0
+  cudnnTensorDescriptor_t * tensorDescriptor_BN_growthRate;//BN when transitionIdx > 0
+  //filter descriptor for conv
+  vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
+  //conv descriptor for conv
+  cudnnConvolutionDescriptor_t* conv_Descriptor;
 
+  //end GPU specific data setion
 };
 
 }  // namespace caffe

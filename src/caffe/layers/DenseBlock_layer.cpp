@@ -76,19 +76,36 @@ namespace caffe {
 	this->tensorDescriptor_conv_y = new cudnnTensorDescriptor_t;
 	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y);
         cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
+	//BN&ReLU narrow descriptor, conv_x local tensor descriptor
 	for (int i=0;i<this->numTransition;++i){
+	    //narrow descriptor
 	    int narrowChannelNum = (i==0?this->initChannel:this->growthRate);
 	    cudnnTensorDescriptor_t * narrow_Desc_local = new cudnnTensorDescriptor_t;
 	    cudnn::createTensor4dDesc<Dtype>(narrow_Desc_local);
 	    cudnn::setTensor4dDesc<Dtype>(narrow_Desc_local,this->N,narrowChannelNum,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
 	    this->tensorDescriptorVec_narrow.push_back(narrow_Desc_local);
+	    //conv_x descriptor
 	    int conv_x_channels = this->initChannel + this->growthRate * i;
 	    cudnnTensorDescriptor_t * wide_Desc_local_x = new cudnnTensorDescriptor_t;
 	    cudnn::createTensor4dDesc<Dtype>(wide_Desc_local_x);
 	    cudnn::setTensor4dDesc<Dtype>(wide_Desc_local_x,this->N,conv_x_channels,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
 	    this->tensorDescriptorVec_conv_x.push_back(wide_Desc_local_x); 
+	    //filter Descriptor for Convolution
+	    cudnnFilterDescriptor_t * localFilterDesc = new cudnnFilterDescriptor_t;
+	    cudnn::createFilterDesc<Dtype>(localFilterDesc,growthRate,conv_x_channels,this->filter_H,this->filter_W);
+	    this->filterDescriptorVec.push_back(localFilterDesc);
 	}
-
+	//BN parameter (Scale,Bias) Descriptor
+	this->tensorDescriptor_BN_initChannel = new cudnnTensorDescriptor_t;
+	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_BN_initChannel);
+	cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_BN_initChannel,1,this->initChannel,1,1);
+	this->tensorDescriptor_BN_growthRate = new cudnnTensorDescriptor_t;
+	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_BN_growthRate);
+	cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_BN_growthRate,1,this->growthRate,1,1);
+	//Conv Descriptor
+	this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
+	CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
+	CUDNN_CHECK(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION);
 #endif 
   }
 
