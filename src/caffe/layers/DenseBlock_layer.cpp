@@ -121,7 +121,7 @@ namespace caffe {
 	//Conv Descriptor
 	this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
 	CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
-	CUDNN_CHECK(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION);
+	CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION));
 #endif 
   }
 
