@@ -42,7 +42,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   float* postConv_data_gpu;
   float* postConv_grad_gpu;
   float* postBN_data_gpu;
-  float* postBN_grad_gpu;b
+  float* postBN_grad_gpu;
   float* postReLU_data_gpu;
   float* postReLU_grad_gpu;
   float* workspace;
