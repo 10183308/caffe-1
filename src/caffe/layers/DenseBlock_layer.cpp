@@ -52,12 +52,12 @@ namespace caffe {
 //GPU intermediate ptrs
 #ifndef CPU_ONLY
         int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
-        cudaMalloc(&this->postConv_data_gpu,bufferSize_byte);
-        cudaMalloc(&this->postBN_data_gpu,bufferSize_byte);
-        cudaMalloc(&this->postReLU_data_gpu,bufferSize_byte);
-        cudaMalloc(&this->postConv_grad_gpu,bufferSize_byte);
-        cudaMalloc(&this->postBN_grad_gpu,bufferSize_byte);
-        cudaMalloc(&this->postReLU_grad_gpu,bufferSize_byte);
+        CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
+        CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
+        CUDA_CHECK(cudaMalloc(&this->postReLU_data_gpu,bufferSize_byte));
+        CUDA_CHECK(cudaMalloc(&this->postConv_grad_gpu,bufferSize_byte));
+        CUDA_CHECK(cudaMalloc(&this->postBN_grad_gpu,bufferSize_byte));
+        CUDA_CHECK(cudaMalloc(&this->postReLU_grad_gpu,bufferSize_byte));
 
         cudaMemset(this->postConv_data_gpu,0,bufferSize_byte);
 	cudaMemset(this->postBN_data_gpu,0,bufferSize_byte);
@@ -66,8 +66,29 @@ namespace caffe {
 	cudaMemset(this->postBN_grad_gpu,0,bufferSize_byte);
 	cudaMemset(this->postReLU_grad_gpu,0,bufferSize_byte);
 	//workspace
-	cudaMalloc(&this->workspace,this->workspace_size_bytes);
+	CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
 	cudaMemset(this->workspace,0,this->workspace_size_bytes);
+	//handles and descriptors
+	//cudnn handle
+	this->cudnnHandlePtr = new cudnnHandle_t;
+	CUDNN_CHECK(cudnnCreate(this->cudnnHandlePtr));
+	//conv_y global tensor descriptor
+	this->tensorDescriptor_conv_y = new cudnnTensorDescriptor_t;
+	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y);
+        cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
+	for (int i=0;i<this->numTransition;++i){
+	    int narrowChannelNum = (i==0?this->initChannel:this->growthRate);
+	    cudnnTensorDescriptor_t * narrow_Desc_local = new cudnnTensorDescriptor_t;
+	    cudnn::createTensor4dDesc<Dtype>(narrow_Desc_local);
+	    cudnn::setTensor4dDesc<Dtype>(narrow_Desc_local,this->N,narrowChannelNum,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
+	    this->tensorDescriptorVec_narrow.push_back(narrow_Desc_local);
+	    int conv_x_channels = this->initChannel + this->growthRate * i;
+	    cudnnTensorDescriptor_t * wide_Desc_local_x = new cudnnTensorDescriptor_t;
+	    cudnn::createTensor4dDesc<Dtype>(wide_Desc_local_x);
+	    cudnn::setTensor4dDesc<Dtype>(wide_Desc_local_x,this->N,conv_x_channels,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
+	    this->tensorDescriptorVec_conv_x.push_back(wide_Desc_local_x); 
+	}
+
 #endif 
   }
 

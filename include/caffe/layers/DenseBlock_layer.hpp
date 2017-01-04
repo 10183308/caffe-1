@@ -54,7 +54,13 @@ class DenseBlockLayer : public Layer<Dtype> {
   int pad_h, pad_w, conv_verticalStride, conv_horizentalStride; 
   int filter_H, filter_W;
   //gpu workspace size
-  int workspace_size_bytes; 
+  int workspace_size_bytes;
+  //gpu handles and descriptors
+  cudnnHandle_t* cudnnHandlePtr;
+  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;
+  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;
+  cudnnTensorDescriptor_t * tensorDescriptor_conv_y;
+
 };
 
 }  // namespace caffe
