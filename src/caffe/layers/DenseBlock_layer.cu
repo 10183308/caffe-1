@@ -13,6 +13,14 @@ void gpu_copy_one_to_many(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int c
     }
 }
 
+void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int chunkSize_output,int chunkStride_input){
+    for (int chunkIdx=0;chunkIdx<numChunks;++chunkIdx){
+        Dtype* inPtr_local = inPtr_gpu + chunkIdx*chunkStride_input;
+	Dtyle* outPtr_local = outPtr_gpu + chunkIdx*chunkStride_output;
+	CUDA_CHECK(cudaMemcpy(inPtr_local,outPtr_local,chunkSize_output * sizeof(Dtype),cudaMemcpyDeviceToDevice));
+    }
+}
+
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
@@ -21,8 +29,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   const int count = bottom[0]->count();
   //copy to bottom_data to buffer with stride
   int chunkSize_copy = this->initChannel * this->H * this->W;
-  int chunkStride_copyOutput = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-  gpu_copy_one_to_many(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy,chunkStride_copyOutput);
+  int chunkStride_copy = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
+  gpu_copy_one_to_many(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy,chunkStride_copy);
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
       //BN and ReLU
@@ -84,7 +92,10 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	)		      
       ); 
   } 
-  
+  //change top data
+  int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
+  Dtype* resultBuffer_ptr = postConv_data_gpu + resultChannelGap * this->H * this->W;
+  gpu_copy_many_to_one(resultBuffer_ptr,top_data,this->N,chunkSize_copy,chunkStride_copy);
 }
 
 template <typename Dtype>
