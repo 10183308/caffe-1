@@ -37,18 +37,18 @@ class DenseBlockLayer : public Layer<Dtype> {
   //common Blobs for both CPU & GPU mode
     
   //start GPU specific data section
-  //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, this are not Blob because Descriptor is not traditional 
-  float* postConv_data_gpu;
-  float* postConv_grad_gpu;
-  float* postBN_data_gpu;
-  float* postBN_grad_gpu;
-  float* postReLU_data_gpu;
-  float* postReLU_grad_gpu;
-  float* workspace;
-  float* ResultRunningMean_gpu;
-  float* ResultRunningVariance_gpu;
-  float* ResultSaveMean_gpu;
-  float* ResultSaveInvVariance_gpu;
+  //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, these are not Blobs because Descriptor is not traditional 
+  Dtype* postConv_data_gpu;
+  Dtype* postConv_grad_gpu;
+  Dtype* postBN_data_gpu;
+  Dtype* postBN_grad_gpu;
+  Dtype* postReLU_data_gpu;
+  Dtype* postReLU_grad_gpu;
+  Dtype* workspace;
+  Dtype* ResultRunningMean_gpu;
+  Dtype* ResultRunningVariance_gpu;
+  Dtype* ResultSaveMean_gpu;
+  Dtype* ResultSaveInvVariance_gpu;
   
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase
@@ -65,6 +65,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
   cudnnTensorDescriptor_t * tensorDescriptor_BN_initChannel;//BN when transitionIdx = 0
   cudnnTensorDescriptor_t * tensorDescriptor_BN_growthRate;//BN when transitionIdx > 0
+  cudnnActivationDescriptor_t * activationDesc;
   //filter descriptor for conv
   vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
   //conv descriptor for conv

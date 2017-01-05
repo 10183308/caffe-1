@@ -88,6 +88,9 @@ namespace caffe {
 	//cudnn handle
 	this->cudnnHandlePtr = new cudnnHandle_t;
 	CUDNN_CHECK(cudnnCreate(this->cudnnHandlePtr));
+	//global Activation Descriptor:ReLU
+	this->activationDesc = new cudnnActivationDescriptor_t;
+        cudnn::createActivationDescriptor(this->activationDesc,CUDNN_ACTIVATION_RELU);
 	//conv_y global tensor descriptor
 	this->tensorDescriptor_conv_y = new cudnnTensorDescriptor_t;
 	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y);
