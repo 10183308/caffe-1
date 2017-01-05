@@ -123,7 +123,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         int channelsBefore_self = transitionIdx>0?(this->initChannel + (transitionIdx - 1) * this->growthRate):0;
 	//Conv
         Dtype* filterGrad_local = this->blobs_[transitionIdx]->mutable_gpu_diff();
-	const Dtype* filterData_local =this->blobs_[transitionIdx].gpu_data();
+	const Dtype* filterData_local =this->blobs_[transitionIdx]->gpu_data();
 	Dtype* conv_x_local = postReLU_data_gpu;
 	Dtype* conv_dy_local = postConv_grad_gpu + channelsBefore_self * this->H * this->W;
 	//Conv w.r.t. filter
