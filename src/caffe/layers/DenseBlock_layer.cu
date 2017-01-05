@@ -14,9 +14,9 @@ void gpu_copy_one_to_many(const Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks
 }
 
 template <typename Dtype>
-void gpu_copy_many_to_one(const Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int chunkSize_output,int chunkStride_input){
+void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int chunkSize_output,int chunkStride_input){
     for (int chunkIdx=0;chunkIdx<numChunks;++chunkIdx){
-        const Dtype* inPtr_local = inPtr_gpu + chunkIdx*chunkStride_input;
+        Dtype* inPtr_local = inPtr_gpu + chunkIdx*chunkStride_input;
 	Dtype* outPtr_local = outPtr_gpu + chunkIdx*chunkSize_output;
 	CUDA_CHECK(cudaMemcpy(inPtr_local,outPtr_local,chunkSize_output * sizeof(Dtype),cudaMemcpyDeviceToDevice));
     }
