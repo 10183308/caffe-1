@@ -120,12 +120,12 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_noself = this->initChannel + transitionIdx * this->growthRate;
-        int channelsbefore_self = transitionIdx>0?(this->initChannel + (transitionIdx - 1) * this->growthRate):0;
+        int channelsBefore_self = transitionIdx>0?(this->initChannel + (transitionIdx - 1) * this->growthRate):0;
 	//Conv
         Dtype* filterGrad_local = this->blobs_[transitionIdx].mutable_gpu_diff();
 	const Dtype* filterData_local =this->blobs_[transitionIdx].gpu_data();
-	Dtype* conv_x_local = postReLU_data;
-	Dtype* conv_dy_local = postConv_grad + channelsBefore_self * this->H * this->W;
+	Dtype* conv_x_local = postReLU_data_gpu;
+	Dtype* conv_dy_local = postConv_grad_gpu + channelsBefore_self * this->H * this->W;
 	//Conv w.r.t. filter
 	CUDNN_CHECK(cudnnConvolutionBackwardFilter(*(this->cudnnHandlePtr),
 	  cudnn::dataType<Dtype>::one, 
@@ -145,7 +145,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_DATA_ALGO_1,
 	  this->workspace,this->workspace_size_bytes,
 	  cudnn::dataType<Dtype>::one,
-	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),postReLU_grad
+	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),postReLU_grad_gpu
 	  )		
 	);	
 	//ReLU
@@ -166,7 +166,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* BN_x_local = postConv_data_gpu + channelsBefore_noself*this->H*this->W;
 	Dtype* BN_dx_local = postConv_grad_gpu + channelsBefore_noself*this->H*this->W;
 	Dtype* saveMean_local = this->ResultSaveMean_gpu + channelsBefore_noself; 
-	Dtype* saveInvVar_local = this->ResultSaveInvVariance_gpu + channelsbefore_noself;
+	Dtype* saveInvVar_local = this->ResultSaveInvVariance_gpu + channelsBefore_noself;
 	cudnnTensorDescriptor_t * BNparam_desc = (transitionIdx==0?this->tensorDescriptor_BN_initChannel:this->tensorDescriptor_BN_growthRate);
 	CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	  CUDNN_BATCHNORM_SPATIAL,
