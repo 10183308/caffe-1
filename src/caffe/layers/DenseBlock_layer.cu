@@ -122,7 +122,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         int channelsBefore_noself = this->initChannel + transitionIdx * this->growthRate;
         int channelsBefore_self = transitionIdx>0?(this->initChannel + (transitionIdx - 1) * this->growthRate):0;
 	//Conv
-        Dtype* filterGrad_local = this->blobs_[transitionIdx].mutable_gpu_diff();
+        Dtype* filterGrad_local = this->blobs_[transitionIdx]->mutable_gpu_diff();
 	const Dtype* filterData_local =this->blobs_[transitionIdx].gpu_data();
 	Dtype* conv_x_local = postReLU_data_gpu;
 	Dtype* conv_dy_local = postConv_grad_gpu + channelsBefore_self * this->H * this->W;
@@ -176,9 +176,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),ReLU_dx_local,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BN_dx_local,
 	  *BNparam_desc,
-	  this->blobs_[this->numTransition + transitionIdx].gpu_data(),
-	  this->blobs_[this->numTransition + transitionIdx].mutable_gpu_diff(),
-	  this->blobs_[2*this->numTransition + transitionIdx].mutable_gpu_diff(),
+	  this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
+	  this->blobs_[this->numTransition + transitionIdx]->mutable_gpu_diff(),
+	  this->blobs_[2*this->numTransition + transitionIdx]->mutable_gpu_diff(),
 	  CUDNN_BN_MIN_EPSILON,saveMean_local,saveInvVar_local
 	  )		
 	);
