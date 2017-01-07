@@ -35,7 +35,20 @@ class DenseBlockLayer : public Layer<Dtype> {
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
   //common Blobs for both CPU & GPU mode
-    
+  //in this->blobs_, containing all filters for Convolution, scalers and bias for BN
+  
+  //start CPU specific data section
+  bool cpuInited;
+  vector<Blob<Dtype>*> global_Mean;
+  vector<Blob<Dtype>*> batch_Mean;
+  vector<Blob<Dtype>*> global_Var;
+  vector<Blob<Dtype>*> batch_Var;
+
+  vector<Blob<Dtype>*> postBN_blobVec;
+  vector<Blob<Dtype>*> postReLU_blobVec;
+  vector<Blob<Dtype>*> postConv_blobVec;
+  //end CPU specific data section
+
   //start GPU specific data section
   //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, these are not Blobs because Descriptor is not traditional 
   Dtype* postConv_data_gpu;

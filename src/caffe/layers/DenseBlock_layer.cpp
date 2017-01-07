@@ -7,6 +7,7 @@ namespace caffe {
 
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top){
+	this->cpuInited = false;
 	DenseBlockParameter dbParam = this->layer_param_.denseblock_param();
         this->numTransition = dbParam.numtransition();
         this->initChannel = dbParam.initchannel();
@@ -125,6 +126,10 @@ namespace caffe {
 	this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
 	CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
 	CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION));
+
+#else
+	//CPU mode
+	
 #endif 
   }
 
@@ -132,7 +137,13 @@ namespace caffe {
   void DenseBlockLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                   const vector<Blob<Dtype>*>& top) 
   { 
-    
+    //init CPU
+    this->global_Mean.resize(this->numTransition);
+    this->batch_Mean.resize(this->numTransition);
+    this->
+
+    this->cpuInited = true;
+    //init CPU finish
     const Dtype* bottom_data = bottom[0]->cpu_data();
     Dtype* top_data = top[0]->mutable_cpu_data();
     const int count = bottom[0]->count();
