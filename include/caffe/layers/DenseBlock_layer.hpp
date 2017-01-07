@@ -22,6 +22,10 @@ class DenseBlockLayer : public Layer<Dtype> {
   virtual inline const char* type() const { return "DenseBlock"; } 
 
  protected:
+  virtual void CPU_Initialization();
+
+  virtual void GPU_Initialization();
+
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
   
@@ -51,6 +55,7 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   //start GPU specific data section
   //GPU ptr for efficient space usage only, these pointers not allocated when CPU_ONLY, these are not Blobs because Descriptor is not traditional 
+  bool gpuInited;
   Dtype* postConv_data_gpu;
   Dtype* postConv_grad_gpu;
   Dtype* postBN_data_gpu;

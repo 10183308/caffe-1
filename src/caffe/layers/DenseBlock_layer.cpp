@@ -1,5 +1,7 @@
 #include <vector>
+#include <algorithm>
 
+#include "caffe/blob.hpp"
 #include "caffe/filler.hpp"
 #include "caffe/layers/DenseBlock_layer.hpp"
 
@@ -55,94 +57,165 @@ namespace caffe {
         this->N = bottom[0]->shape()[0]; 
         this->H = bottom[0]->shape()[2];
         this->W = bottom[0]->shape()[3];
-//GPU intermediate ptrs
-#ifndef CPU_ONLY
-        int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
-        CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
-        CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
-        CUDA_CHECK(cudaMalloc(&this->postReLU_data_gpu,bufferSize_byte));
-        CUDA_CHECK(cudaMalloc(&this->postConv_grad_gpu,bufferSize_byte));
-        CUDA_CHECK(cudaMalloc(&this->postBN_grad_gpu,bufferSize_byte));
-        CUDA_CHECK(cudaMalloc(&this->postReLU_grad_gpu,bufferSize_byte));
+}
 
-        cudaMemset(this->postConv_data_gpu,0,bufferSize_byte);
-	cudaMemset(this->postBN_data_gpu,0,bufferSize_byte);
-	cudaMemset(this->postReLU_data_gpu,0,bufferSize_byte);
-	cudaMemset(this->postConv_grad_gpu,0,bufferSize_byte);
-	cudaMemset(this->postBN_grad_gpu,0,bufferSize_byte);
-	cudaMemset(this->postReLU_grad_gpu,0,bufferSize_byte);
-	//workspace
-	CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
-	cudaMemset(this->workspace,0,this->workspace_size_bytes);
-	//Result Running/Saving Mean/Variance/InvVariance
-	int totalChannel = this->initChannel + this->growthRate*this->numTransition;
-	CUDA_CHECK(cudaMalloc(&this->ResultRunningMean_gpu,totalChannel*sizeof(Dtype)));
-        CUDA_CHECK(cudaMalloc(&this->ResultRunningVariance_gpu,totalChannel*sizeof(Dtype)));
-	CUDA_CHECK(cudaMalloc(&this->ResultSaveMean_gpu,totalChannel*sizeof(Dtype)));
-	CUDA_CHECK(cudaMalloc(&this->ResultSaveInvVariance_gpu,totalChannel*sizeof(Dtype)));
-		
-	cudaMemset(this->ResultRunningMean_gpu,0,totalChannel*sizeof(Dtype));
-	cudaMemset(this->ResultRunningVariance_gpu,0,totalChannel*sizeof(Dtype));
-	cudaMemset(this->ResultSaveMean_gpu,0,totalChannel*sizeof(Dtype));
-	cudaMemset(this->ResultSaveInvVariance_gpu,0,totalChannel*sizeof(Dtype));
-	//handles and descriptors
-	//cudnn handle
-	this->cudnnHandlePtr = new cudnnHandle_t;
-	CUDNN_CHECK(cudnnCreate(this->cudnnHandlePtr));
-	//global Activation Descriptor:ReLU
-	this->activationDesc = new cudnnActivationDescriptor_t;
-        cudnn::createActivationDescriptor<Dtype>(this->activationDesc,CUDNN_ACTIVATION_RELU);
-	//conv_y global tensor descriptor
-	this->tensorDescriptor_conv_y = new cudnnTensorDescriptor_t;
-	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y);
-        cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
-	//BN&ReLU narrow descriptor, conv_x local tensor descriptor
-	for (int i=0;i<this->numTransition;++i){
-	    //narrow descriptor
-	    int narrowChannelNum = (i==0?this->initChannel:this->growthRate);
-	    cudnnTensorDescriptor_t * narrow_Desc_local = new cudnnTensorDescriptor_t;
-	    cudnn::createTensor4dDesc<Dtype>(narrow_Desc_local);
-	    cudnn::setTensor4dDesc<Dtype>(narrow_Desc_local,this->N,narrowChannelNum,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
-	    this->tensorDescriptorVec_narrow.push_back(narrow_Desc_local);
-	    //conv_x descriptor
-	    int conv_x_channels = this->initChannel + this->growthRate * i;
-	    cudnnTensorDescriptor_t * wide_Desc_local_x = new cudnnTensorDescriptor_t;
-	    cudnn::createTensor4dDesc<Dtype>(wide_Desc_local_x);
-	    cudnn::setTensor4dDesc<Dtype>(wide_Desc_local_x,this->N,conv_x_channels,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);
-	    this->tensorDescriptorVec_conv_x.push_back(wide_Desc_local_x); 
-	    //filter Descriptor for Convolution
-	    cudnnFilterDescriptor_t * localFilterDesc = new cudnnFilterDescriptor_t;
-	    cudnn::createFilterDesc<Dtype>(localFilterDesc,growthRate,conv_x_channels,this->filter_H,this->filter_W);
-	    this->filterDescriptorVec.push_back(localFilterDesc);
+template <typename Dtype>
+Dtype getZeroPaddedValue(bool isDiff,Blob<Dtype>* inputData,int n,int c,int h,int w){
+    int n_blob = inputData->shape(0);
+    int c_blob = inputData->shape(1);
+    int h_blob = inputData->shape(2);
+    int w_blob = inputData->shape(3);
+    if ((n<0) || (n>=n_blob)) return 0;
+    if ((c<0) || (c>=c_blob)) return 0;
+    if ((h<0) || (h>=h_blob)) return 0;
+    if ((w<0) || (w>=w_blob)) return 0;
+    if (isDiff) return inputData->diff_at(n,c,h,w);
+    else return inputData->data_at(n,c,h,w);
+}
+
+//Assumption, h_filter and w_filter must be 3 for now
+//naivest possible implementation of convolution, CPU forward and backward should not be used in production.
+//CPU version of convolution assume img H,W does not change after convolution, which corresponds to denseBlock without BC
+//input of size N*c_input*h_img*w_img
+template <typename Dtype>
+void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter){
+    CHECK_EQ(h_filter,3);
+    CHECK_EQ(w_filter,3);
+    int outputShape[] = {N,c_output,h_img,w_img};
+    vector<int> outputShapeVec (outputShape,outputShape + 4);
+    output.reshape(outputShapeVec);
+    Dtype * outputPtr = output->mutable_cpu_data();
+    for (int n=0;n<N;++n){
+      for (int c_outIdx=0;c_outIdx<c_output;++c_outIdx){
+        for (int hIdx=0;hIdx<h_img;++hIdx){
+	  for (int wIdx=0;wIdx<w_img;++wIdx){
+	    outputPtr[output->offset(n,c_outIdx,hIdx,wIdx)]=0;
+	    for (int c_inIdx=0;c_inIdx<c_input;++c_inIdx){
+	      for (int filter_x=0;filter_x<h_filter;++filter_x){
+	        for (int filter_y=0;filter_y<w_filter;++filter_y){
+		  int localX = wIdx + 1 - filter_x;
+	          int localY = hIdx + 1 - filter_y;
+	          outputPtr[output->offset(n,c_outIdx,hIdx,wIdx)] += (filter->data_at(c_outIdx,c_inIdx,filter_x,filter_y) * getZeroPaddedValue(false,input,n,c_inIdx,localX,localY));
+		}
+	      } 
+	    }
+	  }
 	}
-	//BN parameter (Scale,Bias) Descriptor
-	this->tensorDescriptor_BN_initChannel = new cudnnTensorDescriptor_t;
-	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_BN_initChannel);
-	cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_BN_initChannel,1,this->initChannel,1,1);
-	this->tensorDescriptor_BN_growthRate = new cudnnTensorDescriptor_t;
-	cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_BN_growthRate);
-	cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_BN_growthRate,1,this->growthRate,1,1);
-	//Conv Descriptor
-	this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
-	CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
-	CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION));
+      }
+    }
+}
 
-#else
-	//CPU mode
-	
-#endif 
-  }
+template <typename Dtype>
+void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter){
+    CHECK_EQ(h_filter,3);
+    CHECK_EQ(w_filter,3);
+    Dtype * filterDiffPtr = filter->mutable_cpu_diff();
+    Dtype * bottomDiffPtr = bottom->mutable_cpu_diff();
+    //compute FilterGrad
+    for (int coutIdx=0;coutIdx<c_output;++coutIdx){
+      for (int cinIdx=0;cinIdx<c_input;++cinIdx){
+        for (int filter_x=0;filter_x<h_filter;++filter_x){
+	  for (int filter_y=0;filter_y<w_filter;++filter_y){
+	    Dtype localGradSum=0;
+	    for (int n=0;n<N;++n){
+	      for (int i_img=0;i_img<h_img;++i_img){
+	        for (int j_img=0;j_img<w_img;++j_img){
+		  int localX = i_img + 1 - filter_x;
+		  int localY = j_img + 1 - filter_y;
+		  localGradSum += top->diff_at(top->offset(n,coutIdx,i_img,j_img)) * getZeroPaddedValue(false,bottom,n,cinIdx,localX,localY);
+		}
+	      } 
+	    }
+	    filterDiffPtr[filter->offset(coutIdx,cinIdx,filter_x,filter_y)] = localGradSum;
+	  }
+	}
+      }
+    } 
+    //compute BottomGrad
+    for (int n=0;n<N;++n){
+      for (int cinIdx=0;cinIdx<c_input;++cinIdx){
+        for (int i_img=0;i_img<h_img;++i_img){
+	  for (int j_img=0;j_img<w_img;++j_img){
+	    Dtype localGradSum=0;
+	    for (int coutIdx=0;coutIdx<c_output;++coutIdx){
+	      for (int x_img=0;x_img<h_img;++x_img){
+	        for (int y_img=0;y_img<w_img;++y_img){
+		  int localX = x_img-i_img+1;
+		  int localY = y_img-j_img+1;
+		  localGradSum += top->diff_at(n,coutIdx,x_img,y_img) * getZeroPaddedValue(false,filter,coutIdx,cinIdx,localX,localY); 
+		}
+	      }
+	    }
+	    bottomDiffPtr[bottom->offset(n,cinIdx,i_img,j_img)] = localGradSum;
+	  }
+	}
+      }
+    } 
+}
+
+template <typename Dtype>
+void ReLu_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
+    //Reshape top
+    int topShapeArr = {n,c,h_img,w_img};
+    vector<int> topShapeVec(topShapeArr,topShapeArr+4);
+    top.reshape(topShapeVec);
+    //ReLU Fwd
+    Dtype* topPtr = top.mutable_cpu_data();
+    for (int n=0;n<N;++n){
+      for (int cIdx=0;cIdx<C;++cIdx){
+        for (int hIdx=0;hIdx<h_img;++hIdx){
+	  for (int wIdx=0;wIdx<w_img;++wIdx){
+	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = std::max(0,bottom->data_at(n,cIdx,hIdx,wIdx));
+	  }
+	}
+      } 
+    }
+}
+
+template <typename Dtype>
+void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
+    Dtype* bottomDiffPtr = bottom.mutable_cpu_diff();
+    for (int n=0;n<N;++n){
+      for (int cIdx=0;cIdx<C;++cIdx){
+        for (int hIdx=0;hIdx<h_img;++hIdx){
+	  for (int wIdx=0;wIdx<w_img;++wIdx){
+	    bottomDiffPtr[bottom->offset(n,cIdx,hIdx,wIdx)] = bottom->data_at(n,cIdx,hIdx,wIdx)>0?top->diff_at(n,cIdx,hIdx,wIdx):0; 
+	  }
+	}
+      }
+    }
+}
+
+template <typename Dtype>
+void BN_inf_Fwd(Blob<Dtype>* input,int N,int C,int h_img,int w_img,Blob ){}
+
+template <typename Dtype>
+void BN_train_Fwd(){}
+
+template <typename Dtype>
+void BN_train_Bwd(){}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::CPU_Initialization(){
+    this->global_Mean.resize(this->numTransition);
+    this->batch_Mean.resize(this->numTransition);
+    this->global_Var.resize(this->numTransition);
+    this->batch_Var.resize(this->numTransition);
+    this->postBN_blobVec.resize(this->numTransition);
+    this->postReLU_blobVec.resize(this->numTransition);
+    this->postConv_blobVec.resize(this->numTransition);
+
+}
 
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                   const vector<Blob<Dtype>*>& top) 
   { 
     //init CPU
-    this->global_Mean.resize(this->numTransition);
-    this->batch_Mean.resize(this->numTransition);
-    this->
-
-    this->cpuInited = true;
+    if (!this->cpuInited){   
+	this->CPU_Initialization();
+        this->cpuInited = true;
+    }
     //init CPU finish
     const Dtype* bottom_data = bottom[0]->cpu_data();
     Dtype* top_data = top[0]->mutable_cpu_data();
@@ -156,7 +229,11 @@ namespace caffe {
   void DenseBlockLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
                                     const vector<bool>& propagate_down,
                                     const vector<Blob<Dtype>*>& bottom) 
-  { 
+  {
+    if (!this->cpuInited){
+    	this->CPU_Initialization();
+        this->cpuInited = true;
+    }
     if (propagate_down[0]) {
       const Dtype* bottom_data = bottom[0]->cpu_data();
       const Dtype* top_diff = top[0]->cpu_diff();
