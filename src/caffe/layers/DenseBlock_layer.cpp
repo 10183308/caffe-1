@@ -358,7 +358,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
       }
     }
     
-}
+ }
 
 
 template <typename Dtype>
@@ -367,10 +367,71 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
     this->batch_Mean.resize(this->numTransition);
     this->global_Var.resize(this->numTransition);
     this->batch_Var.resize(this->numTransition);
+    
+    this->merge_conv.resize(this->numTransition);
+    this->BN_XhatVec.resize(this->numTransition);
     this->postBN_blobVec.resize(this->numTransition);
     this->postReLU_blobVec.resize(this->numTransition);
     this->postConv_blobVec.resize(this->numTransition);
 
+    for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
+      int localChannels = transitionIdx==0?this->initChannel:this->growthRate;
+      int mergeChannels = this->initChannel + this->growthRate * transitionIdx;
+      int[] channelShapeArr = {1,localChannels,1,1};
+      int[] tensorShapeArr = {this->N,localChannels,this->H,this->W};
+      int[] mergeShapeArr = {this->N,mergeChannels,this->H,this->W};
+      vector<int> channelShape(channelShapeArr,channelShapeArr+4);
+      vector<int> tensorShape(tensorShapeArr,tensorShapeArr+4);
+      vector<int> mergeShape(mergedShapeArr,mergedShapeArr+4);
+      this->global_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
+      this->batch_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
+      this->global_Var[transitionIdx] = new Blob<Dtype>(channelShape);
+      this->batch_Var[transitionIdx] = new Blob<Dtype>(channelShape);
+      this->merge_conv[transitionIdx] = new Blob<Dtype>(mergeShape);
+      this->BN_XhatVec[transitionIdx] = new Blob<Dtype>(tensorShape);
+      this->postBN_blobVec[transitionIdx] = new Blob<Dtype>(tensorShape);
+      this->postReLU_blobVec[transitionIdx] = new Blob<Dtype>(tensorShape);
+      this->postConv_blobVec[transitionIdx] = new Blob<Dtype>(tensorShape);
+    }
+}
+
+template <typename Dtype>
+void mergeData(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transitionIdx,int N,int initChannel,int growthRate,int H,int W){
+    Dtype* mergePtr = mergeBlob->mutable_cpu_data();
+    for (int n=0;n<N;++n){
+      for (int localT=0;localT<=transitionIdx;++localT){
+        int localChannel = localT==0?initChannel:growthRate;
+	int localOffset = localT==0?0:initChannel+(localT-1)*growthRate;
+	for (int c=0;c<localChannel;++c){
+	  int cIdx = c + localOffset; 
+	  for (int hIdx=0;hIdx<H;++hIdx){
+	    for (int wIdx=0;wIdx<W;++wIdx){
+	      mergePtr(mergeBlob->offset(n,cIdx,hIdx,wIdx)) = blobVec[localT]->data_at(n,c,hIdx,wIdx);
+	    }
+	  }
+	}
+      }
+    }
+}
+
+template <typename Dtype>
+void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transitionIdx){
+    for (int n=0;n<N;++n){
+      for (int localT=0;localT<=transitionIdx;++localT){
+	Dtype* localDiff = blobVec[localT]->mutable_cpu_diff();
+	int localChannel = localT==0?initChannel:growthRate;
+	int localOffset = localT==0?0:initChannel+(localT-1)*growthRate;
+	for (int c=0;c<localChannel;++c){
+	  int cIdx = c + localOffset;
+	  for (int hIdx=0;hIdx<H;++hIdx){
+	    for (int wIdx=0;wIdx<W;++wIdx){
+	      localDiff[blobVec[localT]->offset(n,c,hIdx,wIdx)] = mergeBlob->diff_at(n,cIdx,hIdx,wIdx);
+	    }
+	  }
+	}
+        
+      }
+    }
 }
 
   template <typename Dtype>
@@ -383,12 +444,32 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
         this->cpuInited = true;
     }
     //init CPU finish
-    const Dtype* bottom_data = bottom[0]->cpu_data();
-    Dtype* top_data = top[0]->mutable_cpu_data();
-    const int count = bottom[0]->count();
-    for (int i = 0; i < count; ++i) {
-      top_data[i] = sin(bottom_data[i]);
+    for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
+      //BN
+      Blob<Dtype>* BN_bottom = transitionIdx==0?bottom[0]:postConv_blobVec[transitionIdx-1];
+      Blob<Dtype>* BN_top = postBN_blobVec[transitionIdx];
+      Blob<Dtype>* Scaler = this->blobs_[numTransition + transitionIdx];
+      Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx];
+      int localChannels = transitionIdx==0?this->initChannel:this->growthRate;
+      if (this->phase_ == TEST){
+        BN_inf_Fwd(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->global_Mean[transitionIdx],this->global_Var[transitionIdx],Scaler,Bias);
+      }
+      else {
+        BN_train_Fwd(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,this->localChannels,this->H,this->W);
+	this->trainCycleIdx += 1;
+      }
+      //ReLU
+      Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
+      this->ReLU_Fwd(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
+      //Pre-Conv
+      mergeData(this->postReLU_blobVec,this->merged_conv[transitionIdx],transitionIdx);
+      //Conv
+      Blob<Dtype>* filterBlob = this->blobs_[transitionIdx];
+      Blob<Dtype>* topConv = transitionIdx==this->numTransition-1?top[0]:postConv_blobsVec[transitionIdx];
+      int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
+      Convolution_Fwd(this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx],filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
     }
+
   }
 
   template <typename Dtype>

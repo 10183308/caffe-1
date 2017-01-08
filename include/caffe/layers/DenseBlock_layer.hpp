@@ -47,7 +47,9 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Blob<Dtype>*> batch_Mean;
   vector<Blob<Dtype>*> global_Var;
   vector<Blob<Dtype>*> batch_Var;
+  vector<Blob<Dtype>*> merged_conv;
 
+  vector<Blob<Dtype>*> BN_XhatVec;
   vector<Blob<Dtype>*> postBN_blobVec;
   vector<Blob<Dtype>*> postReLU_blobVec;
   vector<Blob<Dtype>*> postConv_blobVec;
