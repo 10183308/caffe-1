@@ -1,5 +1,7 @@
+#include <math.h>
 #include <vector>
 #include <algorithm>
+
 
 #include "caffe/blob.hpp"
 #include "caffe/filler.hpp"
@@ -187,13 +189,177 @@ void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
 }
 
 template <typename Dtype>
-void BN_inf_Fwd(Blob<Dtype>* input,int N,int C,int h_img,int w_img,Blob ){}
+void getMean(Blob<Dtype>* A,int channelIdx){
+    int N = A.shape(0);
+    int C = A.shape(1);
+    int H = A.shape(2);
+    int W = A.shape(3);
+    int totalCount = N*H*W;
+
+    Dtype sum = 0;
+    for (int n=0;n<N;++n){
+      for (int h=0;h<H;++h){
+	for (int w=0;w<W;++w){
+          sum += A->data_at(h,channelIdx,h,w);
+	}	
+      }
+    }
+    return sum/totalCount;
+}
 
 template <typename Dtype>
-void BN_train_Fwd(){}
+void getVar(Blob<Dtype>* A,int channelIdx){
+    int N = A.shape(0);
+    int C = A.shape(1);
+    int H = A.shape(2);
+    int W = A.shape(3);
+    int totalCount = N*C*H*W;
+    Dtype mean = getMean(A,channelIdx);
+    
+    Dtype sum = 0;
+    for (int n=0;n<N;++n){
+      for (int h=0;h<H;++h){
+        for (int w=0;w<W;++w){
+	  sum += (A->data_at(n,channelIdx,h,w)-mean) * (A->data_at(n,channelIdx,h,w)-mean);
+	}
+      }
+    }
+    return sum / totalCount;
+}
 
 template <typename Dtype>
-void BN_train_Bwd(){}
+void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int w_img,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* scaler,Blob<Dtype>* bias){
+    //reshape output
+    int outputShape[] = {N,C,h_img,w_img};
+    vector<int> outputShapeVec(outputShape,outputShape+4);
+    output.reshape(outputShapeVec);
+    //BN Fwd inf
+    double epsilon = 1e-5;
+    Dtype* outputPtr = output->mutable_cpu_data();
+
+    for (int n=0;n<N;++n){
+      for (int cIdx=0;cIdx<C;++cIdx){
+        Dtype denom = 1.0 / sqrt(globalVar->data_at(0,cIdx,0,0) + epsilon);
+	for (int hIdx=0;hIdx<h_img;++hIdx){
+	  for (int wIdx=0;wIdx<w_img;++wIdx){
+	    outputPtr[output->offset(n,cIdx,hIdx,wIdx)] = scaler->data_at(0,cIdx,0,0) * (denom * (input->data_at(n,cIdx,hIdx,wIdx) - globalMean->data_at(0,cIdx,0,0))) + bias->data_at(0,cIdx,0,0);
+	  }
+	}
+      }
+    }
+}
+
+template <typename Dtype>
+void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int trainCycleIdx,int N,int C,int h_img,int w_img){
+    //reshape output
+    int outputShape[] = {N,C,h_img,w_img};
+    vector<int> outputShapeVec(outputShape,outputShape+4);
+    top.reshape(outputShapeVec);
+    output_xhat.reshape(outputShapeVec);
+    //BN Fwd train
+    double epsilon = 1e-5;
+    double EMA_factor = 1.0 / (1+trainCycleIdx);
+    //get batch/global Mean/Var
+    for (int channelIdx=0;channelIdx<C;++channelIdx){
+      int variance_adjust_m = N*h_img*w_img;
+      //batch
+      Dtype* batchMean_mutable = batchMean->mutable_cpu_data();
+      Dtype* batchVar_mutable = batchVar->mutable_cpu_data();
+      batchMean_mutable[channelIdx] = getMean(bottom,channelIdx);
+      batchVar_mutable[channelIdx] = (variance_adjust_m / (variance_adjust_m - 1.0)) * getVar(bottom,channelIdx);
+      //global
+      Dtype* globalMean_mutable = globalMean->mutable_cpu_data();
+      Dtype* globalVar_mutable = globalVar->mutable_cpu_data();
+      globalMean_mutable[channelIdx] = (1-EMA_factor) * globalMean->data_at(0,channelIdx,0,0) + EMA_factor * batchMean->data_at(0,channelIdx,0,0);
+      globalVar_mutable[channelIdx] = (1-EMA_factor) * globalVar->data_at(0,channelIdx,0,0) + EMA_factor * batchVar->data_at(0,channelIdx,0,0);
+    }
+    //process data
+    for (int n=0;n<N;++n){
+      for (int c=0;c<C;++c){
+        for (int h=0;h<h_img;++h){
+	  for (int w=0;w<w_img;++w){
+	    Dtype* xhat_mutable = output_xhat->mutable_cpu_data();
+	    xhat_mutable[c] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
+	    Dtype* output_mutable = output->mutable_cpu_data();
+	    output_mutable[offset(n,c,h,w)] = scaler->data_at(c) * xhat_mutable->data_at(n,c,h,w) + bias->data_at(c);
+	  }
+	}
+      }
+    }
+}
+
+template <typename Dtype>
+void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int N,int C,int h_img,int w_img){
+    double epsilon = 1e-5;
+    //bias and scaler grad
+    Dtype* biasGrad = bias->mutable_cpu_diff();
+    Dtype* scalerGrad = scaler->mutable_cpu_diff();
+    for (int channelIdx=0;channelIdx<C;++channelIdx){
+      biasGrad[channelIdx] = 0;
+      scalerGrad[channelIdx] = 0;
+      for (int n=0;n<N;++n){
+        for (int hIdx=0;hIdx<h_img;++hIdx){
+	  for (int wIdx=0;wIdx<w_img;++wIdx){
+	    biasGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx);
+	    scalerGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx) * bottom_xhat->data_at(n,channelIdx,hIdx,wIdx);
+	  }
+	}
+      }
+    }
+    //bottom data grad
+    //helper 1:
+    Dtype* XhatGrad = bottom_xhat->mutable_cpu_diff();
+    for (int n=0;n<N;++n){
+      for (int c=0;c<C;++c){
+        for (int h=0;h<h_img++h){
+	  for (int w=0;w<w_img;++w){
+	    XhatGrad[offset(n,c,h,w)] = top->diff_at(n,c,h,w) * scaler->data_at(0,c,0,0);
+	  }
+	}
+      }
+    } 
+    //helper 2:
+    Dtype* varGrad = batchVar->mutable_cpu_diff();
+    for (int c=0;c<C;++c){
+      for (int n=0;n<N;++n){
+        for (int h=0;h<h_img;++h){
+	  for (int w=0;w<w_img;++w){
+	    varGrad[c] = bottom_xhat->diff_at(n,c,h,w) * (bottom->data_at(n,c,h,w)-batchMean->data_at(0,c,0,0)) * (-0.5) * pow(batchVar->data_at(0,c,0,0) + epsilon,-1.5); 
+	  }
+	}
+      }
+    }
+
+    //helper 3:
+    double m = float(n * h_img * w_img);
+    Dtype* meanGrad = batchMean->mutable_cpu_diff();
+    for (int c=0;c<C;++c){
+      for (int n=0;n<N;++n){
+        for (int h=0;h<h_img;++h){
+	  for (int w=0;w<w_img;++w){
+	    meanGrad[c] = bottom_xhat->diff_at(n,c,h,w) * (-1.0 / sqrt(batchVar->data_at(0,c,0,0) + epsilon)) + batchVar->diff_at(0,c,0,0) * (-2.0) * (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m; 
+	  }
+	}
+      }
+    }
+
+    //combine helpers
+    Dtype* bottomDataGrad = bottom->mutable_data_cpu();
+    for (int n=0;n<N;++n){
+      for (int c=0;c<C;++c){
+        for (int h=0;h<h_img;++h){
+	  for (int w=0;w<w_img;++w){
+	    Dtype term1=bottom_xhat->diff_at(n,c,h,w)*pow(batchVar->data_at(0,c,0,0)+epsilon,-0.5);
+	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
+	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
+	    bottomDataGrad[offset(n,c,h,w)] += term1 + term2 + term3;
+	  }
+	}
+      }
+    }
+    
+}
+
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::CPU_Initialization(){
