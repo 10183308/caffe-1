@@ -434,6 +434,30 @@ void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int tra
     }
 }
 
+template <typename Dtype>
+void BlobSetZero(Blob<Dtype>* B,int count){
+    Dtype* B_mutable_data = B.mutable_cpu_data();
+    Dtype* B_mutable_diff = B.mutable_cpu_diff();
+    for (int i=0;i<count;++i) {
+      B_mutable_data[i] = 0;
+      B_mutable_diff[i] = 0;
+    }
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
+    for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
+      int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
+      int tensorCount = this->N * localChannel * this->H * this->W;
+      int tensorMergeCount = this->N * (this->initChannel + this->growthRate * transitionIdx) * this->H * this->W;
+      BlobSetZero(this->merged_conv,tensorMergeCount);
+      BlobSetZero(this->BN_XhatVec,tensorCount);
+      BlobSetZero(this->postBN_blobVec,tensorCount);
+      BlobSetZero(this->postReLU_blobVec,tensorCount);
+      BlobSetZero(this->postConv_blobVec,tensorCount);
+    }
+}
+
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
                                   const vector<Blob<Dtype>*>& top) 
@@ -481,17 +505,25 @@ void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int tra
     	this->CPU_Initialization();
         this->cpuInited = true;
     }
-    if (propagate_down[0]) {
-      const Dtype* bottom_data = bottom[0]->cpu_data();
-      const Dtype* top_diff = top[0]->cpu_diff();
-      Dtype* bottom_diff = bottom[0]->mutable_cpu_diff();
-      const int count = bottom[0]->count();
-      Dtype bottom_datum;
-      for (int i = 0; i < count; ++i) {
-        bottom_datum = bottom_data[i];
-        bottom_diff[i] = top_diff[i] * cos(bottom_datum);
-      }
-    }
+    for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
+      //Conv Bwd
+      Blob<Dtype>* conv_top=transitionIdx==this->numTransition-1?top[0]:this->postConv_blobVec[transitionIdx+1];
+      Blob<Dtype>* conv_bottom=merged_conv[transitionIdx];
+      Blob<Dtype>* filter = this->blobs_[transitionIdx];
+      int c_input = this->initChannel + this->growthRate * transitionIdx;
+      convolution_Bwd(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride);
+      //Conv postprocessing
+      distributeGrad(this->postReLU_blobVec,merged_conv[transitionIdx],transitionIdx); 
+      //ReLU Bwd
+      int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
+      ReLU_Bwd(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
+      //BN Bwd
+      Blob<Dtype>* BN_bottom = transitionIdx==0?bottom[0]:postConv_blobVec[transitionIdx];
+      Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx];
+      Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx];
+      this->BN_train_Bwd(BN_bottom,this->BN_xhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
+    } 
+    this->loopEndCleanup_cpu(); 
   }
 
 #ifdef CPU_ONLY

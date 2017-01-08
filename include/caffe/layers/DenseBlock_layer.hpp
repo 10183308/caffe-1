@@ -26,6 +26,10 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   virtual void GPU_Initialization();
 
+  virtual void LoopEndCleanup_cpu();
+
+  virtual void LoopEndCleanup_gpu();
+
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
   

@@ -99,6 +99,22 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
 }
 
 template <typename Dtype>
+void cleanupBuffer(Dtype* ptr_gpu,int count){
+    cudaMemset(ptr_gpu,0,count*sizeof(Dtype));
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
+    int valsBuffer = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
+    cleanupBuffer(this->postConv_data_gpu,valsBuffer);
+    cleanupBuffer(this->postConv_grad_gpu,valsBuffer);
+    cleanupBuffer(this->postBN_data_gpu,valsBuffer);
+    cleanupBuffer(this->postBN_grad_gpu,valsBuffer);
+    cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
+    cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
+}
+
+template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
@@ -269,6 +285,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     }
     //deploy buffer to bottom diff 
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy); 
+    this->LoopEndCleanup_gpu();
 }
 
 INSTANTIATE_LAYER_GPU_FUNCS(DenseBlockLayer);
