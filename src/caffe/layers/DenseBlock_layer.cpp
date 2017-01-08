@@ -158,7 +158,7 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 template <typename Dtype>
 void ReLu_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
     //Reshape top
-    int topShapeArr = {n,c,h_img,w_img};
+    int topShapeArr = {N,C,h_img,w_img};
     vector<int> topShapeVec(topShapeArr,topShapeArr+4);
     top.reshape(topShapeVec);
     //ReLU Fwd
@@ -280,8 +280,8 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
 	  for (int w=0;w<w_img;++w){
 	    Dtype* xhat_mutable = output_xhat->mutable_cpu_data();
 	    xhat_mutable[c] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
-	    Dtype* output_mutable = output->mutable_cpu_data();
-	    output_mutable[offset(n,c,h,w)] = scaler->data_at(c) * xhat_mutable->data_at(n,c,h,w) + bias->data_at(c);
+	    Dtype* output_mutable = top->mutable_cpu_data();
+	    output_mutable[top->offset(n,c,h,w)] = scaler->data_at(c) * xhat_mutable->data_at(n,c,h,w) + bias->data_at(0,c,0,0);
 	  }
 	}
       }
@@ -311,9 +311,9 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
     Dtype* XhatGrad = bottom_xhat->mutable_cpu_diff();
     for (int n=0;n<N;++n){
       for (int c=0;c<C;++c){
-        for (int h=0;h<h_img++h){
+        for (int h=0;h<h_img;++h){
 	  for (int w=0;w<w_img;++w){
-	    XhatGrad[offset(n,c,h,w)] = top->diff_at(n,c,h,w) * scaler->data_at(0,c,0,0);
+	    XhatGrad[bottom_xhat->offset(n,c,h,w)] = top->diff_at(n,c,h,w) * scaler->data_at(0,c,0,0);
 	  }
 	}
       }
@@ -331,7 +331,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
     }
 
     //helper 3:
-    double m = float(n * h_img * w_img);
+    double m = N * h_img * w_img;
     Dtype* meanGrad = batchMean->mutable_cpu_diff();
     for (int c=0;c<C;++c){
       for (int n=0;n<N;++n){
@@ -352,7 +352,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term1=bottom_xhat->diff_at(n,c,h,w)*pow(batchVar->data_at(0,c,0,0)+epsilon,-0.5);
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
-	    bottomDataGrad[offset(n,c,h,w)] += term1 + term2 + term3;
+	    bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
 	  }
 	}
       }
