@@ -489,7 +489,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
       Blob<Dtype>* topConv = transitionIdx==this->numTransition-1?top[0]:postConv_blobVec[transitionIdx];
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
-      convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],topConv,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
+      convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],topConv,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W); 
     }
 
   }
