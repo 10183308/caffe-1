@@ -124,7 +124,7 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 	        for (int j_img=0;j_img<w_img;++j_img){
 		  int localX = i_img + 1 - filter_x;
 		  int localY = j_img + 1 - filter_y;
-		  localGradSum += top->diff_at(top->offset(n,coutIdx,i_img,j_img)) * getZeroPaddedValue(false,bottom,n,cinIdx,localX,localY);
+		  localGradSum += top->diff_at(n,coutIdx,i_img,j_img) * getZeroPaddedValue(false,bottom,n,cinIdx,localX,localY);
 		}
 	      } 
 	    }
@@ -167,7 +167,7 @@ void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
       for (int cIdx=0;cIdx<C;++cIdx){
         for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
-	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = max(0,bottom->data_at(n,cIdx,hIdx,wIdx));
+	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = max(0.0,bottom->data_at(n,cIdx,hIdx,wIdx));
 	  }
 	}
       } 
@@ -176,7 +176,7 @@ void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
 
 template <typename Dtype>
 void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
-    Dtype* bottomDiffPtr = bottom.mutable_cpu_diff();
+    Dtype* bottomDiffPtr = bottom->mutable_cpu_diff();
     for (int n=0;n<N;++n){
       for (int cIdx=0;cIdx<C;++cIdx){
         for (int hIdx=0;hIdx<h_img;++hIdx){
@@ -190,10 +190,9 @@ void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
 
 template <typename Dtype>
 Dtype getMean(Blob<Dtype>* A,int channelIdx){
-    int N = A.shape(0);
-    int C = A.shape(1);
-    int H = A.shape(2);
-    int W = A.shape(3);
+    int N = A->shape(0);
+    int H = A->shape(2);
+    int W = A->shape(3);
     int totalCount = N*H*W;
 
     Dtype sum = 0;
@@ -209,11 +208,10 @@ Dtype getMean(Blob<Dtype>* A,int channelIdx){
 
 template <typename Dtype>
 Dtype getVar(Blob<Dtype>* A,int channelIdx){
-    int N = A.shape(0);
-    int C = A.shape(1);
-    int H = A.shape(2);
-    int W = A.shape(3);
-    int totalCount = N*C*H*W;
+    int N = A->shape(0);
+    int H = A->shape(2);
+    int W = A->shape(3);
+    int totalCount = N*H*W;
     Dtype mean = getMean(A,channelIdx);
     
     Dtype sum = 0;
@@ -281,7 +279,7 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
 	    Dtype* xhat_mutable = output_xhat->mutable_cpu_data();
 	    xhat_mutable[c] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
 	    Dtype* output_mutable = top->mutable_cpu_data();
-	    output_mutable[top->offset(n,c,h,w)] = (scaler->data_at(0,c,0,0)) * (xhat_mutable->data_at(n,c,h,w)) + bias->data_at(0,c,0,0);
+	    output_mutable[top->offset(n,c,h,w)] = (scaler->data_at(0,c,0,0)) * (output_xhat->data_at(n,c,h,w)) + bias->data_at(0,c,0,0);
 	  }
 	}
       }
@@ -344,7 +342,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
     }
 
     //combine helpers
-    Dtype* bottomDataGrad = bottom->mutable_data_cpu();
+    Dtype* bottomDataGrad = bottom->mutable_cpu_data();
     for (int n=0;n<N;++n){
       for (int c=0;c<C;++c){
         for (int h=0;h<h_img;++h){
@@ -406,7 +404,7 @@ void mergeData(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transiti
 	  int cIdx = c + localOffset; 
 	  for (int hIdx=0;hIdx<H;++hIdx){
 	    for (int wIdx=0;wIdx<W;++wIdx){
-	      mergePtr(mergeBlob->offset(n,cIdx,hIdx,wIdx)) = blobVec[localT]->data_at(n,c,hIdx,wIdx);
+	      mergePtr[mergeBlob->offset(n,cIdx,hIdx,wIdx)] = blobVec[localT]->data_at(n,c,hIdx,wIdx);
 	    }
 	  }
 	}
