@@ -377,9 +377,9 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
       int localChannels = transitionIdx==0?this->initChannel:this->growthRate;
       int mergeChannels = this->initChannel + this->growthRate * transitionIdx;
-      int[] channelShapeArr = {1,localChannels,1,1};
-      int[] tensorShapeArr = {this->N,localChannels,this->H,this->W};
-      int[] mergeShapeArr = {this->N,mergeChannels,this->H,this->W};
+      int channelShapeArr[] = {1,localChannels,1,1};
+      int tensorShapeArr[] = {this->N,localChannels,this->H,this->W};
+      int mergeShapeArr[] = {this->N,mergeChannels,this->H,this->W};
       vector<int> channelShape(channelShapeArr,channelShapeArr+4);
       vector<int> tensorShape(tensorShapeArr,tensorShapeArr+4);
       vector<int> mergeShape(mergedShapeArr,mergedShapeArr+4);
@@ -387,7 +387,7 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
       this->batch_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
       this->global_Var[transitionIdx] = new Blob<Dtype>(channelShape);
       this->batch_Var[transitionIdx] = new Blob<Dtype>(channelShape);
-      this->merge_conv[transitionIdx] = new Blob<Dtype>(mergeShape);
+      this->merged_conv[transitionIdx] = new Blob<Dtype>(mergeShape);
       this->BN_XhatVec[transitionIdx] = new Blob<Dtype>(tensorShape);
       this->postBN_blobVec[transitionIdx] = new Blob<Dtype>(tensorShape);
       this->postReLU_blobVec[transitionIdx] = new Blob<Dtype>(tensorShape);
@@ -415,7 +415,7 @@ void mergeData(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transiti
 }
 
 template <typename Dtype>
-void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transitionIdx){
+void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int transitionIdx,int N,int initChannel,int growthRate,int H,int W){
     for (int n=0;n<N;++n){
       for (int localT=0;localT<=transitionIdx;++localT){
 	Dtype* localDiff = blobVec[localT]->mutable_cpu_diff();
@@ -450,11 +450,11 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
       int tensorCount = this->N * localChannel * this->H * this->W;
       int tensorMergeCount = this->N * (this->initChannel + this->growthRate * transitionIdx) * this->H * this->W;
-      BlobSetZero(this->merged_conv,tensorMergeCount);
-      BlobSetZero(this->BN_XhatVec,tensorCount);
-      BlobSetZero(this->postBN_blobVec,tensorCount);
-      BlobSetZero(this->postReLU_blobVec,tensorCount);
-      BlobSetZero(this->postConv_blobVec,tensorCount);
+      BlobSetZero<Dtype>(this->merged_conv,tensorMergeCount);
+      BlobSetZero<Dtype>(this->BN_XhatVec,tensorCount);
+      BlobSetZero<Dtype>(this->postBN_blobVec,tensorCount);
+      BlobSetZero<Dtype>(this->postReLU_blobVec,tensorCount);
+      BlobSetZero<Dtype>(this->postConv_blobVec,tensorCount);
     }
 }
 
@@ -472,26 +472,26 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       //BN
       Blob<Dtype>* BN_bottom = transitionIdx==0?bottom[0]:postConv_blobVec[transitionIdx-1];
       Blob<Dtype>* BN_top = postBN_blobVec[transitionIdx];
-      Blob<Dtype>* Scaler = this->blobs_[numTransition + transitionIdx];
-      Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx];
+      Blob<Dtype>* Scaler = this->blobs_[numTransition + transitionIdx].get();
+      Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx].get();
       int localChannels = transitionIdx==0?this->initChannel:this->growthRate;
       if (this->phase_ == TEST){
-        BN_inf_Fwd(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->global_Mean[transitionIdx],this->global_Var[transitionIdx],Scaler,Bias);
+        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->global_Mean[transitionIdx],this->global_Var[transitionIdx],Scaler,Bias);
       }
       else {
-        BN_train_Fwd(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,this->localChannels,this->H,this->W);
+        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
 	this->trainCycleIdx += 1;
       }
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
-      this->ReLU_Fwd(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
+      ReLU_Fwd<Dtype>(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
       //Pre-Conv
-      mergeData(this->postReLU_blobVec,this->merged_conv[transitionIdx],transitionIdx);
+      mergeData<Dtype>(this->postReLU_blobVec,this->merged_conv[transitionIdx],transitionIdx);
       //Conv
-      Blob<Dtype>* filterBlob = this->blobs_[transitionIdx];
-      Blob<Dtype>* topConv = transitionIdx==this->numTransition-1?top[0]:postConv_blobsVec[transitionIdx];
+      Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
+      Blob<Dtype>* topConv = transitionIdx==this->numTransition-1?top[0]:postConv_blobVec[transitionIdx];
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
-      Convolution_Fwd(this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx],filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
+      Convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx],filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
     }
 
   }
@@ -511,19 +511,19 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* conv_bottom=merged_conv[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx];
       int c_input = this->initChannel + this->growthRate * transitionIdx;
-      convolution_Bwd(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride);
+      convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride);
       //Conv postprocessing
-      distributeGrad(this->postReLU_blobVec,merged_conv[transitionIdx],transitionIdx); 
+      distributeGrad<Dtype>(this->postReLU_blobVec,merged_conv[transitionIdx],transitionIdx,this->N,this->initChannel,this->growthRate,this->H,this->W); 
       //ReLU Bwd
       int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
-      ReLU_Bwd(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
+      ReLU_Bwd<Dtype>(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
       //BN Bwd
       Blob<Dtype>* BN_bottom = transitionIdx==0?bottom[0]:postConv_blobVec[transitionIdx];
       Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx];
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx];
-      this->BN_train_Bwd(BN_bottom,this->BN_xhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
+      BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
     } 
-    this->loopEndCleanup_cpu(); 
+    this->LoopEndCleanup_cpu(); 
   }
 
 #ifdef CPU_ONLY
