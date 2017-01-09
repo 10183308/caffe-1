@@ -23,18 +23,6 @@ class DenseBlockLayer : public Layer<Dtype> {
 
  protected:
   
-  virtual Dtype getZeroPaddedValue(bool isDiff,Blob<Dtype>* inputData,int n,int c,int h,int w);
-
-  virtual void convolution_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter);
-
-  virtual void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter);
-
-  virtual void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img);
-
-  virtual void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img);
-
-
-
   virtual void CPU_Initialization();
 
   virtual void GPU_Initialization();
