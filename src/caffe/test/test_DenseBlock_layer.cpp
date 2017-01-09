@@ -36,7 +36,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->set_conv_horizentalstride(1);
     db_param->set_filter_h(3);
     db_param->set_filter_w(3);
-    db_param->mutable_filer_filler()->set_type("gaussian");
+    db_param->mutable_filter_filler()->set_type("gaussian");
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
     
@@ -64,13 +64,13 @@ TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.denseblock_param();
-  shared_ptr<Layer<Dtype>> layer(new DenseBlockLayer<Dtype>(this->layer_param));
+  shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
   
-  shared_ptr<Filler<Dtype>> gaussianFiller(GetFiller<Dtype>(db_param.bn_scaler_filler()));
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
   
-  layer->SetUp(this->bottomVec_cpu,this->topVec->cpu);
+  layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer->Forward_cpu(this->bottomVec_cpu,this->topVec_cpu);
   layer->Forward_gpu(this->bottomVec_gpu,this->topVec_gpu);
 
