@@ -22,9 +22,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   virtual inline const char* type() const { return "DenseBlock"; } 
 
   virtual void Forward_cpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
-
-  void Forward_gpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
-
+ 
  protected:
   
   virtual void CPU_Initialization();

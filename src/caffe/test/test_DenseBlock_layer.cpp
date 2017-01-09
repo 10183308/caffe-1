@@ -72,7 +72,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
-  layer->Forward_gpu_public(this->bottomVec_gpu,this->topVec_gpu);
+  layer->Forward(this->bottomVec_gpu,this->topVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<2;++c){
