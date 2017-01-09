@@ -524,11 +524,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     this->LoopEndCleanup_cpu(); 
   }
 
-template <typename Dtype>
-void DenseBlockLayer<Dtype>::Forward_cpu_public(const vector<Blob<Dtype>*>& bottom,const vector<Blob<Dtype>*>& top){
-  return this->Forward_cpu(bottom,top);
-}
-
 #ifdef CPU_ONLY
 STUB_GPU(DenseBlockLayer);
 #endif

@@ -63,7 +63,7 @@ TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
-  DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
+  DenseBlockParameter* db_param = this->layer_param.denseblock_param();
   shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
@@ -71,8 +71,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
   
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
-  layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
-  layer->Forward_gpu_public(this->bottomVec_gpu,this->topVec_gpu);
+  layer->Forward_cpu(this->bottomVec_cpu,this->topVec_cpu);
+  layer->Forward_gpu(this->bottomVec_gpu,this->topVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<2;++c){
