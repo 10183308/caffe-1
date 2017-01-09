@@ -23,17 +23,17 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   virtual void Forward_cpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
 
-  virtual void Forward_gpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+  void Forward_gpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
 
  protected:
   
   virtual void CPU_Initialization();
 
-  virtual void GPU_Initialization();
+  void GPU_Initialization();
 
   virtual void LoopEndCleanup_cpu();
 
-  virtual void LoopEndCleanup_gpu();
+  void LoopEndCleanup_gpu();
 
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
