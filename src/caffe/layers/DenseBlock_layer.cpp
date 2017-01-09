@@ -85,7 +85,7 @@ void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filte
     CHECK_EQ(w_filter,3);
     int outputShape[] = {N,c_output,h_img,w_img};
     vector<int> outputShapeVec (outputShape,outputShape + 4);
-    output.reshape(outputShapeVec);
+    output->Reshape(outputShapeVec);
     Dtype * outputPtr = output->mutable_cpu_data();
     for (int n=0;n<N;++n){
       for (int c_outIdx=0;c_outIdx<c_output;++c_outIdx){
@@ -160,7 +160,7 @@ void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
     //Reshape top
     int topShapeArr[] = {N,C,h_img,w_img};
     vector<int> topShapeVec(topShapeArr,topShapeArr+4);
-    top->reshape(topShapeVec);
+    top->Reshape(topShapeVec);
     //ReLU Fwd
     Dtype* topPtr = top->mutable_cpu_data();
     for (int n=0;n<N;++n){
@@ -229,10 +229,10 @@ Dtype getVar(Blob<Dtype>* A,int channelIdx){
 
 template <typename Dtype>
 void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int w_img,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* scaler,Blob<Dtype>* bias){
-    //reshape output
+    //Reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
-    output->reshape(outputShapeVec);
+    output->Reshape(outputShapeVec);
     //BN Fwd inf
     double epsilon = 1e-5;
     Dtype* outputPtr = output->mutable_cpu_data();
@@ -254,8 +254,8 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
     //reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
-    top->reshape(outputShapeVec);
-    output_xhat->reshape(outputShapeVec);
+    top->Reshape(outputShapeVec);
+    output_xhat->Reshape(outputShapeVec);
     //BN Fwd train
     double epsilon = 1e-5;
     double EMA_factor = 1.0 / (1+trainCycleIdx);
@@ -281,7 +281,7 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
 	    Dtype* xhat_mutable = output_xhat->mutable_cpu_data();
 	    xhat_mutable[c] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
 	    Dtype* output_mutable = top->mutable_cpu_data();
-	    output_mutable[top->offset(n,c,h,w)] = scaler->data_at(0,c,0,0) * xhat_mutable->data_at(n,c,h,w) + bias->data_at(0,c,0,0);
+	    output_mutable[top->offset(n,c,h,w)] = (scaler->data_at(0,c,0,0)) * (xhat_mutable->data_at(n,c,h,w)) + bias->data_at(0,c,0,0);
 	  }
 	}
       }
@@ -508,7 +508,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
       //Conv Bwd
       Blob<Dtype>* conv_top=transitionIdx==this->numTransition-1?top[0]:this->postConv_blobVec[transitionIdx+1];
-      Blob<Dtype>* conv_bottom=merged_conv[transitionIdx].get();
+      Blob<Dtype>* conv_bottom=merged_conv[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx].get();
       int c_input = this->initChannel + this->growthRate * transitionIdx;
       convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride);
