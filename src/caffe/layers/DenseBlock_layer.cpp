@@ -54,8 +54,8 @@ namespace caffe {
 	
 }
 
-  template <typename Dtype>
-  void DenseBlockLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top){ 
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top){ 
         this->N = bottom[0]->shape()[0]; 
         this->H = bottom[0]->shape()[2];
         this->W = bottom[0]->shape()[3];

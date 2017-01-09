@@ -20,67 +20,73 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 
  protected:
   DenseBlockLayerTest()
-      : blob_bottom_(new Blob<Dtype>(2, 3, 4, 5)),
-        blob_top_(new Blob<Dtype>())
+      : blob_bottom_cpu(new Blob<Dtype>(2,3,5,5)),
+        blob_top_cpu(new Blob<Dtype>(2,2,5,5)),
+	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
+	blob_top_gpu(new Blob<Dtype>(2,2,5,5))
   {
     Caffe::set_random_seed(1701);
-    FillerParameter filler_param;
-    blob_bottom_vec_.push_back(blob_bottom_);
-    blob_top_vec_.push_back(blob_top_);
+    DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
+    db_param->add_add_numtransition(2);
+    db_param->add_initchannel(3);
+    db_param->add_growthrate(2);
+    db_param->add_pad_h(1);
+    db_param->add_pad_w(1);
+    db_param->add_conv_verticalstride(1);
+    db_param->add_conv_horizentalstride(1);
+    db_param->add_filter_h(3);
+    db_param->add_filter_w(3);
+    db_param->mutable_filer_filler()->set_type("gaussian");
+    db_param->mutable_bn_scaler_filler()->set_type("gaussian");
+    db_param->mutable_bn_bias_filler()->set_type("gaussian");
+    
+    this->bottomVec_gpu.push_back(this->blob_bottom_gpu);
+    this->bottomVec_cpu.push_back(this->blob_bottom_cpu);
+    this->topVec_gpu.push_back(this->blob_top_gpu);
+    this->topVec_cpu.push_back(this->blob_top_cpu);
   }
-  virtual ~DenseBlockLayerTest() { delete blob_bottom_; delete blob_top_; }
+  virtual ~DenseBlockLayerTest() {}
   
-  void TestForward(Dtype filler_std)
-  {
-    FillerParameter filler_param;
-    filler_param.set_std(filler_std);
-    GaussianFiller<Dtype> filler(filler_param);
-    filler.Fill(this->blob_bottom_);
+  LayerParameter layer_param;
+  Blob<Dtype>* blob_bottom_cpu;
+  Blob<Dtype>* blob_top_cpu;
+  Blob<Dtype>* blob_bottom_gpu;
+  Blob<Dtype>* blob_top_gpu;
 
-    LayerParameter layer_param;
-    DenseBlockLayer<Dtype> layer(layer_param);
-    layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
-    layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
-    // Now, check values
-    const Dtype* bottom_data = this->blob_bottom_->cpu_data();
-    const Dtype* top_data = this->blob_top_->cpu_data();
-    const Dtype min_precision = 1e-5;
-    for (int i = 0; i < this->blob_bottom_->count(); ++i) {
-      Dtype expected_value = sin(bottom_data[i]);
-      Dtype precision = std::max(
-        Dtype(std::abs(expected_value * Dtype(1e-4))), min_precision);
-      EXPECT_NEAR(expected_value, top_data[i], precision);
-    }
-  }
-
-  void TestBackward(Dtype filler_std)
-  {
-    FillerParameter filler_param;
-    filler_param.set_std(filler_std);
-    GaussianFiller<Dtype> filler(filler_param);
-    filler.Fill(this->blob_bottom_);
-
-    LayerParameter layer_param;
-    DenseBlockLayer<Dtype> layer(layer_param);
-    GradientChecker<Dtype> checker(1e-4, 1e-2, 1701);
-    checker.CheckGradientEltwise(&layer, this->blob_bottom_vec_,
-        this->blob_top_vec_);
-  }
-
-  Blob<Dtype>* const blob_bottom_;
-  Blob<Dtype>* const blob_top_;
-  vector<Blob<Dtype>*> blob_bottom_vec_;
-  vector<Blob<Dtype>*> blob_top_vec_;
+  vector<Blob<Dtype>*> bottomVec_cpu;
+  vector<Blob<Dtype>*> topVec_cpu;
+  vector<Blob<Dtype>*> bottomVec_gpu;
+  vector<Blob<Dtype>*> topVec_gpu;
 };
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
-  this->TestForward(1.0);
+  typedef typename TypeParam::Dtype Dtype;
+  DenseBlockParameter* db_param = this->layer_param.denseblock_param();
+  shared_ptr<Layer<Dtype>> layer(new DenseBlockLayer<Dtype>(this->layer_param));
+  
+  shared_ptr<Filler<Dtype>> gaussianFiller(GetFiller<Dtype>(db_param.bn_scaler_filler()));
+  gaussianFiller->Fill(this->blob_bottom_cpu);
+  this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
+  
+  layer->SetUp(this->bottomVec_cpu,this->topVec->cpu);
+  layer->Forward_cpu(this->bottomVec_cpu,this->topVec_cpu);
+  layer->Forward_gpu(this->bottomVec_gpu,this->topVec_gpu);
+
+  for (int n=0;n<2;++n){
+    for (int c=0;c<2;++c){
+      for (int h=0;h<5;++h){
+        for (int w=0;w<5;++w){
+	  EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),0.1);
+	}
+      }
+    }
+  }
 }
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockGradient) {
-  this->TestBackward(1.0);
+  
 }
 
 }  // namespace caffe

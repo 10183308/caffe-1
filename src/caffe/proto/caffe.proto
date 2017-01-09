@@ -61,7 +61,7 @@ message FillerParameter {
   optional VarianceNorm variance_norm = 8 [default = FAN_IN];
 }
 
-message NetParameter {
+
   optional string name = 1; // consider giving the network a name
   // DEPRECATED. See InputParameter. The input blobs to the network.
   repeated string input = 3;
@@ -414,7 +414,7 @@ message DenseBlockParameter {
   optional int32 pad_h = 4 [default = 1];
   optional int32 pad_w = 5 [default = 1];
   optional int32 conv_verticalStride = 6 [default = 1];
-  optional int32 conv_horizentalStride = 7 [default = 2];
+  optional int32 conv_horizentalStride = 7 [default = 1];
   optional int32 filter_H = 8 [default = 3];
   optional int32 filter_W = 9 [default = 3];
   optional FillerParameter Filter_Filler = 10;
