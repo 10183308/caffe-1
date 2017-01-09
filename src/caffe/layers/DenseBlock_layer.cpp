@@ -156,7 +156,7 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 }
 
 template <typename Dtype>
-void ReLu_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
+void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_img){
     //Reshape top
     int topShapeArr = {N,C,h_img,w_img};
     vector<int> topShapeVec(topShapeArr,topShapeArr+4);
@@ -368,7 +368,7 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
     this->global_Var.resize(this->numTransition);
     this->batch_Var.resize(this->numTransition);
     
-    this->merge_conv.resize(this->numTransition);
+    this->merged_conv.resize(this->numTransition);
     this->BN_XhatVec.resize(this->numTransition);
     this->postBN_blobVec.resize(this->numTransition);
     this->postReLU_blobVec.resize(this->numTransition);
@@ -382,7 +382,7 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
       int mergeShapeArr[] = {this->N,mergeChannels,this->H,this->W};
       vector<int> channelShape(channelShapeArr,channelShapeArr+4);
       vector<int> tensorShape(tensorShapeArr,tensorShapeArr+4);
-      vector<int> mergeShape(mergedShapeArr,mergedShapeArr+4);
+      vector<int> mergeShape(mergeShapeArr,mergeShapeArr+4);
       this->global_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
       this->batch_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
       this->global_Var[transitionIdx] = new Blob<Dtype>(channelShape);
@@ -450,11 +450,11 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
       int tensorCount = this->N * localChannel * this->H * this->W;
       int tensorMergeCount = this->N * (this->initChannel + this->growthRate * transitionIdx) * this->H * this->W;
-      BlobSetZero<Dtype>(this->merged_conv,tensorMergeCount);
-      BlobSetZero<Dtype>(this->BN_XhatVec,tensorCount);
-      BlobSetZero<Dtype>(this->postBN_blobVec,tensorCount);
-      BlobSetZero<Dtype>(this->postReLU_blobVec,tensorCount);
-      BlobSetZero<Dtype>(this->postConv_blobVec,tensorCount);
+      BlobSetZero<Dtype>(this->merged_conv[transitionIdx],tensorMergeCount);
+      BlobSetZero<Dtype>(this->BN_XhatVec[transitionIdx],tensorCount);
+      BlobSetZero<Dtype>(this->postBN_blobVec[transitionIdx],tensorCount);
+      BlobSetZero<Dtype>(this->postReLU_blobVec[transitionIdx],tensorCount);
+      BlobSetZero<Dtype>(this->postConv_blobVec[transitionIdx],tensorCount);
     }
 }
 
@@ -491,7 +491,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
       Blob<Dtype>* topConv = transitionIdx==this->numTransition-1?top[0]:postConv_blobVec[transitionIdx];
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
-      Convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx],filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
+      convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx],filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride); 
     }
 
   }
