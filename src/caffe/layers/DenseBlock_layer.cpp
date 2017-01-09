@@ -199,7 +199,7 @@ Dtype getMean(Blob<Dtype>* A,int channelIdx){
     for (int n=0;n<N;++n){
       for (int h=0;h<H;++h){
 	for (int w=0;w<W;++w){
-          sum += A->data_at(h,channelIdx,h,w);
+          sum += A->data_at(n,channelIdx,h,w);
 	}	
       }
     }
