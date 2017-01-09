@@ -27,15 +27,15 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   {
     Caffe::set_random_seed(1701);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-    db_param->add_add_numtransition(2);
-    db_param->add_initchannel(3);
-    db_param->add_growthrate(2);
-    db_param->add_pad_h(1);
-    db_param->add_pad_w(1);
-    db_param->add_conv_verticalstride(1);
-    db_param->add_conv_horizentalstride(1);
-    db_param->add_filter_h(3);
-    db_param->add_filter_w(3);
+    db_param->set_numtransition(2);
+    db_param->set_initchannel(3);
+    db_param->set_growthrate(2);
+    db_param->set_pad_h(1);
+    db_param->set_pad_w(1);
+    db_param->set_conv_verticalstride(1);
+    db_param->set_conv_horizentalstride(1);
+    db_param->set_filter_h(3);
+    db_param->set_filter_w(3);
     db_param->mutable_filer_filler()->set_type("gaussian");
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
