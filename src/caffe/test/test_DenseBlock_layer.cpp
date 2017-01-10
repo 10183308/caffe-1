@@ -6,13 +6,14 @@
 
 #include "gtest/gtest.h"
 
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
 #include "caffe/blob.hpp"
 #include "caffe/common.hpp"
 #include "caffe/filler.hpp"
-
 #include "caffe/test/test_caffe_main.hpp"
 #include "caffe/test/test_gradient_check_util.hpp"
-
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
@@ -63,8 +64,10 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 };
 
 void writeHelloWorld(){
-  std::ofstream testOut("HelloWorld.txt",std::ofstream::out);
-  testOut<< "Hello WOrld"<<endl;
+  //std::ofstream testOut("HelloWorld.txt",std::ofstream::out);
+  //testOut<< "Hello WOrld"<<endl;
+  boost::filesystem::path dir("hello/world/hahaha");
+  boost::filesystem::create_directories(dir);
 }
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
