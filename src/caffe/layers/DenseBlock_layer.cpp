@@ -134,9 +134,10 @@ void logBlob(Blob<Dtype>* B,string fileName){
 }
 
 string itos(int i){
-  stringstream convert;
-  convert << i;
-  return convert.str();
+  char buffer [32];
+  itoa(i,buffer,10);
+  string output(buffer);
+  return output;
 }
 
 template <typename Dtype>
