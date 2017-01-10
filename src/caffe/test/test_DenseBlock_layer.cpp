@@ -23,7 +23,8 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
       : blob_bottom_cpu(new Blob<Dtype>(2,3,5,5)),
         blob_top_cpu(new Blob<Dtype>(2,2,5,5)),
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
-	blob_top_gpu(new Blob<Dtype>(2,2,5,5))
+	blob_top_gpu(new Blob<Dtype>(2,2,5,5)),
+	idIdx(1)
   {
     Caffe::set_random_seed(1701);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -46,7 +47,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     this->topVec_cpu.push_back(this->blob_top_cpu);
   }
   virtual ~DenseBlockLayerTest() {}
-  
+  int idIdx;
   LayerParameter layer_param;
   Blob<Dtype>* blob_bottom_cpu;
   Blob<Dtype>* blob_top_cpu;
@@ -58,8 +59,6 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   vector<Blob<Dtype>*> bottomVec_gpu;
   vector<Blob<Dtype>*> topVec_gpu;
 };
-
-TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
@@ -73,6 +72,12 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer2->Setup(this->bottomVec_gpu,this->topVec_gpu);
+
+  layer->setLogId(this->idIdx);
+  this->idIdx += 1;
+  layer2->setLogid(this->idIdx);
+  this->idIdx += 1;
+
   //synchronize the random filled parameters of layer and layers
   layer2->syncBlobs(layer.get());
 
