@@ -116,6 +116,7 @@ void DenseBlockLayer<Dtype>::setLogId(int uid){
 
 template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
+    std::cout << fileName<<std::endl;
     const char* dataName = (fileName + "data").c_str();
     const char* gradName = (fileName + "grad").c_str();
     tryCreateDirectory(dataName);
@@ -143,8 +144,6 @@ string itos(int i){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
-    std::cout<<"itos0:"<<itos(0)<<std::endl;
-    std::cout<<"itos1:"<<itos(1)<<std::endl;
     string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
     std::cout<< "Log Internal Start"<<std::endl;
     //global_Mean
