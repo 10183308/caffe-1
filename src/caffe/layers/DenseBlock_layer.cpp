@@ -84,14 +84,16 @@ void DenseBlockLayer<Dtype>::setLogId(int uid){
 
 template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
-    std::ofstream outWriter_data(fileName+"data");
-    std::ofstream outWriter_grad(fileName+"grad"); 
+    const char* dataName = (fileName + "data").c_str();
+    const char* gradName = (fileName + "grad").c_str();
+    std::ofstream outWriter_data(dataName,std::ofstream::out);
+    std::ofstream outWriter_grad(gradName,std::ofstream::out); 
     for (int n=0;n<B->shape(0);++n){
       for (int c=0;c<B->shape(1);++c){
         for (int h=0;h<B->shape(2);++h){
 	  for (int w=0;w<B->shape(3);++w){
 	    outWriter_data<<B->data_at(n,c,h,w)<<",";
-	    outWriter_grad<<B->grad_at(n,c,h,w)<<",";
+	    outWriter_grad<<B->diff_at(n,c,h,w)<<",";
 	  }
 	}
       }
