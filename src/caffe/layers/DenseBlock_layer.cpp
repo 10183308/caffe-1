@@ -37,8 +37,6 @@ namespace caffe {
     for (int i=0;i<strVec.size()-1;++i){
       newStr += strVec[i] + (i==strVec.size()-2?"":"/");
     }
-    std::cout << newStr << std::endl;
-
     boost::filesystem::path dirToCreate(newStr);
     if (!dirExists(newStr)){
       boost::filesystem::create_directories(dirToCreate);
@@ -116,9 +114,13 @@ void DenseBlockLayer<Dtype>::setLogId(int uid){
 
 template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
-    std::cout << fileName<<std::endl;
-    const char* dataName = (fileName + "data").c_str();
-    const char* gradName = (fileName + "grad").c_str();
+    string dataNameStr = fileName + "_data";
+    string gradNameStr = gradName + "_grad";
+    std::cout<<dataNameStr;
+    std::cout<<gradNameStr;
+    const char* dataName = (dataNameStr).c_str();
+    const char* gradName = (gradNameStr).c_str();
+    
     tryCreateDirectory(dataName);
     tryCreateDirectory(gradName);
     std::ofstream outWriter_data(dataName,std::ofstream::out);
@@ -145,7 +147,6 @@ string itos(int i){
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
     string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
-    std::cout<< "Log Internal Start"<<std::endl;
     //global_Mean
     for (int i=0;i<this->global_Mean.size();++i){
       string blobStr = localDir+"global_Mean_"+itos(i);
