@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <stdlib.h>
 
 #include "caffe/blob.hpp"
@@ -99,52 +100,58 @@ void logBlob(Blob<Dtype>* B,string fileName){
     outWriter_grad<<std::endl;
 }
 
+string itos(int i){
+  stringstream convert;
+  convert << i;
+  return convert.str();
+}
+
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
-    string localDir = dir+"/cpu_"+itoa(this->logId)+"/"; 
+    string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
     //global_Mean
     for (int i=0;i<this->global_Mean.size();++i){
-      string blobStr = localDir+"global_Mean_"+to_string(i);
+      string blobStr = localDir+"global_Mean_"+itos(i);
       logBlob(this->global_Mean[i],blobStr);
     }
     //batch_Mean
     for (int i=0;i<this->batch_Mean.size();++i){
-      string blobStr = localDir+"batch_Mean_"+to_string(i);
+      string blobStr = localDir+"batch_Mean_"+itos(i);
       logBlob(this->batch_Mean[i],blobStr);
     }
     //global_Var
     for (int i=0;i<this->global_Var.size();++i){
-      string blobStr = localDir+"global_Var_"+to_string(i);
+      string blobStr = localDir+"global_Var_"+itos(i);
       logBlob(this->global_Var[i],blobStr);
     }
     //batch_Var
     for (int i=0;i<this->batch_Var.size();++i){
-      string blobStr = localDir+"batch_Var_"+to_string(i);
+      string blobStr = localDir+"batch_Var_"+itos(i);
       logBlob(this->batch_Var[i],blobStr);
     }
     //merged_conv
     for (int i=0;i<this->merged_conv.size();++i){
-      string blobStr = localDir+"merged_conv_"+to_string(i);
+      string blobStr = localDir+"merged_conv_"+itos(i);
       logBlob(this->merged_conv[i],blobStr);
     }
     //BN_XhatVec
     for (int i=0;i<this->BN_XhatVec.size();++i){
-      string blobStr = localDir+"BN_XhatVec_"+to_string(i);
+      string blobStr = localDir+"BN_XhatVec_"+itos(i);
       logBlob(this->BN_XhatVec[i],blobStr);
     }
     //postBN_blobVec
     for (int i=0;i<this->postBN_blobVec.size();++i){
-      string blobStr = localDir+"postBN_blobVec_"+to_string(i);
+      string blobStr = localDir+"postBN_blobVec_"+itos(i);
       logBlob(this->postBN_blobVec[i],blobStr);
     }
     //postReLU_blobVec
     for (int i=0;i<this->postReLU_blobVec.size();++i){
-      string blobStr = localDir+"postReLU_blobVec_"+to_string(i);
+      string blobStr = localDir+"postReLU_blobVec_"+itos(i);
       logBlob(this->postReLU_blobVec[i],blobStr);
     }
     //postConv_blobVec
     for (int i=0;i<this->postConv_blobVec.size();++i){
-      string blobStr = localDir+"postConv_blobVec_"+to_string(i);
+      string blobStr = localDir+"postConv_blobVec_"+itos(i);
       logBlob(this->postConv_blobVec[i],blobStr);
     }
     
