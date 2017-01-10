@@ -20,11 +20,12 @@ namespace caffe {
     if (!boost::filesystem::exists(fileName)){
       vector<string> strVec;
       boost::split(strVec,fileName,boost::is_any_of("/"));
+      std::cout<< "alpha"<<std::endl;
       string newStr="";
       for (int i=0;i<strVec.size()-1;++i){
         newStr += strVec[i] + "/";
       }
-      
+      std::cout<<"beta"<<std::endl; 
       std::cout << newStr << std::endl;
 
       boost::filesystem::path dirToCreate(newStr);
