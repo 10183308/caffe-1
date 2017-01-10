@@ -115,7 +115,7 @@ void DenseBlockLayer<Dtype>::setLogId(int uid){
 template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
     string dataNameStr = fileName + "_data";
-    string gradNameStr = gradName + "_grad";
+    string gradNameStr = fileName + "_grad";
     std::cout<<dataNameStr;
     std::cout<<gradNameStr;
     const char* dataName = (dataNameStr).c_str();
