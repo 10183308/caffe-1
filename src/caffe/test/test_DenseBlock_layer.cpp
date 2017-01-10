@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <vector>
-#include <ofstream>
+#include <iostream>
+#include <fstream>
 #include <string>
 
 #include "gtest/gtest.h"
