@@ -7,6 +7,8 @@
 #include <sstream>
 #include <stdlib.h>
 
+#include <sys/types.h>
+#include <dirent.h>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
