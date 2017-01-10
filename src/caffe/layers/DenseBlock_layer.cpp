@@ -19,11 +19,12 @@
 namespace caffe {
 
   bool dirExists(string dirStr){
-    DIR* dir = opendir(dirStr);
+    const char* dirCStr = dirStr.c_str();
+    DIR* dir = opendir(dirCStr);
     if (ENOENT == errno){
       return false;
     }
-    closedir(dirStr);
+    closedir(dir);
     return true;
   }
 
