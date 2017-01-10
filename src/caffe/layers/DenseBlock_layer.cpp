@@ -16,18 +16,26 @@
 
 namespace caffe {
 
-  void tryCreateDirectory(string fileName){
-    boost::filesystem::path fileNamePath(fileName);
-    if (!boost::filesystem::is_directory(fileNamePath)){
-      vector<string> strVec;
-      boost::split(strVec,fileName,boost::is_any_of("/"));
-      string newStr="";
-      for (int i=0;i<strVec.size()-1;++i){
-        newStr += strVec[i] + "/";
-      }
-      std::cout << newStr << std::endl;
+  bool dirExists(string dirStr){
+    DIR* dir = opendir(dirStr);
+    if (ENOENT == errno){
+      return false;
+    }
+    closedir(dirStr);
+    return true;
+  }
 
-      boost::filesystem::path dirToCreate(newStr);
+  void tryCreateDirectory(string fileName){
+    vector<string> strVec;
+    boost::split(strVec,fileName,boost::is_any_of("/"));
+    string newStr="";
+    for (int i=0;i<strVec.size()-1;++i){
+      newStr += strVec[i] + (i==strVec.size()-2?"":"/");
+    }
+    std::cout << newStr << std::endl;
+
+    boost::filesystem::path dirToCreate(newStr);
+    if (!dirExists(newStr)){
       boost::filesystem::create_directories(dirToCreate);
     }
   }
