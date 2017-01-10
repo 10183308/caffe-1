@@ -143,6 +143,8 @@ string itos(int i){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
+    std::cout<<"itos0:"<<itos(0)<<std::endl;
+    std::cout<<"itos1:"<<itos(1)<<std::endl;
     string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
     std::cout<< "Log Internal Start"<<std::endl;
     //global_Mean
