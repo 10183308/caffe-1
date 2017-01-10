@@ -18,7 +18,7 @@ namespace caffe {
 
   void tryCreateDirectory(string fileName){
     boost::filesystem::path fileNamePath(fileName);
-    if (!boost::filesystem::exists(fileNamePath)){
+    if (!boost::filesystem::is_directory(fileNamePath)){
       vector<string> strVec;
       boost::split(strVec,fileName,boost::is_any_of("/"));
       string newStr="";
