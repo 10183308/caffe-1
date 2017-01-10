@@ -5,10 +5,12 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <sys/types.h>
 #include <dirent.h>
+#include <boost/lexical_cast.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -135,10 +137,8 @@ void logBlob(Blob<Dtype>* B,string fileName){
 }
 
 string itos(int i){
-  char buffer [32];
-  itoa(i,buffer,10);
-  string output(buffer);
-  return output;
+  string output = boost::lexical_cast<string>(i);
+  return output;  
 }
 
 template <typename Dtype>
