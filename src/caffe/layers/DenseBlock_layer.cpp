@@ -7,11 +7,26 @@
 #include <sstream>
 #include <stdlib.h>
 
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
 #include "caffe/blob.hpp"
 #include "caffe/filler.hpp"
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
+
+  void tryCreateDirectory(string fileName){
+    if (!boost::filesystem::exists(fileName)){
+      vector<string> strVec;
+      boost::split(strVec,fileName,boost::is_any_of("/"));
+      string newStr="";
+      for (int i=0;i<strVec.size()-1;++i){
+        newStr += strVec[i] + "/";
+      }
+      boost::filesystem::create_directory(newStr);
+    }
+  }
 
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top){
@@ -86,6 +101,8 @@ template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
     const char* dataName = (fileName + "data").c_str();
     const char* gradName = (fileName + "grad").c_str();
+    tryCreateDirectory(dataName);
+    tryCreateDirectory(gradName);
     std::ofstream outWriter_data(dataName,std::ofstream::out);
     std::ofstream outWriter_grad(gradName,std::ofstream::out); 
     for (int n=0;n<B->shape(0);++n){
