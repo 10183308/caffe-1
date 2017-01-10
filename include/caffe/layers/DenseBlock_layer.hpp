@@ -2,6 +2,7 @@
 #define CAFFE_DENSEBLOCK_LAYER_HPP_
 
 #include <vector>
+#include <string>
 
 #include "caffe/blob.hpp"
 #include "caffe/layer.hpp"
@@ -22,7 +23,15 @@ class DenseBlockLayer : public Layer<Dtype> {
   virtual inline const char* type() const { return "DenseBlock"; } 
 
   virtual void Forward_cpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
- 
+
+  virtual void syncBlobs(DenseBlockLayer<Dtype>* originLayer);
+
+  virtual void setLogId(int uid);
+
+  virtual void logInternal_cpu(string dir);
+
+  void logInternal_gpu(string dir);
+
  protected:
   
   virtual void CPU_Initialization();
@@ -44,6 +53,10 @@ class DenseBlockLayer : public Layer<Dtype> {
   
   virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+
+  //start logging specific data: for debugging
+  int logId;
+  //end logging specific data
 
   //common Blobs for both CPU & GPU mode
   //in this->blobs_, containing all filters for Convolution, scalers and bias for BN

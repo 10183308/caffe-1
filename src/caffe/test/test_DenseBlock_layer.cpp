@@ -65,14 +65,19 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
+  shared_ptr<DenseBlockLayer<Dtype> > layer2(new DenseBlockLayer<Dtype>(this->layer_param));
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
   
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
+  layer2->Setup(this->bottomVec_gpu,this->topVec_gpu);
+  //synchronize the random filled parameters of layer and layers
+  layer2->syncBlobs(layer.get());
+
   layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
-  layer->Forward(this->bottomVec_gpu,this->topVec_gpu);
+  layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<2;++c){
@@ -85,8 +90,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   }
 }
 
-TYPED_TEST(DenseBlockLayerTest, TestDenseBlockGradient) {
-  
-}
+//TYPED_TEST(DenseBlockLayerTest, TestDenseBlockGradient) {
+// 
+//}
 
 }  // namespace caffe

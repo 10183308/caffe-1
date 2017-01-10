@@ -1,7 +1,8 @@
 #include <math.h>
 #include <vector>
 #include <algorithm>
-
+#include <iostream>
+#include <fstream>
 
 #include "caffe/blob.hpp"
 #include "caffe/filler.hpp"
@@ -59,6 +60,91 @@ void DenseBlockLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom, const v
         this->N = bottom[0]->shape()[0]; 
         this->H = bottom[0]->shape()[2];
         this->W = bottom[0]->shape()[3];
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::syncBlobs(DenseBlockLayer<Dtype>* originLayer){
+    vector<shared_ptr<Blob<Dtype> > >& originBlobs = originLayer->blobs();
+    for (int blobIdx=0;blobIdx < originBlobs.size();++blobIdx){
+      shared_ptr<Blob<Dtype> > localBlob = originBlobs[blobIdx];
+      Blob<Dtype> * newBlob = new Blob<Dtype>(localBlob.shape());
+      newBlob->copyFrom(*(localBlob.get()));
+      this->blobs_.push_back(newBlob);
+    }
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::setLogId(int uid){
+    this->logId = uid;
+}
+
+template <typename Dtype>
+void logBlob(Blob<Dtype>* B,string fileName){
+    ofstream outWriter_data(fileName+"data");
+    ofstream outWriter_grad(fileName+"grad"); 
+    for (int n=0;n<B->shape(0);++n){
+      for (int c=0;c<B->shape(1);++c){
+        for (int h=0;h<B->shape(2);++h){
+	  for (int w=0;w<B->shape(3);++w){
+	    outWriter_data<<B->data_at<<",";
+	    outWriter_grad<<B->grad_at<<",";
+	  }
+	}
+      }
+    }
+    outWriter_data<<endl;
+    outWriter_grad<<endl;
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
+    string localDir = dir+"/cpu_"+to_string(this->logId)+"/"; 
+    //global_Mean
+    for (int i=0;i<this->global_Mean.size();++i){
+      string blobStr = localDir+"global_Mean_"+to_string(i);
+      logBlob(this->global_Mean[i],blobStr);
+    }
+    //batch_Mean
+    for (int i=0;i<this->batch_Mean.size();++i){
+      string blobStr = localDir+"batch_Mean_"+to_string(i);
+      logBlob(this->batch_Mean[i],blobStr);
+    }
+    //global_Var
+    for (int i=0;i<this->global_Var.size();++i){
+      string blobStr = localDir+"global_Var_"+to_string(i);
+      logBlob(this->global_Var[i],blobStr);
+    }
+    //batch_Var
+    for (int i=0;i<this->batch_Var.size();++i){
+      string blobStr = localDir+"batch_Var_"+to_string(i);
+      logBlob(this->batch_Var[i],blobStr);
+    }
+    //merged_conv
+    for (int i=0;i<this->merged_conv.size();++i){
+      string blobStr = localDir+"merged_conv_"+to_string(i);
+      logBlob(this->merged_conv[i],blobStr);
+    }
+    //BN_XhatVec
+    for (int i=0;i<this->BN_XhatVec.size();++i){
+      string blobStr = localDir+"BN_XhatVec_"+to_string(i);
+      logBlob(this->BN_XhatVec[i],blobStr);
+    }
+    //postBN_blobVec
+    for (int i=0;i<this->postBN_blobVec.size();++i){
+      string blobStr = localDir+"postBN_blobVec_"+to_string(i);
+      logBlob(this->postBN_blobVec[i],blobStr);
+    }
+    //postReLU_blobVec
+    for (int i=0;i<this->postReLU_blobVec.size();++i){
+      string blobStr = localDir+"postReLU_blobVec_"+to_string(i);
+      logBlob(this->postReLU_blobVec[i],blobStr);
+    }
+    //postConv_blobVec
+    for (int i=0;i<this->postConv_blobVec.size();++i){
+      string blobStr = localDir+"postConv_blobVec_"+to_string(i);
+      logBlob(this->postConv_blobVec[i],blobStr);
+    }
+    
 }
 
 template <typename Dtype>
@@ -491,7 +577,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
       convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],topConv,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W); 
     }
-
+    this->logInternal_cpu("TClog");
   }
 
   template <typename Dtype>

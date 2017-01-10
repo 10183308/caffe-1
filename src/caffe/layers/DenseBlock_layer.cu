@@ -23,6 +23,11 @@ void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int c
 }
 
 template <typename Dtype>
+void logInternal_gpu(string dir){
+    
+}
+
+template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
