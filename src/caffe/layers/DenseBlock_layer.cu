@@ -8,7 +8,7 @@
 
 namespace caffe {
 
-string itos(int i){
+string itos_cu(int i){
   stringstream convert;
   convert << i;
   return convert.str();
@@ -46,7 +46,7 @@ void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
-    string localDir = dir+"/gpu_"+itos(this->logId)+"/";
+    string localDir = dir+"/gpu_"+itos_cu(this->logId)+"/";
     int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
     //postConv_data_gpu
     log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu");
