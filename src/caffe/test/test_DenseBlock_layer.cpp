@@ -63,20 +63,11 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   vector<Blob<Dtype>*> topVec_gpu;
 };
 
-void writeHelloWorld(){
-  //std::ofstream testOut("HelloWorld.txt",std::ofstream::out);
-  //testOut<< "Hello WOrld"<<endl;
-  std::cout<< boost::filesystem::exists("hello") <<std::endl;
-  boost::filesystem::path dir("hello/world/hahaha");
-  boost::filesystem::create_directories(dir);
-}
-
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
   //test
-  writeHelloWorld();
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
   shared_ptr<DenseBlockLayer<Dtype> > layer2(new DenseBlockLayer<Dtype>(this->layer_param));
@@ -93,7 +84,6 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   layer2->setLogId(this->idIdx);
   this->idIdx += 1;
 
-  std::cout<< "HelloWorld" << std::endl;
   //synchronize the random filled parameters of layer and layers
   layer2->syncBlobs(layer.get());
 
