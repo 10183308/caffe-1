@@ -23,8 +23,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
       : blob_bottom_cpu(new Blob<Dtype>(2,3,5,5)),
         blob_top_cpu(new Blob<Dtype>(2,2,5,5)),
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
-	blob_top_gpu(new Blob<Dtype>(2,2,5,5)),
-	idIdx(1)
+	blob_top_gpu(new Blob<Dtype>(2,2,5,5))
   {
     Caffe::set_random_seed(1701);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -40,7 +39,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_filter_filler()->set_type("gaussian");
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
-    
+    this->idIdx = 1;
     this->bottomVec_gpu.push_back(this->blob_bottom_gpu);
     this->bottomVec_cpu.push_back(this->blob_bottom_cpu);
     this->topVec_gpu.push_back(this->blob_top_gpu);
