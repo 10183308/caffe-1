@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 #include "caffe/blob.hpp"
 #include "caffe/filler.hpp"
@@ -100,7 +101,7 @@ void logBlob(Blob<Dtype>* B,string fileName){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
-    string localDir = dir+"/cpu_"+std::to_string(this->logId)+"/"; 
+    string localDir = dir+"/cpu_"+itoa(this->logId)+"/"; 
     //global_Mean
     for (int i=0;i<this->global_Mean.size();++i){
       string blobStr = localDir+"global_Mean_"+to_string(i);
