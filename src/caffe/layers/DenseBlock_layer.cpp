@@ -24,7 +24,11 @@ namespace caffe {
       for (int i=0;i<strVec.size()-1;++i){
         newStr += strVec[i] + "/";
       }
-      boost::filesystem::create_directory(newStr);
+      
+      std::cout << newStr << std::endl;
+
+      boost::filesystem::path dirToCreate(newStr);
+      boost::filesystem::create_directories(dirToCreate);
     }
   }
 
