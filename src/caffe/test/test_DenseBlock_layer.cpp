@@ -79,6 +79,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   layer2->setLogId(this->idIdx);
   this->idIdx += 1;
 
+  std::cout<< "HelloWorld" << std::endl;
   //synchronize the random filled parameters of layer and layers
   layer2->syncBlobs(layer.get());
 
