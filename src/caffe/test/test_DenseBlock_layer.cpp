@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <vector>
+#include <ofstream>
+#include <string>
 
 #include "gtest/gtest.h"
 
@@ -59,10 +61,17 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   vector<Blob<Dtype>*> topVec_gpu;
 };
 
+void writeHelloWorld(){
+  ofstream testOut("HelloWorld.txt",std::ofstream::out);
+  testOut<< "Hello WOrld"<<endl;
+}
+
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
+  //test
+  writeHelloWorld();
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
   shared_ptr<DenseBlockLayer<Dtype> > layer2(new DenseBlockLayer<Dtype>(this->layer_param));
