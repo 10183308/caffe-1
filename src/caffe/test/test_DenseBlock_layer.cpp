@@ -66,6 +66,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 void writeHelloWorld(){
   //std::ofstream testOut("HelloWorld.txt",std::ofstream::out);
   //testOut<< "Hello WOrld"<<endl;
+  std::cout<< boost::filesystem::exists("hello") <<std::endl;
   boost::filesystem::path dir("hello/world/hahaha");
   boost::filesystem::create_directories(dir);
 }
