@@ -111,6 +111,7 @@ string itos(int i){
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
     string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
+    std::cout<< "Log Internal Start"<<std::endl;
     //global_Mean
     for (int i=0;i<this->global_Mean.size();++i){
       string blobStr = localDir+"global_Mean_"+itos(i);
