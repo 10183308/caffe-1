@@ -1,4 +1,7 @@
 #include <vector>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include "caffe/layers/DenseBlock_layer.hpp"
 
@@ -23,8 +26,37 @@ void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int c
 }
 
 template <typename Dtype>
-void logInternal_gpu(string dir){
-    
+void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
+    Dtype* cpuPtr = new Dtype[numValues];
+    cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
+    ofstream outWriter(fileName);
+    for (int i=0;i<numValues;++i){
+      outWriter<<cpuPtr[i]<<",";
+    }
+    outWriter<<endl;
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
+    string localDir = dir+"/gpu_"+to_string(this->logId)+"/";
+    int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
+    //postConv_data_gpu
+    log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu");
+    //postConv_grad_gpu
+    log_gpuPtr(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu");
+    //postBN_data_gpu
+    log_gpuPtr(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu");
+    //postBN_grad_gpu
+    log_gpuPtr(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu");
+    //postReLU_data_gpu
+    log_gpuPtr(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu");
+    //postReLU_grad_gpu
+    log_gpuPtr(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu");
+    //ResultRunningMean_gpu
+    int numChannelsTotal = this->initChannel + this->growthRate * this->numTransition;
+    log_gpuPtr(this->ResultRunningMean_gpu,numChannelsTotal,localDir+"ResultRunningMean_gpu");
+    //ResultRunningVariance_gpu
+    log_gpuPtr(this->ResultRunningVariance_gpu,numChannelsTotal,localDir+"ResultRunningVariance_gpu");
 }
 
 template <typename Dtype>
@@ -200,6 +232,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
   Dtype* resultBuffer_ptr = postConv_data_gpu + resultChannelGap * this->H * this->W;
   gpu_copy_many_to_one<Dtype>(resultBuffer_ptr,top_data,this->N,chunkSize_copy_end,chunkStride_copy);
+  this->logInternal_gpu("TClog");
 }
 
 template <typename Dtype>
