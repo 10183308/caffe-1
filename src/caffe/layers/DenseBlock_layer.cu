@@ -2,10 +2,17 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
+
+string itos(int i){
+  stringstream convert;
+  convert << i;
+  return convert.str();
+}
 
 template <typename Dtype>
 void gpu_copy_one_to_many(const Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int chunkSize_input,int chunkStride_output){
@@ -29,7 +36,7 @@ template <typename Dtype>
 void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
     Dtype* cpuPtr = new Dtype[numValues];
     cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
-    ofstream outWriter(fileName);
+    ofstream outWriter(fileName,std::ofstream::out);
     for (int i=0;i<numValues;++i){
       outWriter<<cpuPtr[i]<<",";
     }
@@ -38,7 +45,7 @@ void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
-    string localDir = dir+"/gpu_"+to_string(this->logId)+"/";
+    string localDir = dir+"/gpu_"+itos(this->logId)+"/";
     int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
     //postConv_data_gpu
     log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu");
