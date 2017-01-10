@@ -36,11 +36,11 @@ template <typename Dtype>
 void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
     Dtype* cpuPtr = new Dtype[numValues];
     cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
-    ofstream outWriter(fileName,std::ofstream::out);
+    std::ofstream outWriter(fileName,std::ofstream::out);
     for (int i=0;i<numValues;++i){
       outWriter<<cpuPtr[i]<<",";
     }
-    outWriter<<endl;
+    outWriter<<std::endl;
 }
 
 template <typename Dtype>
