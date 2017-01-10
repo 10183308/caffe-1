@@ -63,7 +63,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 };
 
 void writeHelloWorld(){
-  ofstream testOut("HelloWorld.txt",std::ofstream::out);
+  std::ofstream testOut("HelloWorld.txt",std::ofstream::out);
   testOut<< "Hello WOrld"<<endl;
 }
 
