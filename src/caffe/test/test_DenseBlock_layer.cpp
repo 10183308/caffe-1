@@ -60,6 +60,8 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   vector<Blob<Dtype>*> topVec_gpu;
 };
 
+TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
+
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
