@@ -73,11 +73,11 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
   
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
-  layer2->Setup(this->bottomVec_gpu,this->topVec_gpu);
+  layer2->SetUp(this->bottomVec_gpu,this->topVec_gpu);
 
   layer->setLogId(this->idIdx);
   this->idIdx += 1;
-  layer2->setLogid(this->idIdx);
+  layer2->setLogId(this->idIdx);
   this->idIdx += 1;
 
   //synchronize the random filled parameters of layer and layers
