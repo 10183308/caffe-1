@@ -67,9 +67,10 @@ void DenseBlockLayer<Dtype>::syncBlobs(DenseBlockLayer<Dtype>* originLayer){
     vector<shared_ptr<Blob<Dtype> > >& originBlobs = originLayer->blobs();
     for (int blobIdx=0;blobIdx < originBlobs.size();++blobIdx){
       shared_ptr<Blob<Dtype> > localBlob = originBlobs[blobIdx];
-      Blob<Dtype> * newBlob = new Blob<Dtype>(localBlob.shape());
-      newBlob->copyFrom(*(localBlob.get()));
-      this->blobs_.push_back(newBlob);
+      Blob<Dtype> * newBlob = new Blob<Dtype>(localBlob->shape());
+      newBlob->CopyFrom(*(localBlob.get()));
+      shared_ptr<Blob<Dtype> > sharedPtrBlob(newBlob);
+      this->blobs_.push_back(sharedPtrBlob);
     }
 }
 
@@ -80,8 +81,8 @@ void DenseBlockLayer<Dtype>::setLogId(int uid){
 
 template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
-    ofstream outWriter_data(fileName+"data");
-    ofstream outWriter_grad(fileName+"grad"); 
+    std::ofstream outWriter_data(fileName+"data");
+    std::ofstream outWriter_grad(fileName+"grad"); 
     for (int n=0;n<B->shape(0);++n){
       for (int c=0;c<B->shape(1);++c){
         for (int h=0;h<B->shape(2);++h){
@@ -92,56 +93,56 @@ void logBlob(Blob<Dtype>* B,string fileName){
 	}
       }
     }
-    outWriter_data<<endl;
-    outWriter_grad<<endl;
+    outWriter_data<<std::endl;
+    outWriter_grad<<std::endl;
 }
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
-    string localDir = dir+"/cpu_"+to_string(this->logId)+"/"; 
+    string localDir = dir+"/cpu_"+std::to_string(this->logId)+"/"; 
     //global_Mean
     for (int i=0;i<this->global_Mean.size();++i){
-      string blobStr = localDir+"global_Mean_"+to_string(i);
+      string blobStr = localDir+"global_Mean_"+std::to_string(i);
       logBlob(this->global_Mean[i],blobStr);
     }
     //batch_Mean
     for (int i=0;i<this->batch_Mean.size();++i){
-      string blobStr = localDir+"batch_Mean_"+to_string(i);
+      string blobStr = localDir+"batch_Mean_"+std::to_string(i);
       logBlob(this->batch_Mean[i],blobStr);
     }
     //global_Var
     for (int i=0;i<this->global_Var.size();++i){
-      string blobStr = localDir+"global_Var_"+to_string(i);
+      string blobStr = localDir+"global_Var_"+std::to_string(i);
       logBlob(this->global_Var[i],blobStr);
     }
     //batch_Var
     for (int i=0;i<this->batch_Var.size();++i){
-      string blobStr = localDir+"batch_Var_"+to_string(i);
+      string blobStr = localDir+"batch_Var_"+std::to_string(i);
       logBlob(this->batch_Var[i],blobStr);
     }
     //merged_conv
     for (int i=0;i<this->merged_conv.size();++i){
-      string blobStr = localDir+"merged_conv_"+to_string(i);
+      string blobStr = localDir+"merged_conv_"+std::to_string(i);
       logBlob(this->merged_conv[i],blobStr);
     }
     //BN_XhatVec
     for (int i=0;i<this->BN_XhatVec.size();++i){
-      string blobStr = localDir+"BN_XhatVec_"+to_string(i);
+      string blobStr = localDir+"BN_XhatVec_"+std::to_string(i);
       logBlob(this->BN_XhatVec[i],blobStr);
     }
     //postBN_blobVec
     for (int i=0;i<this->postBN_blobVec.size();++i){
-      string blobStr = localDir+"postBN_blobVec_"+to_string(i);
+      string blobStr = localDir+"postBN_blobVec_"+std::to_string(i);
       logBlob(this->postBN_blobVec[i],blobStr);
     }
     //postReLU_blobVec
     for (int i=0;i<this->postReLU_blobVec.size();++i){
-      string blobStr = localDir+"postReLU_blobVec_"+to_string(i);
+      string blobStr = localDir+"postReLU_blobVec_"+std::to_string(i);
       logBlob(this->postReLU_blobVec[i],blobStr);
     }
     //postConv_blobVec
     for (int i=0;i<this->postConv_blobVec.size();++i){
-      string blobStr = localDir+"postConv_blobVec_"+to_string(i);
+      string blobStr = localDir+"postConv_blobVec_"+std::to_string(i);
       logBlob(this->postConv_blobVec[i],blobStr);
     }
     
