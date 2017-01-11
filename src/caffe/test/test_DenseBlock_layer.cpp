@@ -21,6 +21,20 @@ namespace caffe {
 
 int global_id = 1;
 
+template <typename Dtype>
+void printBlobDiff(Blob<Dtype>* B){
+  for (int n=0;n<B->shape(0);++n){
+    for (int c=0;c<B->shape(1);++c){
+      for (int h=0;h<B->shape(2);++h){
+        for (int w=0;w<B->shape(3);++w){
+	  std::cout<< B->diff_at(n,c,h,w)<<",";
+	}
+      }
+    }
+  }
+  std::cout<<std::endl;
+}
+
 template <typename TypeParam>
 class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   typedef typename TypeParam::Dtype Dtype;
@@ -136,6 +150,10 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   //top fill
   this->FillDiff(this->blob_top_cpu);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
+  std::cout<<"Top blobs"<<std::endl;
+  printBlobDiff(blob_top_cpu);
+  printBlobDiff(blob_top_gpu);
+
   //backward
   vector<bool> propagate_down(1,true);
   layer->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
