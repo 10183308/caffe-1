@@ -304,7 +304,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkStride_copy = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
     int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
     Dtype* targetDeploy_ptr = this->postConv_grad_gpu + resultChannelGap * this->H * this->W; 
-    gpu_copy_one_to_many(top_diff,targetDeploy_ptr,this->N,chunkSize_copy_end,chunkStride_copy);    
+    gpu_copy_one_to_many(top_diff,targetDeploy_ptr,this->N,chunkSize_copy_end,chunkStride_copy);   
+    std::cout<<"Bwdpass, after deploy init Diff"<<std::endl;
+    print_gpuPtr(this->postConv_grad_gpu,350);
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_noself = this->initChannel + transitionIdx * this->growthRate;
