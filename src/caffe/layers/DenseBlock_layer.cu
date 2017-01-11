@@ -65,6 +65,16 @@ void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int c
 }
 
 template <typename Dtype>
+void print_gpuPtr(Dtype* gpuPtr,int numValues){
+    Dtype* cpuPtr = new Dtype[numValues];
+    cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
+    for (int i=0;i<numValues;++i){
+      std::cout<< cpuPtr[i] <<",";
+    }
+    std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
     Dtype* cpuPtr = new Dtype[numValues];
     cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
@@ -254,6 +264,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptorVec_narrow[transitionIdx]),ReLU_y_ptr)
       );
       //Convolution
+      std::cout<<"pre conv"<<transitionIdx<<std::endl;//TO DELETE
+      print_gpuPtr(this->postConv_data_gpu,175); //TO DELETE
+      
       int delayChannel = this->initChannel + this->growthRate * transitionIdx;
       Dtype* conv_x_local = this->postReLU_data_gpu;
       Dtype* conv_y_local = this->postConv_data_gpu + delayChannel * this->H * this->W;
@@ -267,6 +280,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
       ); 
+
+      std::cout<<"post conv"<<transitionIdx<<std::endl;//TO DELETE
+      print_gpuPtr(this->postConv_data_gpu,175);//TO DELETE
   } 
   //change top data
   int chunkSize_copy_end = this->growthRate * this->H * this->W;

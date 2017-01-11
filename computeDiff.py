@@ -1,9 +1,9 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_1/postConv_blobVec_0_data"
+fileNameA = "TClog/cpu_1/postConv_blobVec_1_data"
 fileNameB = "TClog/gpu_2/postConv_data_gpu"
 A_offset = 0
-B_offset = 75
+B_offset = 125
 rangeLen = 50
 
 listA =  open(fileNameA,'r').readlines()[0].split(",")[:-1]
@@ -15,18 +15,13 @@ print len(floatAL)
 print floatAL[A_offset:A_offset+rangeLen]
 print floatBL[B_offset:B_offset+rangeLen]
 
-for c in range(2):
-    for h in range(5):
-        for w in range(5):
-            print `floatAL[A_offset+c*25+h*5+w]`+":"+`floatBL[B_offset+c*25+w*5+h]`
-
 """
 for i in range(rangeLen):
     numA,numB = floatAL[A_offset+i],floatBL[B_offset+i]
     print numA-numB
     if abs(numA-numB)>0.2:
         print i
-    
+"""    
 
 globalMaxDiff = 0 
 for i in range(rangeLen):
@@ -34,4 +29,4 @@ for i in range(rangeLen):
     globalMaxDiff = max(globalMaxDiff,abs(floatAL[aIdx]-floatBL[bIdx]))
 
 print "global Max Diff is:"+`globalMaxDiff`
-"""
+
