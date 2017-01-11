@@ -132,6 +132,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   //forward
   layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
+  std::cout <<"Forward of BWD done"<<std::endl;
   //top fill
   this->FillDiff(this->blob_top_cpu);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
