@@ -195,12 +195,12 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
     //scaler 
     for (int i=0;i<this->numTransition;++i){
       string blobStr = localDir+"scaler_"+itos(i);
-      logBlob(this->blobs_[this->numTransition+i],blobStr);
+      logBlob(this->blobs_[this->numTransition+i].get(),blobStr);
     }
     //bias
     for (int i=0;i<this->numTransition;++i){
       string blobStr = localDir+"bias_"+itos(i);
-      logBlob(this->blobs_[this->numTransition*2+i],blobStr);
+      logBlob(this->blobs_[this->numTransition*2+i].get(),blobStr);
     }
 }
 
