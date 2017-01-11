@@ -656,7 +656,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* conv_bottom=merged_conv[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx].get();
       int c_input = this->initChannel + this->growthRate * transitionIdx;
-      convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->conv_verticalStride,this->conv_horizentalStride);
+      convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->filter_H,this->filter_W);
       //Conv postprocessing
       distributeGrad<Dtype>(this->postReLU_blobVec,merged_conv[transitionIdx],transitionIdx,this->N,this->initChannel,this->growthRate,this->H,this->W); 
       //ReLU Bwd
