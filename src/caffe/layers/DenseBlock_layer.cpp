@@ -192,7 +192,16 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
       string blobStr = localDir+"postConv_blobVec_"+itos(i);
       logBlob(this->postConv_blobVec[i],blobStr);
     }
-    
+    //scaler 
+    for (int i=0;i<this->numTransition;++i){
+      string blobStr = localDir+"scaler_"+itos(i);
+      logBlob(this->blobs_[this->numTransition+i],blobStr);
+    }
+    //bias
+    for (int i=0;i<this->numTransition;++i){
+      string blobStr = localDir+"bias_"+itos(i);
+      logBlob(this->blobs_[this->numTransition*2+i],blobStr);
+    }
 }
 
 template <typename Dtype>
