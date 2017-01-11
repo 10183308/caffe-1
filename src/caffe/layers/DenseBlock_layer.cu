@@ -8,10 +8,33 @@
 
 namespace caffe {
 
+  bool dirExists_cu(string dirStr){
+    const char* dirCStr = dirStr.c_str();
+    DIR* dir = opendir(dirCStr);
+    if (ENOENT == errno){
+      return false;
+    }
+    closedir(dir);
+    return true;
+  }
+
+  void tryCreateDirectory_cu(string fileName){
+    vector<string> strVec;
+    boost::split(strVec,fileName,boost::is_any_of("/"));
+    string newStr="";
+    for (int i=0;i<strVec.size()-1;++i){
+      newStr += strVec[i] + (i==strVec.size()-2?"":"/");
+    }
+    boost::filesystem::path dirToCreate(newStr);
+    if (!dirExists_cu(newStr)){
+      boost::filesystem::create_directories(dirToCreate);
+    }
+  }
+
+
 string itos_cu(int i){
-  stringstream convert;
-  convert << i;
-  return convert.str();
+  string output = boost::lexical_cast<string>(i);
+  return output; 
 }
 
 template <typename Dtype>
@@ -37,6 +60,7 @@ void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
     Dtype* cpuPtr = new Dtype[numValues];
     cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
     const char* fileName_cstr = fileName.c_str();
+    tryCreateDirectory_cu(fileName_cstr);
     std::ofstream outWriter(fileName_cstr,std::ofstream::out);
     for (int i=0;i<numValues;++i){
       outWriter<<cpuPtr[i]<<",";
