@@ -116,8 +116,6 @@ template <typename Dtype>
 void logBlob(Blob<Dtype>* B,string fileName){
     string dataNameStr = fileName + "_data";
     string gradNameStr = fileName + "_grad";
-    std::cout<<dataNameStr;
-    std::cout<<gradNameStr;
     const char* dataName = (dataNameStr).c_str();
     const char* gradName = (gradNameStr).c_str();
     
