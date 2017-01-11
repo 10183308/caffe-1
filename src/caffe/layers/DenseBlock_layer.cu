@@ -255,8 +255,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       );
       //Convolution
       int delayChannel = this->initChannel + this->growthRate * transitionIdx;
-      Dtype* conv_x_local = postReLU_data_gpu;
-      Dtype* conv_y_local = postConv_data_gpu + delayChannel * this->H * this->W;
+      Dtype* conv_x_local = this->postReLU_data_gpu;
+      Dtype* conv_y_local = this->postConv_data_gpu + delayChannel * this->H * this->W;
       CUDNN_CHECK(cudnnConvolutionForward(*(this->cudnnHandlePtr),
 	cudnn::dataType<Dtype>::one,
 	*(this->tensorDescriptorVec_conv_x[transitionIdx]),conv_x_local,
