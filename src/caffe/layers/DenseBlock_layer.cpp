@@ -243,8 +243,8 @@ void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filte
 	    for (int c_inIdx=0;c_inIdx<c_input;++c_inIdx){
 	      for (int filter_x=0;filter_x<h_filter;++filter_x){
 	        for (int filter_y=0;filter_y<w_filter;++filter_y){
-		  int localX = wIdx + 1 - filter_x;
-	          int localY = hIdx + 1 - filter_y;
+		  int localX = hIdx + 1 - filter_x;
+	          int localY = wIdx + 1 - filter_y;
 	          outputPtr[output->offset(n,c_outIdx,hIdx,wIdx)] += (filter->data_at(c_outIdx,c_inIdx,filter_x,filter_y) * getZeroPaddedValue(false,input,n,c_inIdx,localX,localY));
 		}
 	      } 

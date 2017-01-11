@@ -1,7 +1,7 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_5/postConv_blobVec_0_data"
-fileNameB = "TClog/gpu_6/postConv_data_gpu"
+fileNameA = "TClog/cpu_1/postConv_blobVec_0_data"
+fileNameB = "TClog/gpu_2/postConv_data_gpu"
 A_offset = 0
 B_offset = 75
 rangeLen = 50
@@ -15,8 +15,11 @@ print len(floatAL)
 print floatAL[A_offset:A_offset+rangeLen]
 print floatBL[B_offset:B_offset+rangeLen]
 
-print np.std(floatAL[A_offset:A_offset+rangeLen])
-print np.std(floatBL[B_offset:B_offset+rangeLen])
+for c in range(2):
+    for h in range(5):
+        for w in range(5):
+            print `floatAL[A_offset+c*25+h*5+w]`+":"+`floatBL[B_offset+c*25+w*5+h]`
+
 """
 for i in range(rangeLen):
     numA,numB = floatAL[A_offset+i],floatBL[B_offset+i]
