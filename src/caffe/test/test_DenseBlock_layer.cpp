@@ -96,7 +96,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
     for (int c=0;c<2;++c){
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
-	  EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),0.1);
+	  EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),1);
 	}
       }
     }
