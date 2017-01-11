@@ -60,7 +60,7 @@ void gpu_copy_many_to_one(Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks,int c
     for (int chunkIdx=0;chunkIdx<numChunks;++chunkIdx){
         Dtype* inPtr_local = inPtr_gpu + chunkIdx*chunkStride_input;
 	Dtype* outPtr_local = outPtr_gpu + chunkIdx*chunkSize_output;
-	CUDA_CHECK(cudaMemcpy(inPtr_local,outPtr_local,chunkSize_output * sizeof(Dtype),cudaMemcpyDeviceToDevice));
+	CUDA_CHECK(cudaMemcpy(outPtr_local,inPtr_local,chunkSize_output * sizeof(Dtype),cudaMemcpyDeviceToDevice));
     }
 }
 
