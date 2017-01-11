@@ -136,7 +136,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
   //backward
   vector<bool> propagate_down(1,true);
-  layer->Backward_gpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
+  layer->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
   layer2->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
 
   for (int n=0;n<2;++n){
