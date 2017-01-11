@@ -149,6 +149,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   std::cout <<"Forward of BWD done"<<std::endl;
   //top fill
   this->FillDiff(this->blob_top_cpu);
+  this->blob_top_gpu->CopyFrom(*this->blob_top_cpu,true);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
   std::cout<<"Top blobs"<<std::endl;
   printBlobDiff(this->blob_top_cpu);
