@@ -101,7 +101,7 @@ void DenseBlockLayer<Dtype>::syncBlobs(DenseBlockLayer<Dtype>* originLayer){
     for (int blobIdx=0;blobIdx < originBlobs.size();++blobIdx){
       shared_ptr<Blob<Dtype> > localBlob = originBlobs[blobIdx];
       Blob<Dtype> * newBlob = new Blob<Dtype>(localBlob->shape());
-      newBlob->CopyFrom(*(localBlob.get()));
+      newBlob->CopyFrom(*(localBlob.get()),true);
       shared_ptr<Blob<Dtype> > sharedPtrBlob(newBlob);
       this->blobs_[blobIdx] = sharedPtrBlob;
     }
@@ -674,7 +674,12 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_cpu_public(const vector<Blob<Dtype>*>& bottom,const vector<Blob<Dtype>*>& top){
-  return this->Forward_cpu(bottom,top);
+  this->Forward_cpu(bottom,top);
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::Backward_cpu_public(const vector<Blob<Dtype>*>& top,const vector<bool>& propagate_down,const vector<Blob<Dtype>*>& bottom){
+  this->Backward_cpu(top,propagate_down,bottom);
 }
 
 #ifdef CPU_ONLY
