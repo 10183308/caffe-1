@@ -327,6 +327,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->filterDescriptorVec[transitionIdx]),filterGrad_local	  
 	  )		
 	);
+	std::cout<<"Bwdpass, after Convolution"<<std::endl;
+	print_gpuPtr(this->postConv_grad_gpu,350);
+	print_gpuPtr(this->postReLU_grad_gpu,350);
 	//Conv w.r.t. x
 	CUDNN_CHECK(cudnnConvolutionBackwardData(*(this->cudnnHandlePtr),
 	  cudnn::dataType<Dtype>::one,
