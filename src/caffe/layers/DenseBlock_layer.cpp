@@ -192,6 +192,11 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
       string blobStr = localDir+"postConv_blobVec_"+itos(i);
       logBlob(this->postConv_blobVec[i],blobStr);
     }
+    //filter
+    for (int i=0;i<this->numTransition;++i){
+      string blobStr = localDir+"filter_"+itos(i);
+      logBlob(this->blobs_[i].get(),blobStr);
+    }
     //scaler 
     for (int i=0;i<this->numTransition;++i){
       string blobStr = localDir+"scaler_"+itos(i);
