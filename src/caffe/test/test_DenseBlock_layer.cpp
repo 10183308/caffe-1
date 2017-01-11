@@ -107,7 +107,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   }
 }
 
-/*
+
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -150,5 +150,5 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     }
   }
 }
-*/
+
 }  // namespace caffe
