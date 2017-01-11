@@ -18,6 +18,8 @@
 
 namespace caffe {
 
+int global_id = 1;
+
 template <typename TypeParam>
 class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   typedef typename TypeParam::Dtype Dtype;
@@ -43,14 +45,14 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_filter_filler()->set_type("gaussian");
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
-    this->idIdx = 1;
+  
     this->bottomVec_gpu.push_back(this->blob_bottom_gpu);
     this->bottomVec_cpu.push_back(this->blob_bottom_cpu);
     this->topVec_gpu.push_back(this->blob_top_gpu);
     this->topVec_cpu.push_back(this->blob_top_cpu);
   }
   virtual ~DenseBlockLayerTest() {}
-  int idIdx;
+ 
   LayerParameter layer_param;
   Blob<Dtype>* blob_bottom_cpu;
   Blob<Dtype>* blob_top_cpu;
@@ -79,10 +81,10 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer2->SetUp(this->bottomVec_gpu,this->topVec_gpu);
 
-  layer->setLogId(this->idIdx);
-  this->idIdx += 1;
-  layer2->setLogId(this->idIdx);
-  this->idIdx += 1;
+  layer->setLogId(global_id);
+  global_id += 1;
+  layer2->setLogId(global_id);
+  global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
   layer2->syncBlobs(layer.get());
