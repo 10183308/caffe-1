@@ -67,7 +67,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 
-TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
+TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   //test
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -103,8 +103,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlock) {
   }
 }
 
-//TYPED_TEST(DenseBlockLayerTest, TestDenseBlockGradient) {
-// 
-//}
+TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
+ 
+}
 
 }  // namespace caffe

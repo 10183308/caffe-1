@@ -639,7 +639,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
       convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],topConv,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W); 
     }
-    this->logInternal_cpu("TClog");
   }
 
   template <typename Dtype>
@@ -668,7 +667,8 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx].get();
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx].get();
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
-    } 
+    }
+    this->logInternal_cpu("TClog");
     this->LoopEndCleanup_cpu(); 
   }
 

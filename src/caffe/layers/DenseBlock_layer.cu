@@ -264,9 +264,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptorVec_narrow[transitionIdx]),ReLU_y_ptr)
       );
       //Convolution
-      std::cout<<"pre conv"<<transitionIdx<<std::endl;//TO DELETE
-      print_gpuPtr(this->postConv_data_gpu,175); //TO DELETE
-      
       int delayChannel = this->initChannel + this->growthRate * transitionIdx;
       Dtype* conv_x_local = this->postReLU_data_gpu;
       Dtype* conv_y_local = this->postConv_data_gpu + delayChannel * this->H * this->W;
@@ -280,16 +277,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
       ); 
-
-      std::cout<<"post conv"<<transitionIdx<<std::endl;//TO DELETE
-      print_gpuPtr(this->postConv_data_gpu,175);//TO DELETE
   } 
   //change top data
   int chunkSize_copy_end = this->growthRate * this->H * this->W;
   int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
   Dtype* resultBuffer_ptr = postConv_data_gpu + resultChannelGap * this->H * this->W;
   gpu_copy_many_to_one<Dtype>(resultBuffer_ptr,top_data,this->N,chunkSize_copy_end,chunkStride_copy);
-  this->logInternal_gpu("TClog");
 }
 
 template <typename Dtype>
@@ -379,7 +372,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	);
     }
     //deploy buffer to bottom diff 
-    gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy); 
+    gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
+    this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
 }
 
