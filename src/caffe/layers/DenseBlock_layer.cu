@@ -4,6 +4,15 @@
 #include <fstream>
 #include <sstream>
 
+#include <stdio.h>
+#include <stdlib.h>
+
+#include <sys/types.h>
+#include <dirent.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
