@@ -420,7 +420,7 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
         for (int h=0;h<h_img;++h){
 	  for (int w=0;w<w_img;++w){
 	    Dtype* xhat_mutable = output_xhat->mutable_cpu_data();
-	    xhat_mutable[c] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
+	    xhat_mutable[output_xhat->offset(n,c,h,w)] = (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0))/sqrt(batchVar->data_at(0,c,0,0) + epsilon);
 	    Dtype* output_mutable = top->mutable_cpu_data();
 	    output_mutable[top->offset(n,c,h,w)] = (scaler->data_at(0,c,0,0)) * (output_xhat->data_at(n,c,h,w)) + bias->data_at(0,c,0,0);
 	  }
