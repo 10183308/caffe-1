@@ -103,7 +103,7 @@ void DenseBlockLayer<Dtype>::syncBlobs(DenseBlockLayer<Dtype>* originLayer){
       Blob<Dtype> * newBlob = new Blob<Dtype>(localBlob->shape());
       newBlob->CopyFrom(*(localBlob.get()));
       shared_ptr<Blob<Dtype> > sharedPtrBlob(newBlob);
-      this->blobs_.push_back(sharedPtrBlob);
+      this->blobs_[blobIdx] = sharedPtrBlob;
     }
 }
 
