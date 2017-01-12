@@ -114,12 +114,12 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
       //Filter_grad_gpu
       int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
-      log_gpuPtr(this->blobs_[transitionIdx]->gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
+      log_gpuPtr(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
       //Scaler_grad_gpu
       int numChannelLocal = transitionIdx==0?this->initChannel:this->growthRate;
-      log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->gpu_diff(),filterSize,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
+      log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
       //Bias_grad_gpu
-      log_gpuPtr(this->blob_[transitionIdx+2*this->numTransition]->gpu_diff(),filterSize,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
+      log_gpuPtr(this->blob_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
     }
 }
 
