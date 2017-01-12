@@ -305,8 +305,6 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
     Dtype* targetDeploy_ptr = this->postConv_grad_gpu + resultChannelGap * this->H * this->W; 
     gpu_copy_one_to_many(top_diff,targetDeploy_ptr,this->N,chunkSize_copy_end,chunkStride_copy);   
-    std::cout<<"Bwdpass, after deploy init Diff"<<std::endl;
-    print_gpuPtr(this->postConv_grad_gpu,350);
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_noself = this->initChannel + transitionIdx * this->growthRate;
@@ -338,9 +336,17 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),postReLU_grad_gpu
 	  )		
 	);
-	std::cout<<"Bwdpass, after Convolution"<<std::endl;
+	std::cout<<"Bwdpass, after Convolution"<<std::endl;i
+	std::cout<<"postConv_grad"<<std::endl;
 	print_gpuPtr(this->postConv_grad_gpu,350);
-	print_gpuPtr(this->postReLU_grad_gpu,350);	
+	std::cout<<"postReLU_grad"<<std::endl;
+	print_gpuPtr(this->postReLU_grad_gpu,350);
+	std::cout<<"filter Data"<<std::endl;
+	int filterSize = (transitionIdx==0?3:2) * 2 * 9;
+        print_gpuPtr(filterData_local,filterSize);
+	std::cout<<"postReLU_data"<<std::endl;
+	print_gpuPtr(postReLU_data_gpu,350);
+
 	//ReLU
 	Dtype* ReLU_y_local = postReLU_data_gpu + channelsBefore_noself*this->H*this->W;
 	Dtype* ReLU_x_local = postBN_data_gpu + channelsBefore_noself*this->H*this->W;
