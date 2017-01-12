@@ -142,7 +142,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
-  layer4->syncBlobs(layer.get());
+  layer4->syncBlobs(layer3.get());
   //forward
   layer3->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer4->Forward(this->bottomVec_gpu,this->topVec_gpu);
