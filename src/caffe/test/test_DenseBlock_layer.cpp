@@ -125,27 +125,27 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-  shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
-  shared_ptr<DenseBlockLayer<Dtype> > layer2(new DenseBlockLayer<Dtype>(this->layer_param));
+  shared_ptr<DenseBlockLayer<Dtype> > layer3(new DenseBlockLayer<Dtype>(this->layer_param));
+  shared_ptr<DenseBlockLayer<Dtype> > layer4(new DenseBlockLayer<Dtype>(this->layer_param));
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   //bottom fill
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
     
-  layer->SetUp(this->bottomVec_cpu,this->topVec_cpu);
-  layer2->SetUp(this->bottomVec_gpu,this->topVec_gpu);
+  layer3->SetUp(this->bottomVec_cpu,this->topVec_cpu);
+  layer4->SetUp(this->bottomVec_gpu,this->topVec_gpu);
 
-  layer->setLogId(global_id);
+  layer3->setLogId(global_id);
   global_id += 1;
-  layer2->setLogId(global_id);
+  layer4->setLogId(global_id);
   global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
-  layer2->syncBlobs(layer.get());
+  layer4->syncBlobs(layer.get());
   //forward
-  layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
-  layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
+  layer3->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
+  layer4->Forward(this->bottomVec_gpu,this->topVec_gpu);
   std::cout <<"Forward of BWD done"<<std::endl;
   //top fill
   this->FillDiff(this->blob_top_cpu);
@@ -154,8 +154,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     
   //backward
   vector<bool> propagate_down(1,true);
-  layer->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
-  layer2->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
+  layer3->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
+  layer4->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
