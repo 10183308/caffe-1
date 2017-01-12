@@ -355,7 +355,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	std::cout<<"postReLU_grad"<<std::endl;
 	print_gpuPtr(this->postReLU_grad_gpu,350);
 	std::cout<<"filter Data"<<std::endl;
-	int filterSize = (transitionIdx==0?3:2) * 2 * 9;
+	//int filterSize = (transitionIdx==0?3:2) * 2 * 9;
         print_gpuPtr(this->blobs_[transitionIdx]->mutable_gpu_data(),filterSize);
 	std::cout<<"postReLU_data"<<std::endl;
 	print_gpuPtr(postReLU_data_gpu,350);
