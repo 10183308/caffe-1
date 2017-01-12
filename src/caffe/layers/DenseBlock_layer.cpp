@@ -488,7 +488,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
     }
 
     //combine helpers
-    Dtype* bottomDataGrad = bottom->mutable_cpu_data();
+    Dtype* bottomDataGrad = bottom->mutable_cpu_diff();
     for (int n=0;n<N;++n){
       for (int c=0;c<C;++c){
         for (int h=0;h<h_img;++h){
@@ -497,7 +497,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
 	    bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
-	    std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
+	    //std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
 	  }
 	}
       }
