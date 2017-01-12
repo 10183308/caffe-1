@@ -1,10 +1,10 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_15/postBN_blobVec_1_grad"
-fileNameB = "TClog/gpu_16/postBN_grad_gpu"
+fileNameA = "TClog/cpu_9/bias_0_grad"
+fileNameB = "TClog/gpu_10/Bias_grad_gpu_0"
 A_offset = 0
-B_offset = 75
-rangeLen = 50
+B_offset = 0
+rangeLen = 3
 
 listA =  open(fileNameA,'r').readlines()[0].split(",")[:-1]
 listB =  open(fileNameB,'r').readlines()[0].split(',')[:-1]

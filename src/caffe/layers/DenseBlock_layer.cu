@@ -219,10 +219,10 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
-      std::cout<< "start gpu init"<<std::endl;
+      //std::cout<< "start gpu init"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
-      std::cout<< "end gpu init"<<std::endl;
+      //std::cout<< "end gpu init"<<std::endl;
   }
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
@@ -230,12 +230,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //copy to bottom_data to buffer with stride
   int chunkSize_copy_init = this->initChannel * this->H * this->W;
   int chunkStride_copy = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-  std::cout<<"init Deploy"<<std::endl;
+  //std::cout<<"init Deploy"<<std::endl;
   gpu_copy_one_to_many<Dtype>(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
-  std::cout<<"finish init Deploy"<<std::endl;
+  //std::cout<<"finish init Deploy"<<std::endl;
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
-      std::cout<< "transitionIdx:"<<transitionIdx <<std::endl;
+      //std::cout<< "transitionIdx:"<<transitionIdx <<std::endl;
       //BN and ReLU
       int channelsBefore_noself = (transitionIdx==0?0:(this->initChannel + (transitionIdx - 1)*this->growthRate));
       Dtype* BN_x_ptr = this->postConv_data_gpu + channelsBefore_noself * this->H * this->W;  
@@ -245,7 +245,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       Dtype* BN_mean_local = this->ResultRunningMean_gpu + channelsBefore_noself;
       Dtype* BN_var_local = this->ResultRunningVariance_gpu + channelsBefore_noself;
       cudnnTensorDescriptor_t * localBN_paramDesc = (transitionIdx==0?tensorDescriptor_BN_initChannel:tensorDescriptor_BN_growthRate);
-      std::cout<<"Pre BN"<<std::endl;
+      //std::cout<<"Pre BN"<<std::endl;
       if (this->phase_ == TEST){
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
@@ -262,14 +262,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           Dtype* resultSaveMean_local = this->ResultSaveMean_gpu + channelsBefore_noself;
           Dtype* resultSaveInvVariance_local =  this->ResultSaveInvVariance_gpu + channelsBefore_noself;
 	  double EMA_factor = 1.0/(1+this->trainCycleIdx);
-	  std::cout<<"After EMA factor"<<std::endl;
-	  printf("BN x ptr %p\n",BN_x_ptr);
-	  printf("BN y ptr %p\n",BN_y_ptr);
-	  printf("BN mean local ptr %p\n",BN_mean_local);
-	  printf("BN var local ptr %p\n",BN_var_local);
-	  printf("scaler ptr %p\n",this->blobs_[this->numTransition+transitionIdx]->gpu_data());
-	  printf("bias ptr %p\n",this->blobs_[2*this->numTransition+transitionIdx]->gpu_data());
-
 	  CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -283,7 +275,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
       } 
       //ReLU
-      std::cout<<"Pre ReLU"<<std::endl;
+      //std::cout<<"Pre ReLU"<<std::endl;
       CUDNN_CHECK(cudnnActivationForward(*(this->cudnnHandlePtr),
 	*(this->activationDesc), cudnn::dataType<Dtype>::one, 
 	*(this->tensorDescriptorVec_narrow[transitionIdx]),BN_y_ptr,
@@ -291,7 +283,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptorVec_narrow[transitionIdx]),ReLU_y_ptr)
       );
       //Convolution
-      std::cout<<"Pre Convolution"<<std::endl;
+      //std::cout<<"Pre Convolution"<<std::endl;
       int delayChannel = this->initChannel + this->growthRate * transitionIdx;
       Dtype* conv_x_local = this->postReLU_data_gpu;
       Dtype* conv_y_local = this->postConv_data_gpu + delayChannel * this->H * this->W;
@@ -308,7 +300,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   } 
   this->trainCycleIdx += 1;
   //change top data
-  std::cout<<"Result Deploy"<<std::endl;
+  //std::cout<<"Result Deploy"<<std::endl;
   int chunkSize_copy_end = this->growthRate * this->H * this->W;
   int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
   Dtype* resultBuffer_ptr = postConv_data_gpu + resultChannelGap * this->H * this->W;
