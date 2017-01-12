@@ -625,7 +625,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       }
       else {
         BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
-	this->trainCycleIdx += 1;
       }
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
@@ -638,6 +637,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
       convolution_Fwd<Dtype>(this->merged_conv[transitionIdx],topConv,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W); 
     }
+    this->trainCycleIdx+=1;
   }
 
   template <typename Dtype>

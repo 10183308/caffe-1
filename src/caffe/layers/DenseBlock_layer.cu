@@ -254,7 +254,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    EMA_factor,BN_mean_local,BN_var_local,CUDNN_BN_MIN_EPSILON,
 	    resultSaveMean_local,resultSaveInvVariance_local)
 	  );
-	  this->trainCycleIdx += 1;
       } 
       //ReLU
       CUDNN_CHECK(cudnnActivationForward(*(this->cudnnHandlePtr),
@@ -278,6 +277,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	)		      
       ); 
   } 
+  this->trainCycleIdx += 1;
   //change top data
   int chunkSize_copy_end = this->growthRate * this->H * this->W;
   int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
