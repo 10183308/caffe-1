@@ -253,6 +253,13 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           Dtype* resultSaveInvVariance_local =  this->ResultSaveInvVariance_gpu + channelsBefore_noself;
 	  double EMA_factor = 1.0/(1+this->trainCycleIdx);
 	  std::cout<<"After EMA factor"<<std::endl;
+	  printf("BN x ptr %p\n",BN_x_ptr);
+	  printf("BN y ptr %p\n",BN_y_ptr);
+	  printf("BN mean local ptr %p\n",BN_mean_local);
+	  printf("BN var local ptr %p\n",BN_var_local);
+	  printf("scaler ptr %p\n",this->blobs_[this->numTransition+transitionIdx]->gpu_data());
+	  printf("bias ptr %p\n",this->blobs_[2*this->numTransition+transitionIdx]->gpu_data());
+
 	  CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
