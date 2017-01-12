@@ -570,7 +570,7 @@ void distributeGrad(vector<Blob<Dtype>*>& blobVec,Blob<Dtype>* mergeBlob,int tra
 	  int cIdx = c + localOffset;
 	  for (int hIdx=0;hIdx<H;++hIdx){
 	    for (int wIdx=0;wIdx<W;++wIdx){
-	      localDiff[blobVec[localT]->offset(n,c,hIdx,wIdx)] = mergeBlob->diff_at(n,cIdx,hIdx,wIdx);
+	      localDiff[blobVec[localT]->offset(n,c,hIdx,wIdx)] += mergeBlob->diff_at(n,cIdx,hIdx,wIdx);
 	    }
 	  }
 	}
