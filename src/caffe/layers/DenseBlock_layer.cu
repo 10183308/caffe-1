@@ -119,7 +119,7 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
       int numChannelLocal = transitionIdx==0?this->initChannel:this->growthRate;
       log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
       //Bias_grad_gpu
-      log_gpuPtr(this->blob_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
+      log_gpuPtr(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
     }
 }
 
