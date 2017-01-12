@@ -89,8 +89,8 @@ TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-  shared_ptr<DenseBlockLayer<Dtype> > layer(new DenseBlockLayer<Dtype>(this->layer_param));
-  shared_ptr<DenseBlockLayer<Dtype> > layer2(new DenseBlockLayer<Dtype>(this->layer_param));
+  DenseBlockLayer<Dtype>* layer=new DenseBlockLayer<Dtype>(this->layer_param);
+  DenseBlockLayer<Dtype>* layer2=new DenseBlockLayer<Dtype>(this->layer_param);
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
@@ -105,7 +105,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
-  layer2->syncBlobs(layer.get());
+  layer2->syncBlobs(layer);
 
   layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
@@ -125,8 +125,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-  shared_ptr<DenseBlockLayer<Dtype> > layer3(new DenseBlockLayer<Dtype>(this->layer_param));
-  shared_ptr<DenseBlockLayer<Dtype> > layer4(new DenseBlockLayer<Dtype>(this->layer_param));
+  DenseBlockLayer<Dtype>* layer3=new DenseBlockLayer<Dtype>(this->layer_param);
+  DenseBlockLayer<Dtype>* layer4=new DenseBlockLayer<Dtype>(this->layer_param);
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   //bottom fill
@@ -142,7 +142,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
-  layer4->syncBlobs(layer3.get());
+  layer4->syncBlobs(layer3);
   //forward
   layer3->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer4->Forward(this->bottomVec_gpu,this->topVec_gpu);
