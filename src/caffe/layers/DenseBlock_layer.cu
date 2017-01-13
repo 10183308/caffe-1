@@ -374,7 +374,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	cudnnTensorDescriptor_t * BNparam_desc = (transitionIdx==0?this->tensorDescriptor_BN_initChannel:this->tensorDescriptor_BN_growthRate);
 	CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	  CUDNN_BATCHNORM_SPATIAL,
-	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
+	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::one,
 	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BN_x_local,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),ReLU_dx_local,
