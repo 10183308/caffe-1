@@ -221,10 +221,10 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
-      std::cout<< "start gpu init"<<std::endl;
+      //std::cout<< "start gpu init"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
-      std::cout<< "end gpu init"<<std::endl;
+      //std::cout<< "end gpu init"<<std::endl;
   }
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
@@ -393,7 +393,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
-    this->logInternal_gpu("TClog");
+    //this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
 }
 

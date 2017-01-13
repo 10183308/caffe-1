@@ -488,9 +488,9 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    //varGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (bottom->data_at(n,c,h,w)-batchMean->data_at(0,c,0,0)) * (-0.5) * pow(batchVar->data_at(0,c,0,0) + epsilon,-1.5);
 	    varGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (bottom->data_at(n,c,h,w)-batchMean->data_at(0,c,0,0)) * (-0.5) * (1.0 / ((batchVar->data_at(0,c,0,0)+epsilon) * sqrt(batchVar->data_at(0,c,0,0) + epsilon)));
 	    //flag
-	    if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
-	      std::cout<<varGrad[c]<<std::endl;
-	    }
+	    //if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
+	    //  std::cout<<varGrad[c]<<std::endl;
+	    //}
  
 	  }
 	}
@@ -505,9 +505,9 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
         for (int h=0;h<h_img;++h){
 	  for (int w=0;w<w_img;++w){
 	    meanGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (-1.0 / sqrt(batchVar->data_at(0,c,0,0) + epsilon)) + batchVar->diff_at(0,c,0,0) * (-2.0) * (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m; 
-            if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
-	      std::cout<<varGrad[c]<<std::endl;
-	    }
+            //if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
+	    //  std::cout<<varGrad[c]<<std::endl;
+	    //}
 
 	  }
 	}
@@ -705,7 +705,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
     }
     bottom[0]->CopyFrom(*(this->postConv_blobVec[0]),true);     
-    this->logInternal_cpu("TClog");
+    //this->logInternal_cpu("TClog");
     this->LoopEndCleanup_cpu(); 
   }
 

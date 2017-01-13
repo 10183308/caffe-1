@@ -114,7 +114,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
     for (int c=0;c<7;++c){
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
-	  EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),1);
+	  EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),0.1);
 	}
       }
     }
@@ -162,7 +162,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
-	  EXPECT_NEAR(this->blob_bottom_cpu->diff_at(n,c,h,w),this->blob_bottom_gpu->diff_at(n,c,h,w),4);
+	  EXPECT_NEAR(this->blob_bottom_cpu->diff_at(n,c,h,w),this->blob_bottom_gpu->diff_at(n,c,h,w),0.1);
 	}
       }
     }
