@@ -319,7 +319,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const int count = bottom[0]->count();
     //deploy top diff to buffer
     int numValues = this->initChannel + this->growthRate * this->numTransition;
-    CUDA_CHECK(cudaMemcpy(this->postConv_grad_gpu,top_diff,,cudaMemcpyDeviceToDevice));
+    CUDA_CHECK(cudaMemcpy(this->postConv_grad_gpu,top_diff,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_self = this->initChannel + transitionIdx * this->growthRate;
@@ -387,6 +387,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	);
     }
     //deploy buffer to bottom diff 
+    int chunkcSize_copy_init = this->initChannel * this->H * this->W;
+    int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
     //this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
