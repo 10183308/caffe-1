@@ -698,7 +698,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
       ReLU_Bwd<Dtype>(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
       //BN Bwd
-      Blob<Dtype>* BN_bottom = transitionIdx==0?bottom[0]:postConv_blobVec[transitionIdx];
+      Blob<Dtype>* BN_bottom = postConv_blobVec[transitionIdx];
       Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx].get();
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx].get();
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
