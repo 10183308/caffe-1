@@ -463,10 +463,6 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
 	    biasGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx);
 	    scalerGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx) * bottom_xhat->data_at(n,channelIdx,hIdx,wIdx);
-	    //flag
-	    if (decide_channelDiffAllZero<Dtype>(top,channelIdx,N,C,h_img,w_img)){
-	      std::cout<<scalerGrad[channelIdx]<<std::endl;
-	    }
 	  }
 	}
       }
@@ -491,6 +487,11 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	  for (int w=0;w<w_img;++w){
 	    //varGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (bottom->data_at(n,c,h,w)-batchMean->data_at(0,c,0,0)) * (-0.5) * pow(batchVar->data_at(0,c,0,0) + epsilon,-1.5);
 	    varGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (bottom->data_at(n,c,h,w)-batchMean->data_at(0,c,0,0)) * (-0.5) * (1.0 / ((batchVar->data_at(0,c,0,0)+epsilon) * sqrt(batchVar->data_at(0,c,0,0) + epsilon)));
+	    //flag
+	    if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
+	      std::cout<<varGrad[c]<<std::endl;
+	    }
+ 
 	  }
 	}
       }
@@ -504,6 +505,10 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
         for (int h=0;h<h_img;++h){
 	  for (int w=0;w<w_img;++w){
 	    meanGrad[c] += bottom_xhat->diff_at(n,c,h,w) * (-1.0 / sqrt(batchVar->data_at(0,c,0,0) + epsilon)) + batchVar->diff_at(0,c,0,0) * (-2.0) * (bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m; 
+            if (decide_channelDiffAllZero<Dtype>(top,c,N,C,h_img,w_img)){
+	      std::cout<<varGrad[c]<<std::endl;
+	    }
+
 	  }
 	}
       }
@@ -519,11 +524,6 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term1=bottom_xhat->diff_at(n,c,h,w) / (sqrt(batchVar->data_at(0,c,0,0) + epsilon));
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
-	    //flag
-	    if ( top->diff_at(n,c,h,w)<0.001 && top->diff_at(n,c,h,w)>-0.001){
-	      std::cout<<"zerotopgrad:"<<top->diff_at(n,c,h,w)<<","<<term1<<","<<term2<<","<<term3<<std::endl;
-	    }
-
 	    bottomDataGrad[bottom->offset(n,c,h,w)] = term1 + term2 + term3;
 	    //std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
 	  }

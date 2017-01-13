@@ -1,7 +1,7 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_1/postBN_blobVec_0_grad"
-fileNameB = "TClog/gpu_2/postBN_grad_gpu"
+fileNameA = "TClog/cpu_9/postBN_blobVec_0_grad"
+fileNameB = "TClog/gpu_10/postBN_grad_gpu"
 A_offset = 0
 B_offset = 0
 rangeLen = 75
