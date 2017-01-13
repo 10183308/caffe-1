@@ -387,7 +387,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	);
     }
     //deploy buffer to bottom diff 
-    int chunkcSize_copy_init = this->initChannel * this->H * this->W;
+    int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
     //this->logInternal_gpu("TClog");
