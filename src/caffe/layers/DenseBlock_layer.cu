@@ -319,7 +319,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     const int count = bottom[0]->count();
     //deploy top diff to buffer
-    int numValues = this->initChannel + this->growthRate * this->numTransition;
+    int numValues = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
     CUDA_CHECK(cudaMemcpy(this->postConv_grad_gpu,top_diff,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
