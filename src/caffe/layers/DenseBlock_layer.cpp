@@ -503,7 +503,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
 	    //flag
-	    if (abs(top->diff_at(n,c,h,w))<1e-5){
+	    if (abs(top->diff_at(n,c,h,w))<0.001){
 	      std::cout<<"zerotopgrad:"<<top->diff_at(n,c,h,w)<<","<<term1<<","<<term2<<","<<term3<<std::endl;
 	    }
 
