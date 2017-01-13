@@ -620,7 +620,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
         this->cpuInited = true;
     }
     //deploy init data
-    this->postConv_blobVec[0]->copyFrom(*(bottom[0]));
+    this->postConv_blobVec[0]->CopyFrom(*(bottom[0]));
     //init CPU finish
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
       //BN
@@ -660,10 +660,10 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
         this->cpuInited = true;
     }
     //deploy top diff
-    distributeGrad<Dtype>(this->postConv_gradVec,top,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W); 
+    distributeGrad<Dtype>(this->postConv_blobVec,top,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W); 
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
       //Conv Bwd
-      Blob<Dtype>* conv_top=transitionIdx==this->postConv_blobVec[transitionIdx+1];
+      Blob<Dtype>* conv_top=this->postConv_blobVec[transitionIdx+1];
       Blob<Dtype>* conv_bottom=merged_conv[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx].get();
       int c_input = this->initChannel + this->growthRate * transitionIdx;
