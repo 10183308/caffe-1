@@ -660,7 +660,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
         this->cpuInited = true;
     }
     //deploy top diff
-    distributeGrad<Dtype>(this->postConv_blobVec,top,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W); 
+    distributeGrad<Dtype>(this->postConv_blobVec,top[0],this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W); 
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
       //Conv Bwd
       Blob<Dtype>* conv_top=this->postConv_blobVec[transitionIdx+1];
