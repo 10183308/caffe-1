@@ -302,7 +302,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //change top data
   int numValues = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
   CUDA_CHECK(cudaMemcpy(top[0]->mutable_gpu_data(),this->postConv_data_gpu,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
-  this->logInternal_gpu("TClog");
+  //this->logInternal_gpu("TClog");
 }
 
 template <typename Dtype>
@@ -391,7 +391,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
-    //this->logInternal_gpu("TClog");
+    this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
 }
 
