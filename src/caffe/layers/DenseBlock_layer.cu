@@ -219,10 +219,10 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
-      //std::cout<< "start gpu init"<<std::endl;
+      std::cout<< "start gpu init"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
-      //std::cout<< "end gpu init"<<std::endl;
+      std::cout<< "end gpu init"<<std::endl;
   }
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
