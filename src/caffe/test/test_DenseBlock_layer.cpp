@@ -119,6 +119,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
       }
     }
   }
+  delete layer;
+  delete layer2;
 }
 
 /*
