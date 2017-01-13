@@ -46,6 +46,7 @@ namespace caffe {
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top){
 	this->cpuInited = false;
+	this->gpuInited = false;
 	DenseBlockParameter dbParam = this->layer_param_.denseblock_param();
         this->numTransition = dbParam.numtransition();
         this->initChannel = dbParam.initchannel();
