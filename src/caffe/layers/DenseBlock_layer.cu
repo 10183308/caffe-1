@@ -300,11 +300,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   } 
   this->trainCycleIdx += 1;
   //change top data
-  //std::cout<<"Result Deploy"<<std::endl;
-  int chunkSize_copy_end = this->growthRate * this->H * this->W;
-  int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
-  Dtype* resultBuffer_ptr = postConv_data_gpu + resultChannelGap * this->H * this->W;
-  gpu_copy_many_to_one<Dtype>(resultBuffer_ptr,top_data,this->N,chunkSize_copy_end,chunkStride_copy);
+  int numValues = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
+  CUDA_CHECK(cudaMemcpy(top[0]->mutable_gpu_data(),this->postConv_data_gpu,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
 }
 
 template <typename Dtype>
@@ -321,12 +318,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     const int count = bottom[0]->count();
     //deploy top diff to buffer
-    int chunkSize_copy_init = this->initChannel * this->H * this->W;
-    int chunkSize_copy_end = this->growthRate * this->H * this->W;
-    int chunkStride_copy = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-    int resultChannelGap = this->initChannel + this->growthRate * (this->numTransition - 1);
-    Dtype* targetDeploy_ptr = this->postConv_grad_gpu + resultChannelGap * this->H * this->W; 
-    gpu_copy_one_to_many(top_diff,targetDeploy_ptr,this->N,chunkSize_copy_end,chunkStride_copy);   
+    int numValues = this->initChannel + this->growthRate * this->numTransition;
+    CUDA_CHECK(cudaMemcpy(this->postConv_grad_gpu,top_diff,,cudaMemcpyDeviceToDevice));
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_self = this->initChannel + transitionIdx * this->growthRate;
