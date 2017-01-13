@@ -52,8 +52,8 @@ void gpu_copy_one_to_many(const Dtype* inPtr_gpu,Dtype* outPtr_gpu,int numChunks
 	const Dtype* inPtr_local = inPtr_gpu + chunkIdx*chunkSize_input; 
 	Dtype* outPtr_local = outPtr_gpu + chunkIdx*chunkStride_output;
        
-	printf("inpointer %p\n",inPtr_gpu);
-	printf("outpointer %p\n",outPtr_gpu);
+	//printf("inpointer %p\n",inPtr_gpu);
+	//printf("outpointer %p\n",outPtr_gpu);
 	CUDA_CHECK(cudaMemcpy(outPtr_local,inPtr_local,chunkSize_input * sizeof(Dtype),cudaMemcpyDeviceToDevice));
     }
 }
@@ -395,7 +395,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     }
     //deploy buffer to bottom diff 
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
-    this->logInternal_gpu("TClog");
+    //this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
 }
 
