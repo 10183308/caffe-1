@@ -674,6 +674,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     //this->logInternal_cpu("TClog");
   }
 
+
   template <typename Dtype>
   void DenseBlockLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
                                     const vector<bool>& propagate_down,
@@ -703,6 +704,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx].get();
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
     }
+    bottom->CopyFrom(*(this->postConv_bnlobVec[0]),true);     
     this->logInternal_cpu("TClog");
     this->LoopEndCleanup_cpu(); 
   }

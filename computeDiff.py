@@ -1,7 +1,7 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_9/postBN_blobVec_0_grad"
-fileNameB = "TClog/gpu_10/postBN_grad_gpu"
+fileNameA = "TClog/cpu_15/postBN_blobVec_0_grad"
+fileNameB = "TClog/gpu_16/postBN_grad_gpu"
 A_offset = 0
 B_offset = 0
 rangeLen = 75
@@ -18,7 +18,7 @@ print floatBL[B_offset:B_offset+rangeLen]
 
 for i in range(rangeLen):
     numA,numB = floatAL[A_offset+i],floatBL[B_offset+i]
-    if abs(numA-numB)>6:
+    if abs(numA-numB)>4:
         print `numA`+":"+`numB`+":"+`numA-numB`
         print i
 
