@@ -436,6 +436,18 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
     }
 }
 
+bool decide_channelDiffAllZero(Blob<Dtype>* B,int channelIdx,int N,int C,int H,int W){
+  bool output = true;
+  for (int n=0;n<N;++n){
+    for (int h=0;h<H;++h){
+      for (int w=0;w<W;++w){
+        output = output && (B->diff_at(n,channelIdx,h,w)<0.001) && (B->diff_at(n,channelIdx,h,w)>-0.001);
+      }
+    }
+  }
+  return output;
+}
+
 template <typename Dtype>
 void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int N,int C,int h_img,int w_img){
     double epsilon = 1e-5;
@@ -450,6 +462,10 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
 	    biasGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx);
 	    scalerGrad[channelIdx] += top->diff_at(n,channelIdx,hIdx,wIdx) * bottom_xhat->data_at(n,channelIdx,hIdx,wIdx);
+	    //flag
+	    if (decide_channelDiffAllZero(top,channelIdx,N,C,h_img,w_img)){
+	      std::cout<<scalerGrad[channelIdx]<<std::endl;
+	    }
 	  }
 	}
       }
