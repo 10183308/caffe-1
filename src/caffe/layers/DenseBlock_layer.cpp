@@ -648,6 +648,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     }
     mergeData<Dtype>(this->postConv_blobVec,top[0],this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W); 
     this->trainCycleIdx+=1;
+    this->logInternal_cpu("TClog");
   }
 
   template <typename Dtype>
