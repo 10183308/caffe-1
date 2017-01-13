@@ -93,6 +93,9 @@ void DenseBlockLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom, const v
         this->N = bottom[0]->shape()[0]; 
         this->H = bottom[0]->shape()[2];
         this->W = bottom[0]->shape()[3];
+	int topShapeArr = {this->N,this->growthRate,this->H,this->W};
+	vector<int> topShape(topShapeArr,topShapeArr+4);
+	top[0]->Reshape(topShape);
 }
 
 template <typename Dtype>
