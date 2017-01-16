@@ -217,6 +217,70 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
 }
 
+//ReLU: Negative_slope = 0.5
+template <typename Dtype>
+__global__ void ReLUForward(int n,Dtype* xPtr,Dtype* yPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx = (index / (H * W)) % (initChannel + growthRate * numTransition);
+    //i.e. for transitionIdx==1, fwd both region 0 and 1
+    int channelLimit = initChannel + transitionIdx * growthRate;
+    if (localChannelIdx < channelLimit){
+      yPtr[index] = xPtr[index] > 0? xPtr[index]: 0.5 * xPtr[index]; 
+    }
+  }
+}
+
+template <typename Dtype>
+__global__ void ReLUBackward(int n,Dtype* xPtr,Dtype* dxPtr,Dtype* dyPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition);
+    //i.e. for transitionIdx==1, bwd both region 0 and 1
+    int channelLimit = initChannel + transitionIdx * growthRate;
+    if (localChannelIdx < channelLimit){
+      dxPtr[index] = xPtr[index]>0?dyPtr[index]:0.5*dyPtr[index];
+    }
+  }
+}
+
+template <typename Dtype>
+__global__ void ReLUReverse(int n,Dtype* yPtr,Dtype* xPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
+    //i.e. for transitionIdx==1, only reverse transform region 0
+    int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
+    if (localChannelIdx < channelLimit){
+      xPtr[index] = yPtr[index]>=0?yPtr[index]:2*yPtr[index];
+    }
+  }
+}
+
+template <typename Dtype>
+__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,double epsilon){
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
+    //i.e. for transitionIdx==1, only reverse transform region 0
+    int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
+    if (localChannelIdx < channelLimit){
+      //x = a * y + b :: affine transform, find out a and b
+      double a = sqrt(batchVarPtr[localChannelIdx] + epsilon) / (scalerPtr[localChannelIdx]);
+      double b = batchMeanPtr[localChannelIdx] - (biasPtr[localChannelIdx]*sqrt(batchVarPtr[localChannelIdx]+epsilon))/(scalerPtr[localChannelIdx]);
+      xPtr[index] = a * yPtr[index] + b;
+    }
+  }
+}
+
+//acts on cpu pointer
+template <typename Dtype>
+void ScalerProtector(Dtype* scaler_mutable_data,int numValues){
+  for (int i=0;i<numValues;++i){
+    Dtype localVal = scaler_mutable_data[i];
+    if ((localVal < 1e-3) && (localVal > -1e-3)){
+        if (localVal>=0){scaler_mutable_data[i] = 1e-3;}
+	else {scaler_mutable_data[i] = -1e-3;}
+    }
+  }
+}
+
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
