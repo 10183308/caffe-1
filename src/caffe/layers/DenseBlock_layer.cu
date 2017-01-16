@@ -13,6 +13,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "caffe/util/gpu_util.cuh"
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
@@ -145,18 +146,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //workspace
     CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
     cudaMemset(this->workspace,0,this->workspace_size_bytes);
-    //Result Running/Saving Mean/Variance/InvVariance
-    int totalChannel = this->initChannel + this->growthRate*this->numTransition;
-    CUDA_CHECK(cudaMalloc(&this->ResultRunningMean_gpu,totalChannel*sizeof(Dtype)));
-    CUDA_CHECK(cudaMalloc(&this->ResultRunningVariance_gpu,totalChannel*sizeof(Dtype)));
-    CUDA_CHECK(cudaMalloc(&this->ResultSaveMean_gpu,totalChannel*sizeof(Dtype)));
-    CUDA_CHECK(cudaMalloc(&this->ResultSaveInvVariance_gpu,totalChannel*sizeof(Dtype)));
-		
-    cudaMemset(this->ResultRunningMean_gpu,0,totalChannel*sizeof(Dtype));
-    cudaMemset(this->ResultRunningVariance_gpu,0,totalChannel*sizeof(Dtype));
-    cudaMemset(this->ResultSaveMean_gpu,0,totalChannel*sizeof(Dtype));
-    cudaMemset(this->ResultSaveInvVariance_gpu,0,totalChannel*sizeof(Dtype));
-
+        
     //handles and descriptors
     //cudnn handle
     this->cudnnHandlePtr = new cudnnHandle_t;
@@ -168,8 +158,29 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     this->tensorDescriptor_conv_y = new cudnnTensorDescriptor_t;
     cudnn::createTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y);
     cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
-    //BN&ReLU narrow descriptor, conv_x local tensor descriptor
+    //per transition variables
     for (int i=0;i<this->numTransition;++i){
+	//Result Running/Saving Mean/Variance/InvVariance
+    	int localChannel = this->initChannel + i * this->growthRate;
+    	Dtype* local_ResultMean;
+	Dtype* local_ResultVar;
+	Dtype* local_SaveMean;
+	Dtype* local_SaveInvVar;
+	
+	CUDA_CHECK(cudaMalloc(&local_ResultMean,localChannel*sizeof(Dtype)));
+    	CUDA_CHECK(cudaMalloc(&local_ResultVar,localChannel*sizeof(Dtype)));
+    	CUDA_CHECK(cudaMalloc(&local_SaveMean,localChannel*sizeof(Dtype)));
+    	CUDA_CHECK(cudaMalloc(&local_SaveInvVar,localChannel*sizeof(Dtype)));
+		
+    	cudaMemset(local_ResultMean,0,localChannel*sizeof(Dtype));
+    	cudaMemset(local_ResultVar,0,localChannel*sizeof(Dtype));
+    	cudaMemset(local_SaveMean,0,localChannel*sizeof(Dtype));
+    	cudaMemset(local_SaveInvVar,0,totalChannel*sizeof(Dtype));
+   
+	this->ResultRunningMean_gpu.push_back(local_ResultMean);
+	this->ResultRunningVariance_gpu.push_back(local_ResultVar);
+	this->ResultSaveMean_gpu.push_back(local_SaveMean);
+	this->ResultSaveInvVariance_gpu.push_back(local_SaveInvVar);
 	//narrow descriptor
 	int narrowChannelNum = (i==0?this->initChannel:this->growthRate);
 	cudnnTensorDescriptor_t * narrow_Desc_local = new cudnnTensorDescriptor_t;
@@ -217,13 +228,28 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
 }
 
+template <typename Dtype>
+__global__ void computeBatchVariance(int n,Dtype* xPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = initChannel + transitionIdx * growthRate;
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx =  (index / (H * W)) % (initChannel + growthRate * numTransition);
+    if (localChannelIdx < channelLimit){
+      batchVarPtr[localChannelIdx] += (xPtr[index] - batchMeanPtr[localChannelIdx]) * (xPtr[index] - batchMeanPtr[localChannelIdx]); 
+    }
+  }
+  int M = N * H * W;
+  for (int c=0;c<channelLimit;++c){
+    batchVarPtr[localChannelIdx] = batchVarPtr[localChannelIdx] / (M-1);
+  }
+}
+
 //ReLU: Negative_slope = 0.5
 template <typename Dtype>
-__global__ void ReLUForward(int n,Dtype* xPtr,Dtype* yPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+__global__ void ReLUForward(int n,Dtype* xPtr,Dtype* yPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = initChannel + transitionIdx * growthRate;
   CUDA_KERNEL_LOOP(index, n){
     int localChannelIdx = (index / (H * W)) % (initChannel + growthRate * numTransition);
     //i.e. for transitionIdx==1, fwd both region 0 and 1
-    int channelLimit = initChannel + transitionIdx * growthRate;
     if (localChannelIdx < channelLimit){
       yPtr[index] = xPtr[index] > 0? xPtr[index]: 0.5 * xPtr[index]; 
     }
@@ -231,11 +257,11 @@ __global__ void ReLUForward(int n,Dtype* xPtr,Dtype* yPtr,int transitionIdx,int 
 }
 
 template <typename Dtype>
-__global__ void ReLUBackward(int n,Dtype* xPtr,Dtype* dxPtr,Dtype* dyPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+__global__ void ReLUBackward(int n,Dtype* xPtr,Dtype* dxPtr,Dtype* dyPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = initChannel + transitionIdx * growthRate;
   CUDA_KERNEL_LOOP(index, n){
     int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition);
     //i.e. for transitionIdx==1, bwd both region 0 and 1
-    int channelLimit = initChannel + transitionIdx * growthRate;
     if (localChannelIdx < channelLimit){
       dxPtr[index] = xPtr[index]>0?dyPtr[index]:0.5*dyPtr[index];
     }
@@ -243,11 +269,11 @@ __global__ void ReLUBackward(int n,Dtype* xPtr,Dtype* dxPtr,Dtype* dyPtr,int tra
 }
 
 template <typename Dtype>
-__global__ void ReLUReverse(int n,Dtype* yPtr,Dtype* xPtr,int transitionIdx,int numTransition,int initChannel,int growthRate,int H,int W){
+__global__ void ReLUReverse(int n,Dtype* yPtr,Dtype* xPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
   CUDA_KERNEL_LOOP(index, n){
     int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
     //i.e. for transitionIdx==1, only reverse transform region 0
-    int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
     if (localChannelIdx < channelLimit){
       xPtr[index] = yPtr[index]>=0?yPtr[index]:2*yPtr[index];
     }
@@ -255,11 +281,11 @@ __global__ void ReLUReverse(int n,Dtype* yPtr,Dtype* xPtr,int transitionIdx,int 
 }
 
 template <typename Dtype>
-__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,double epsilon){
+__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,double epsilon,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
   CUDA_KERNEL_LOOP(index, n){
     int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
     //i.e. for transitionIdx==1, only reverse transform region 0
-    int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
     if (localChannelIdx < channelLimit){
       //x = a * y + b :: affine transform, find out a and b
       double a = sqrt(batchVarPtr[localChannelIdx] + epsilon) / (scalerPtr[localChannelIdx]);

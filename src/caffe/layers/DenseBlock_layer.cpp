@@ -73,9 +73,8 @@ namespace caffe {
 	    this->blobs_[transitionIdx].reset(new Blob<Dtype>(filterShape));
 	    shared_ptr<Filler<Dtype> > filter_Filler(GetFiller<Dtype>(dbParam.filter_filler()));
 	    filter_Filler->Fill(this->blobs_[transitionIdx].get());
-	    //scaler & bias
-	    int numChannel_local = (transitionIdx==0?this->initChannel:this->growthRate); 
-	    int BNparamShape_Arr [] = {1,numChannel_local,1,1};
+	    //scaler & bias 
+	    int BNparamShape_Arr [] = {1,inChannels,1,1};
 	    vector<int> BNparamShape (BNparamShape_Arr,BNparamShape_Arr+4);
 	    //scaler
 	    this->blobs_[numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
