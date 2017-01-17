@@ -87,16 +87,11 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype* postReLU_data_gpu;
   Dtype* postReLU_grad_gpu;
   Dtype* workspace;
-  /*
-  Dtype* ResultRunningMean_gpu;
-  Dtype* ResultRunningVariance_gpu;
-  Dtype* ResultSaveMean_gpu;
-  Dtype* ResultSaveInvVariance_gpu;
-  */
   vector<Dtype*> ResultRunningMean_gpu;
   vector<Dtype*> ResultRunningVariance_gpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
+  vector<Dtype*> ResultSaveVariance_gpu;
 
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase
@@ -108,12 +103,12 @@ class DenseBlockLayer : public Layer<Dtype> {
   int workspace_size_bytes;
   //gpu handles and descriptors
   cudnnHandle_t* cudnnHandlePtr;
-  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;//for BN & ReLU
+  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;//for BN
   vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;//local Conv X
   cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
-  cudnnTensorDescriptor_t * tensorDescriptor_BN_initChannel;//BN when transitionIdx = 0
-  cudnnTensorDescriptor_t * tensorDescriptor_BN_growthRate;//BN when transitionIdx > 0
-  cudnnActivationDescriptor_t * activationDesc;
+  cudnnTensorDescriptor_t * tensorDescriptor_BN_initChannel;//<channelwise>
+  cudnnTensorDescriptor_t * tensorDescriptor_BN_growthRate;//<channelwise>
+  vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN_wide;//<channelwise>
   //filter descriptor for conv
   vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
   //conv descriptor for conv
