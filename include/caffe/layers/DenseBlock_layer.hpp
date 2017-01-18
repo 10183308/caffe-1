@@ -32,7 +32,7 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   virtual void logInternal_cpu(string dir);
 
-  void logInternal_gpu(string dir);
+  void logInternal_gpu(string dir,int transitionIdx,bool logDynamic,bool logDiff);
 
  protected:
   
