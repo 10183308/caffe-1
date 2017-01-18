@@ -140,9 +140,6 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int transitionIdx,bool l
 }
 
 template <typename Dtype>
-void Dense
-
-template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
