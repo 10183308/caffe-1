@@ -65,16 +65,17 @@ class DenseBlockLayer : public Layer<Dtype> {
   
   //start CPU specific data section
   bool cpuInited;
-  vector<Blob<Dtype>*> global_Mean;
-  vector<Blob<Dtype>*> batch_Mean;
+  vector<Blob<Dtype>*> global_Mean;//at T has shape (1,initC+T*growth,1,1)
+  vector<Blob<Dtype>*> batch_Mean; 
   vector<Blob<Dtype>*> global_Var;
   vector<Blob<Dtype>*> batch_Var;
-  vector<Blob<Dtype>*> merged_conv;
 
-  vector<Blob<Dtype>*> BN_XhatVec;
+  vector<Blob<Dtype>*> merged_conv;//at T has shape (N,initC+T*growth,H,W), but this vector has T+1 elements
+
+  vector<Blob<Dtype>*> BN_XhatVec;//at T has shape (N,initC+T*growth,H,W)
   vector<Blob<Dtype>*> postBN_blobVec;
   vector<Blob<Dtype>*> postReLU_blobVec;
-  vector<Blob<Dtype>*> postConv_blobVec;
+  vector<Blob<Dtype>*> postConv_blobVec;//at T has shape(N,T==0?initC:growth,H,W)
   //end CPU specific data section
 
   //start GPU specific data section
