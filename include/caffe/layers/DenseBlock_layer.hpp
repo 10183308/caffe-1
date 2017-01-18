@@ -75,7 +75,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Blob<Dtype>*> BN_XhatVec;//at T has shape (N,initC+T*growth,H,W)
   vector<Blob<Dtype>*> postBN_blobVec;
   vector<Blob<Dtype>*> postReLU_blobVec;
-  vector<Blob<Dtype>*> postConv_blobVec;//at T has shape(N,T==0?initC:growth,H,W)
+  vector<Blob<Dtype>*> postConv_blobVec;//at T has shape(N,growth,H,W)
   //end CPU specific data section
 
   //start GPU specific data section
