@@ -316,7 +316,8 @@ void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
       for (int cIdx=0;cIdx<C;++cIdx){
         for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
-	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = std::max<Dtype>(0.0,bottom->data_at(n,cIdx,hIdx,wIdx));
+            Dtype bottomData = bottom->data_at(n,cIdx,hIdx,wIdx);
+	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = bottomData>=0?bottomData:0.5*bottomData;
 	  }
 	}
       } 
@@ -330,7 +331,7 @@ void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
       for (int cIdx=0;cIdx<C;++cIdx){
         for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
-	    bottomDiffPtr[bottom->offset(n,cIdx,hIdx,wIdx)] = bottom->data_at(n,cIdx,hIdx,wIdx)>0?top->diff_at(n,cIdx,hIdx,wIdx):0; 
+	    bottomDiffPtr[bottom->offset(n,cIdx,hIdx,wIdx)] = bottom->data_at(n,cIdx,hIdx,wIdx)>=0?top->diff_at(n,cIdx,hIdx,wIdx):0.5*top->diff_at(n,cIdx,hIdx,wIdx); 
 	  }
 	}
       }
