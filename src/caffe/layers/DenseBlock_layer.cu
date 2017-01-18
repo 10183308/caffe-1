@@ -308,7 +308,7 @@ __global__ void ReLUReverse(int n,Dtype* yPtr,Dtype* xPtr,int transitionIdx,int 
 }
 
 template <typename Dtype>
-__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,double epsilon,int N,int initChannel,int growthRate,int H,int W){
+__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,double epsilon,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
   int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
   CUDA_KERNEL_LOOP(index, n){
     int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
@@ -564,11 +564,11 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	//BN reverse
         Dtype* BN_reverse_y_local = this->postReLU_data_gpu;
 	Dtype* BN_reverse_x_local = this->postBN_data_gpu;
-	Dtype* scalerPtr = this->blobs_[this->numTransition+transitionIdx]->gpu_data() + channelsBefore_noself;
-	Dtype* biasPtr = this->blobs_[2*this->numTransition+transitionIdx]->gpu_data() + channelsBefore_noself;
+	Dtype* scalerPtr = this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
+	Dtype* biasPtr = this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
 	Dtype* batchMeanPtr = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
 	Dtype* batchVarPtr = this->ResultSaveVariance_gpu[transitionIdx] + channelsBefore_noself;
-	BNReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_reverse_y_local,BN_reverse_x_local,scalerPtr,biasPtr,batchMeanPtr,batchVarPtr,CUDNN_BN_MIN_EPSILON,this->N,this->initChannel,this->growthRate,this->H,this->W);
+	BNReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_reverse_y_local,BN_reverse_x_local,scalerPtr,biasPtr,batchMeanPtr,batchVarPtr,CUDNN_BN_MIN_EPSILON,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
     }
     //deploy buffer to bottom diff 
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
