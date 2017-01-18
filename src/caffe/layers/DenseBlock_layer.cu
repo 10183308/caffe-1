@@ -92,39 +92,55 @@ void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
 }
 
 template <typename Dtype>
-void DenseBlockLayer<Dtype>::logInternal_gpu(string dir){
+void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int transitionIdx,bool logDynamic,bool logDiff){
     string localDir = dir+"/gpu_"+itos_cu(this->logId)+"/";
-    int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-    //postConv_data_gpu
-    log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu");
-    //postConv_grad_gpu
-    log_gpuPtr(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu");
-    //postBN_data_gpu
-    log_gpuPtr(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu");
-    //postBN_grad_gpu
-    log_gpuPtr(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu");
-    //postReLU_data_gpu
-    log_gpuPtr(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu");
-    //postReLU_grad_gpu
-    log_gpuPtr(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu");
-    //ResultRunningMean_gpu
-    int numChannelsTotal = this->initChannel + this->growthRate * this->numTransition;
-    log_gpuPtr(this->ResultRunningMean_gpu,numChannelsTotal,localDir+"ResultRunningMean_gpu");
-    //ResultRunningVariance_gpu
-    log_gpuPtr(this->ResultRunningVariance_gpu,numChannelsTotal,localDir+"ResultRunningVariance_gpu");
-    for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
-      //Filter_grad_gpu
-      int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
-      log_gpuPtr(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
-      //Scaler_grad_gpu
-      int numChannelLocal = transitionIdx==0?this->initChannel:this->growthRate;
-      log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
-      log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_data(),numChannelLocal,localDir+"Scaler_data_gpu_"+itos_cu(transitionIdx));
-      //Bias_grad_gpu
-      log_gpuPtr(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannelLocal,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
-      log_gpuPtr(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_data(),numChannelLocal,localDir+"Bias_data_gpu_"+itos_cu(transitionIdx));
+    if (logDynamic){
+      int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
+      if (logDiff){
+        //postConv_grad_gpu
+        log_gpuPtr(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu_transition"+itos_cu(transitionIdx));
+        //postBN_grad_gpu
+        log_gpuPtr(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu_transition"+itos_cu(transitionIdx));
+        //postReLU_grad_gpu
+        log_gpuPtr(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu_transition"+itos_cu(transitionIdx));
+      }
+      else {
+        //postConv_data_gpu
+        log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu_transition"+itos_cu(transitionIdx));
+        //postBN_data_gpu
+        log_gpuPtr(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu_transition"+itos_cu(transitionIdx));
+        //postReLU_data_gpu
+        log_gpuPtr(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu_transition"+itos_cu(transitionIdx));
+      }
+    }
+    else {
+      for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
+	int numChannel_wide = (transitionIdx==0)?0:this->initChannel + this->growthRate * (transitionIdx - 1);
+	int numChannel_moreWide = this->initChannel + this->growthRate * transitionIdx;
+        //global/batch Mean/Variance
+        log_gpuPtr(this->ResultRunningMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultRunningMean_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->ResultRunningVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultRunningVariance_gpu_transition"+itos_cu(transitionIdx));
+      	log_gpuPtr(this->ResultSaveMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveMean_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
+        //batch InvVariance
+	if (transitionIdx > 0){
+	  log_gpuPtr(this->ResultSaveVariance_gpu[transitionIdx],numChannel_wide,localDir+"ResultSaveVariance_gpu_transition"+itos_cu(transitionIdx));	
+	}
+	//Filter_grad_gpu
+        int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
+        log_gpuPtr(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
+        //Scaler_grad_gpu
+        log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannel_moreWide,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
+        log_gpuPtr(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_data(),numChannel_moreWide,localDir+"Scaler_data_gpu_"+itos_cu(transitionIdx));
+        //Bias_grad_gpu
+        log_gpuPtr(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannel_moreWide,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
+        log_gpuPtr(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_data(),numChannel_moreWide,localDir+"Bias_data_gpu_"+itos_cu(transitionIdx));
+      }
     }
 }
+
+template <typename Dtype>
+void Dense
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
