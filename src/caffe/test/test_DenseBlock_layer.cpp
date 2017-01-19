@@ -152,12 +152,12 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   this->FillDiff(this->blob_top_cpu);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu,true);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
-    
+  std::cout<<"top Fill done"<<std::endl; 
   //backward
   vector<bool> propagate_down(1,true);
   layer3->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
   layer4->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
-
+  std::cout<<"bwd done"<<std::endl;
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){

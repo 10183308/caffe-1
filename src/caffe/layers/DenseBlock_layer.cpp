@@ -735,7 +735,8 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     std::cout<<"deploy result"<<std::endl;
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
     //this->logInternal_cpu("TClog");
-    this->LoopEndCleanup_cpu(); 
+    this->LoopEndCleanup_cpu();
+    std::cout<<"deploy result done"<<std::endl;
   }
 
 template <typename Dtype>
