@@ -599,8 +599,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* BNnarrow_dy_local = this->postBN_grad_gpu + channelsBefore_noself * this->H * this->W;
 	Dtype* saveMeannarrow_local = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
 	Dtype* saveInvVarnarrow_local = this->ResultSaveInvVariance_gpu[transitionIdx] + channelsBefore_noself;
-        print_gpuPtr(saveMeannarrow_local,2);
-	print_gpuPtr(saveInvVarnarrow_local,2);
+        //print_gpuPtr(saveMeannarrow_local,2);
+	//print_gpuPtr(saveInvVarnarrow_local,2);
 	cudnnTensorDescriptor_t * BNnarrowparam_desc = (transitionIdx==0)?tensorDescriptor_BN_initChannel : tensorDescriptor_BN_growthRate;
         CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	  CUDNN_BATCHNORM_SPATIAL,
@@ -610,9 +610,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BNnarrow_dy_local,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BNnarrow_dx_local,
 	  *BNnarrowparam_desc,
-	  this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
-	  this->blobs_[this->numTransition + transitionIdx]->mutable_gpu_diff(),
-	  this->blobs_[2*this->numTransition + transitionIdx]->mutable_gpu_diff(),
+	  this->blobs_[this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
+	  this->blobs_[this->numTransition + transitionIdx]->mutable_gpu_diff() + channelsBefore_noself,
+	  this->blobs_[2*this->numTransition + transitionIdx]->mutable_gpu_diff() + channelsBefore_noself,
 	  CUDNN_BN_MIN_EPSILON,saveMeannarrow_local,saveInvVarnarrow_local
 	  )		
 	);	
