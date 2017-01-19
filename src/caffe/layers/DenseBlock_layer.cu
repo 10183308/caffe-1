@@ -337,8 +337,8 @@ void ScalerProtector(Dtype* scaler_mutable_data,int numValues){
 template <typename Dtype>
 void composeFwdOutput(Dtype* output,Dtype* frontB,Dtype* backB,int N,int channelFront,int channelBack,int H,int W){
   for (int n=0;n<N;++n){
-    int numValuesFront = N*channelFront*H*W;
-    int numValuesBack = N*channelBack*H*W;
+    int numValuesFront = channelFront*H*W;
+    int numValuesBack = channelBack*H*W;
     int offsetFront = n * (channelFront + channelBack) * H * W;
     int offsetBack = offsetFront + numValuesFront;
     cudaMemcpy(output+offsetFront,frontB+offsetFront,numValuesFront*sizeof(Dtype),cudaMemcpyDeviceToDevice);
