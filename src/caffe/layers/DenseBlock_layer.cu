@@ -372,6 +372,18 @@ void composeFwdOutput(Dtype* output,Dtype* frontB,Dtype* backB,int N,int channel
 }
 
 template <typename Dtype>
+void distributeBwdInput(Dtype* input,Dtype* frontB,Dtype* backB,int N,int channelFront,int channelBack,int H,int W){
+  for (int n=0;n<N;++n){
+    int numValuesFront = channelFront*H*W;
+    int numValuesBack = channelBack*H*W;
+    int offsetFront = n * (channelFront + channelBack) * H * W;
+    int offsetBack = offsetFront + numValuesFront;
+    cudaMemcpy(frontB+offsetFront,output+offsetFront,numValuesFront*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    cudaMemcpy(backB+offsetBack,output+offsetBack,numValuesBack*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+  }
+}
+
+template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
@@ -512,8 +524,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     const int count = bottom[0]->count();
     //deploy top diff to buffer
-    int numValues = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-    CUDA_CHECK(cudaMemcpy(this->postConv_grad_gpu,top_diff,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
+    distributeBwdInput(top[0]->mutable_gpu_data(),this->postReLU_grad_gpu,this->postConv_grad_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_self = this->initChannel + transitionIdx * this->growthRate;
