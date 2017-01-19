@@ -46,7 +46,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
 	blob_top_gpu(new Blob<Dtype>(2,7,5,5))
   {
-    Caffe::set_random_seed(1703);
+    Caffe::set_random_seed(1704);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
     db_param->set_numtransition(2);
     db_param->set_initchannel(3);
