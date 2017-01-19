@@ -218,7 +218,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
 	int channelsBefore_noself = i==0?0:initChannel + (i-1) * growthRate;
 	cudnnTensorDescriptor_t * wide_BNparam = new cudnnTensorDescriptor_t;
 	cudnn::createTensor4dDesc<Dtype>(wide_BNparam);
-	cudnn::setTensor4dDesc<Dtype>(wide_BNparam,1,channelsBefore_noself,1,1);
+	if (i>0) cudnn::setTensor4dDesc<Dtype>(wide_BNparam,1,channelsBefore_noself,1,1);
 	this->tensorDescriptor_BN_wide.push_back(wide_BNparam);
     }
     //BN parameter (Scale,Bias) Descriptor
