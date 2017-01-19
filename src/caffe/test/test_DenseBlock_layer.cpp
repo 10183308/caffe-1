@@ -169,8 +169,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     }
   }
 
-  delete layer3;
-  delete layer4;
+  //delete layer3;
+  //delete layer4;
 }
 
 }  // namespace caffe
