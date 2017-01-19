@@ -335,6 +335,18 @@ void ScalerProtector(Dtype* scaler_mutable_data,int numValues){
 }
 
 template <typename Dtype>
+void composeFwdOutput(Dtype* output,Dtype* frontB,Dtype* backB,int N,int channelFront,int channelBack,int H,int W){
+  for (int n=0;n<N;++n){
+    int numValuesFront = N*channelFront*H*W;
+    int numValuesBack = N*channelBack*H*W;
+    int offsetFront = n * (channelFront + channelBack) * H * W;
+    int offsetBack = offsetFront + numValuesFront;
+    cudaMemcpy(output+offsetFront,frontB+offsetFront,numValuesFront*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    cudaMemcpy(output+offsetBack,backB+offsetBack,numValuesBack*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+  }
+}
+
+template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
@@ -454,9 +466,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   this->trainCycleIdx += 1;
-  //change top data
-  int numValues = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
-  CUDA_CHECK(cudaMemcpy(top[0]->mutable_gpu_data(),this->postConv_data_gpu,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
+  //deploy top data
+  composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
   this->logInternal_gpu("TClog",-1,false,false);
   //this->logInternal_gpu("TClog");
 }
