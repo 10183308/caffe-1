@@ -450,12 +450,14 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	this->workspace,this->workspace_size_bytes,cudnn::dataType<Dtype>::zero,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
-      ); 
+      );
+      this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   this->trainCycleIdx += 1;
   //change top data
   int numValues = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
   CUDA_CHECK(cudaMemcpy(top[0]->mutable_gpu_data(),this->postConv_data_gpu,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
+  this->logInternal_gpu("TClog",transitionIdx,false,false);
   //this->logInternal_gpu("TClog");
 }
 
@@ -574,7 +576,6 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
-    //this->logInternal_gpu("TClog");
     this->LoopEndCleanup_gpu();
 }
 
