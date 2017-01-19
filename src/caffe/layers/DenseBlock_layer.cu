@@ -378,8 +378,8 @@ void distributeBwdInput(Dtype* input,Dtype* frontB,Dtype* backB,int N,int channe
     int numValuesBack = channelBack*H*W;
     int offsetFront = n * (channelFront + channelBack) * H * W;
     int offsetBack = offsetFront + numValuesFront;
-    cudaMemcpy(frontB+offsetFront,output+offsetFront,numValuesFront*sizeof(Dtype),cudaMemcpyDeviceToDevice);
-    cudaMemcpy(backB+offsetBack,output+offsetBack,numValuesBack*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    cudaMemcpy(frontB+offsetFront,input+offsetFront,numValuesFront*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    cudaMemcpy(backB+offsetBack,input+offsetBack,numValuesBack*sizeof(Dtype),cudaMemcpyDeviceToDevice);
   }
 }
 
