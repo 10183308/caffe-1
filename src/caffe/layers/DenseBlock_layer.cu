@@ -489,12 +489,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
       );
-      this->logInternal_gpu("TClog",transitionIdx,true,false);
+      //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   this->trainCycleIdx += 1;
   //deploy top data
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
-  this->logInternal_gpu("TClog",-1,false,false);
+  //this->logInternal_gpu("TClog",-1,false,false);
   //this->logInternal_gpu("TClog");
 }
 
@@ -608,8 +608,11 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* batchMeanPtr = this->ResultSaveMean_gpu[transitionIdx];
 	Dtype* batchVarPtr = this->ResultTmpVariance_gpu[transitionIdx];
 	BNReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_reverse_y_local,BN_reverse_x_local,scalerPtr,biasPtr,batchMeanPtr,batchVarPtr,CUDNN_BN_MIN_EPSILON,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
+        this->logInternal_gpu("TClog",transitionIdx,true,false);
+        this->logInternal_gpu("TClog",transitionIdx,true,true);
     }
-    //deploy buffer to bottom diff 
+    //deploy buffer to bottom diff
+    this->logInternal_gpu("TClog",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
