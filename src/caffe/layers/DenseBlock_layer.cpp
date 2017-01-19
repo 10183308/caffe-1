@@ -693,7 +693,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     //deploy output data
     top[0]->CopyFrom(*(this->merged_conv[this->numTransition]));
     this->trainCycleIdx+=1;
-    this->logInternal_cpu("TClog");
+    //this->logInternal_cpu("TClog");
   }
 
 
@@ -734,7 +734,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     }
     std::cout<<"deploy result"<<std::endl;
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
-    //this->logInternal_cpu("TClog");
+    this->logInternal_cpu("TClog");
     this->LoopEndCleanup_cpu();
     std::cout<<"deploy result done"<<std::endl;
   }
