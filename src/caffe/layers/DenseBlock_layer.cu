@@ -122,9 +122,10 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
         log_gpuPtr(this->ResultRunningVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultRunningVariance_gpu_transition"+itos_cu(transitionIdx));
       	log_gpuPtr(this->ResultSaveMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveMean_gpu_transition"+itos_cu(transitionIdx));
         log_gpuPtr(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
-        //batch InvVariance
+        //Parameters for reverse
 	if (transitionIdx > 0){
-	  log_gpuPtr(this->ResultSaveVariance_gpu[transitionIdx],numChannel_wide,localDir+"ResultSaveVariance_gpu_transition"+itos_cu(transitionIdx));	
+	  //log_gpuPtr(this->ResultTmpMean_gpu[transitionIdx],numChannel_wide,localDir+"ResultTmpMean_gpu_transition"+itos_cu(transitionIdx));
+	  log_gpuPtr(this->ResultTmpVariance_gpu[transitionIdx],numChannel_wide,localDir+"ResultTmpVariance_gpu_transition"+itos_cu(transitionIdx));	
 	}
 	//Filter_grad_gpu
         int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
@@ -191,12 +192,16 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
 	this->ResultRunningVariance_gpu.push_back(local_ResultVar);
 	this->ResultSaveMean_gpu.push_back(local_SaveMean);
 	this->ResultSaveInvVariance_gpu.push_back(local_SaveInvVar);
-	//Result Save Variance[i] for i-th transition
+	//Result Tmp Mean/Variance[i] for i-th transition
 	int reversibleChannels=(i==0)?0:initChannel+(i-1)*growthRate;
+	//Dtype* local_SaveMean;
 	Dtype* local_SaveVar;
+        //CUDA_CHECK(cudaMalloc(&local_SaveMean,reversibleChannels*sizeof(Dtype)));
 	CUDA_CHECK(cudaMalloc(&local_SaveVar,reversibleChannels*sizeof(Dtype)));
+	//cudaMemset(local_SaveMean,0,reversibleChannels*sizeof(Dtype));
 	cudaMemset(local_SaveVar,0,reversibleChannels*sizeof(Dtype));
-	this->ResultSaveVariance_gpu.push_back(local_SaveVar);
+	//this->ResultTmpMean_gpu.push_back(local_SaveMean);
+	this->ResultTmpVariance_gpu.push_back(local_SaveVar);
 	
 	//narrow descriptor
 	int narrowChannelNum = (i==0?this->initChannel:this->growthRate);
@@ -250,6 +255,26 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
 }
+
+/*
+template <typename Dtype>
+__global__ void helper_computeBatchMean(int n,Dtype* xPtr,Dtype* batchMeanPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W,int channelLimit){
+  CUDA_KERNEL_LOOP(index, n){
+    int localChannelIdx = (index / (H * W)) % (initChannel + growthRate * numTransition);
+    if (localChannelIdx < channelLimit){
+      caffe_gpu_atomic_add(xPtr[index],batchMeanPtr+localChannelIdx);
+    }
+  }
+}
+
+template <typename Dtype>
+void computeBatchMean(int n,Dtype* xPtr,Dtype* batchMeanPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
+  int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
+  helper_computeBatchMean<Dtype><<<CAFFE_GET_BLOCKS(n), CAFFE_CUDA_NUM_THREADS>>>(n,xPtr,batchMeanPtr,transitionIdx,numTransition,N,initChannel,growthRate,H,W,channelLimit);
+  int M = N * H * W;
+  caffe_gpu_scal<Dtype>(channelLimit,1.0/M,batchMeanPtr);
+}
+*/
 
 template <typename Dtype>
 __global__ void helper_computeBatchVariance(int n,Dtype* xPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W,int channelLimit){
@@ -441,8 +466,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    batchMean,batchInvVar)
 	  );
 	}
-        //compute per channel variance after BN
-        computeBatchVariance<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveMean_gpu[transitionIdx],this->ResultSaveVariance_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
+        //compute per channel mean/variance after BN type2
+	//computeBatchMean<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveTmp_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
+        computeBatchVariance<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveMean_gpu[transitionIdx],this->ResultTmpVariance_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
       }
 
       //ReLU
@@ -579,8 +605,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* BN_reverse_x_local = this->postBN_data_gpu;
 	Dtype* scalerPtr = this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
 	Dtype* biasPtr = this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
-	Dtype* batchMeanPtr = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
-	Dtype* batchVarPtr = this->ResultSaveVariance_gpu[transitionIdx] + channelsBefore_noself;
+	Dtype* batchMeanPtr = this->ResultSaveMean_gpu[transitionIdx];
+	Dtype* batchVarPtr = this->ResultTmpVariance_gpu[transitionIdx];
 	BNReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_reverse_y_local,BN_reverse_x_local,scalerPtr,biasPtr,batchMeanPtr,batchVarPtr,CUDNN_BN_MIN_EPSILON,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
     }
     //deploy buffer to bottom diff 
