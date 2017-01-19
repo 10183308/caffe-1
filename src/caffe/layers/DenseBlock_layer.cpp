@@ -639,13 +639,12 @@ void BlobSetZero(Blob<Dtype>* B,int count){
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
-      int localChannel = transitionIdx==0?this->initChannel:this->growthRate;
-      int tensorCount = this->N * localChannel * this->H * this->W;
+      int tensorCount = this->N * growthRate * this->H * this->W;
       int tensorMergeCount = this->N * (this->initChannel + this->growthRate * transitionIdx) * this->H * this->W;
       BlobSetZero<Dtype>(this->merged_conv[transitionIdx],tensorMergeCount);
-      BlobSetZero<Dtype>(this->BN_XhatVec[transitionIdx],tensorCount);
-      BlobSetZero<Dtype>(this->postBN_blobVec[transitionIdx],tensorCount);
-      BlobSetZero<Dtype>(this->postReLU_blobVec[transitionIdx],tensorCount);
+      BlobSetZero<Dtype>(this->BN_XhatVec[transitionIdx],tensorMergeCount);
+      BlobSetZero<Dtype>(this->postBN_blobVec[transitionIdx],tensorMergeCount);
+      BlobSetZero<Dtype>(this->postReLU_blobVec[transitionIdx],tensorMergeCount);
       BlobSetZero<Dtype>(this->postConv_blobVec[transitionIdx],tensorCount);
     }
 }
@@ -655,9 +654,11 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
                                   const vector<Blob<Dtype>*>& top) 
   { 
     //init CPU
-    if (!this->cpuInited){   
+    if (!this->cpuInited){  
+	std::cout<<"fwd cpu init"<<std::endl;
 	this->CPU_Initialization();
         this->cpuInited = true;
+	std::cout<<"fwd cpu init done"<<std::endl;
     }
     //deploy init data
     this->merged_conv[0]->CopyFrom(*(bottom[0]));
@@ -703,8 +704,10 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
                                     const vector<Blob<Dtype>*>& bottom) 
   {
     if (!this->cpuInited){
+	std::cout<<"bwd cpu init"<<std::endl;
     	this->CPU_Initialization();
         this->cpuInited = true;
+	std::cout<<"bwd cpu init done"<<std::endl;
     }
     //deploy top diff
     std::cout<<"Bwd deploy top diff"<<std::endl;
