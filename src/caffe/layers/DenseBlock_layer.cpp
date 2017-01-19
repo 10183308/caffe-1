@@ -572,7 +572,7 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
     //the last element of merged_conv serve as output of forward
     int extraMergeOutputShapeArr[] = {this->N,this->initChannel+this->growthRate*this->numTransition,this->H,this->W};
     vector<int> extraMergeOutputShapeVector(extraMergeOutputShapeArr,extraMergeOutputShapeArr+4);
-    this->merged_conv[transitionIdx] = new Blob<Dtype>(extraMergeOutputShapeVector);
+    this->merged_conv[this->numTransition] = new Blob<Dtype>(extraMergeOutputShapeVector);
 }
 
 template <typename Dtype>
