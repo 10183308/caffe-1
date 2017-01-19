@@ -525,7 +525,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term1=bottom_xhat->diff_at(n,c,h,w) / (sqrt(batchVar->data_at(0,c,0,0) + epsilon));
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
-	    bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
+	    bottomDataGrad[bottom->offset(n,c,h,w)] = term1 + term2 + term3;
 	    //std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
 	  }
 	}

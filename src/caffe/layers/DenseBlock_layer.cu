@@ -124,7 +124,6 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
         log_gpuPtr(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
         //Parameters for reverse
 	if (transitionIdx > 0){
-	  //log_gpuPtr(this->ResultTmpMean_gpu[transitionIdx],numChannel_wide,localDir+"ResultTmpMean_gpu_transition"+itos_cu(transitionIdx));
 	  log_gpuPtr(this->ResultTmpVariance_gpu[transitionIdx],numChannel_wide,localDir+"ResultTmpVariance_gpu_transition"+itos_cu(transitionIdx));	
 	}
 	//Filter_grad_gpu
