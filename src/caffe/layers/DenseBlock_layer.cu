@@ -92,25 +92,25 @@ void log_gpuPtr(Dtype* gpuPtr,int numValues,string fileName){
 }
 
 template <typename Dtype>
-void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int transitionIdx,bool logDynamic,bool logDiff){
+void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic,bool logDiff){
     string localDir = dir+"/gpu_"+itos_cu(this->logId)+"/";
     if (logDynamic){
       int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
       if (logDiff){
         //postConv_grad_gpu
-        log_gpuPtr(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu_transition"+itos_cu(TIdx));
         //postBN_grad_gpu
-        log_gpuPtr(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu_transition"+itos_cu(TIdx));
         //postReLU_grad_gpu
-        log_gpuPtr(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu_transition"+itos_cu(TIdx));
       }
       else {
         //postConv_data_gpu
-        log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postConv_data_gpu,postBufferSize,localDir+"postConv_data_gpu_transition"+itos_cu(TIdx));
         //postBN_data_gpu
-        log_gpuPtr(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu_transition"+itos_cu(TIdx));
         //postReLU_data_gpu
-        log_gpuPtr(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu_transition"+itos_cu(TIdx));
       }
     }
     else {
@@ -457,7 +457,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //change top data
   int numValues = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
   CUDA_CHECK(cudaMemcpy(top[0]->mutable_gpu_data(),this->postConv_data_gpu,numValues * sizeof(Dtype),cudaMemcpyDeviceToDevice));
-  this->logInternal_gpu("TClog",transitionIdx,false,false);
+  this->logInternal_gpu("TClog",-1,false,false);
   //this->logInternal_gpu("TClog");
 }
 
