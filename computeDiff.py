@@ -1,11 +1,11 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_1/merged_conv_1_grad"
-#fileNameA = "TClog/cpu_1/postConv_blobVec_1_grad"
-fileNameB = "TClog/gpu_2/postConv_grad_gpu_transition1"
+#fileNameA = "TClog/cpu_1/merged_conv_1_grad"
+fileNameA = "TClog/cpu_1/postReLU_blobVec_1_grad"
+fileNameB = "TClog/gpu_2/postReLU_grad_gpu_transition1"
 A_offset = 0
 B_offset = 0
-rangeLen = 125
+rangeLen = 75
 
 listA =  open(fileNameA,'r').readlines()[0].split(",")[:-1]
 listB =  open(fileNameB,'r').readlines()[0].split(',')[:-1]
@@ -20,7 +20,7 @@ print floatBL[B_offset:B_offset+rangeLen]
 
 for i in range(rangeLen):
     numA,numB = floatAL[A_offset+i],floatBL[B_offset+i]
-    if abs(numA-numB)>0.01:
+    if abs(numA-numB)>0.1:
         print `numA`+":"+`numB`+":"+`numA-numB`
         print i
 

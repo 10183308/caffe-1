@@ -520,11 +520,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     }
 
     //assuming buffers store already computed value, always propagate down
-    const Dtype* top_diff = top[0]->gpu_diff();
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
-    const int count = bottom[0]->count();
     //deploy top diff to buffer
-    distributeBwdInput(top[0]->mutable_gpu_data(),this->postReLU_grad_gpu,this->postConv_grad_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
+    distributeBwdInput(top[0]->mutable_gpu_diff(),this->postReLU_grad_gpu,this->postConv_grad_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_self = this->initChannel + transitionIdx * this->growthRate;
