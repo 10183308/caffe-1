@@ -1,8 +1,8 @@
 import numpy as np
 
-fileNameA = "TClog/cpu_1/merged_conv_2_data"
-#fileNameA = "TClog/cpu_1/postConv_blobVec_1_data"
-fileNameB = "TClog/gpu_2/postConv_data_gpu_transition1"
+fileNameA = "TClog/cpu_15/merged_conv_2_diff"
+#fileNameA = "TClog/cpu_15/postConv_blobVec_1_data"
+fileNameB = "TClog/gpu_16/postConv_data_gpu_transition1"
 A_offset = 125
 B_offset = 125
 rangeLen = 50

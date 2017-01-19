@@ -128,22 +128,23 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* layer3=new DenseBlockLayer<Dtype>(this->layer_param);
   DenseBlockLayer<Dtype>* layer4=new DenseBlockLayer<Dtype>(this->layer_param);
-  
+  std::cout<<"a1"<<std::endl; 
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   //bottom fill
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
-    
+  std::cout<<"a2"<<std::endl;
   layer3->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer4->SetUp(this->bottomVec_gpu,this->topVec_gpu);
-
+  
   layer3->setLogId(global_id);
   global_id += 1;
   layer4->setLogId(global_id);
   global_id += 1;
-
+  std::cout<<"a3"<<std::endl;
   //synchronize the random filled parameters of layer and layers
   layer4->syncBlobs(layer3);
+  std::cout<<"a4"<<std::endl;
   //forward
   layer3->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer4->Forward(this->bottomVec_gpu,this->topVec_gpu);
@@ -167,6 +168,9 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
       }
     }
   }
+
+  delete layer3;
+  delete layer4;
 }
 
 }  // namespace caffe
