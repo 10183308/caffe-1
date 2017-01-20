@@ -162,20 +162,10 @@ string itos(int i){
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
     string localDir = dir+"/cpu_"+itos(this->logId)+"/"; 
-    //global_Mean
-    for (int i=0;i<this->global_Mean.size();++i){
-      string blobStr = localDir+"global_Mean_"+itos(i);
-      logBlob(this->global_Mean[i],blobStr);
-    }
     //batch_Mean
     for (int i=0;i<this->batch_Mean.size();++i){
       string blobStr = localDir+"batch_Mean_"+itos(i);
       logBlob(this->batch_Mean[i],blobStr);
-    }
-    //global_Var
-    for (int i=0;i<this->global_Var.size();++i){
-      string blobStr = localDir+"global_Var_"+itos(i);
-      logBlob(this->global_Var[i],blobStr);
     }
     //batch_Var
     for (int i=0;i<this->batch_Var.size();++i){
@@ -551,9 +541,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::CPU_Initialization(){
-    this->global_Mean.resize(this->numTransition);
     this->batch_Mean.resize(this->numTransition);
-    this->global_Var.resize(this->numTransition);
     this->batch_Var.resize(this->numTransition);
     
     this->merged_conv.resize(this->numTransition + 1);
@@ -572,9 +560,7 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
       vector<int> conv_y_Shape(conv_y_ShapeArr,conv_y_ShapeArr+4);
       vector<int> mergeShape(mergeShapeArr,mergeShapeArr+4);
       
-      this->global_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
       this->batch_Mean[transitionIdx] = new Blob<Dtype>(channelShape);
-      this->global_Var[transitionIdx] = new Blob<Dtype>(channelShape);
       this->batch_Var[transitionIdx] = new Blob<Dtype>(channelShape);
       
       this->merged_conv[transitionIdx] = new Blob<Dtype>(mergeShape);
@@ -689,10 +675,10 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx].get();
       int localChannels = this->initChannel+transitionIdx*this->growthRate;
       if (this->phase_ == TEST){
-        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->global_Mean[transitionIdx],this->global_Var[transitionIdx],Scaler,Bias);
+        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias);
       }
       else {
-        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
+        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx],this->blobs_[4*this->numTransition+transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
       }
       std::cout<<"ReLU"<<std::endl;
       //ReLU

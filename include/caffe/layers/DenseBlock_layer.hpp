@@ -69,9 +69,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   
   //start CPU specific data section
   bool cpuInited;
-  vector<Blob<Dtype>*> global_Mean;//at T has shape (1,initC+T*growth,1,1)
+  //at T has shape (1,initC+T*growth,1,1)
   vector<Blob<Dtype>*> batch_Mean; 
-  vector<Blob<Dtype>*> global_Var;
   vector<Blob<Dtype>*> batch_Var;
 
   vector<Blob<Dtype>*> merged_conv;//at T has shape (N,initC+T*growth,H,W), but this vector has T+1 elements
@@ -92,8 +91,6 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype* postReLU_data_gpu;
   Dtype* postReLU_grad_gpu;
   Dtype* workspace;
-  //vector<Dtype*> ResultRunningMean_gpu;
-  //vector<Dtype*> ResultRunningVariance_gpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
     
