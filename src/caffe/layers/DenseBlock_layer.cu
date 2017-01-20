@@ -478,8 +478,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	}
         //compute per channel mean/variance after BN type2
-	//computeBatchMean<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveTmp_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
-        computeBatchVariance<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveMean_gpu[transitionIdx],this->ResultTmpVariance_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
+	computeBatchVariance<Dtype>(work_n,this->postReLU_data_gpu,this->ResultSaveMean_gpu[transitionIdx],this->ResultTmpVariance_gpu[transitionIdx],transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
       }
 
       //ReLU
@@ -599,9 +598,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* BNnarrow_dy_local = this->postBN_grad_gpu + channelsBefore_noself * this->H * this->W;
 	Dtype* saveMeannarrow_local = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
 	Dtype* saveInvVarnarrow_local = this->ResultSaveInvVariance_gpu[transitionIdx] + channelsBefore_noself;
-        //print_gpuPtr(saveMeannarrow_local,2);
-	//print_gpuPtr(saveInvVarnarrow_local,2);
-	cudnnTensorDescriptor_t * BNnarrowparam_desc = (transitionIdx==0)?tensorDescriptor_BN_initChannel : tensorDescriptor_BN_growthRate;
+        cudnnTensorDescriptor_t * BNnarrowparam_desc = (transitionIdx==0)?tensorDescriptor_BN_initChannel : tensorDescriptor_BN_growthRate;
         CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	  CUDNN_BATCHNORM_SPATIAL,
 	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -621,11 +618,11 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	Dtype* BNregion_reverse_x_local = this->postBN_data_gpu;
 	ReLUReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BNregion_reverse_y_local,BNregion_reverse_x_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
 	
-	this->logInternal_gpu("TClog",transitionIdx,true,false);
-        this->logInternal_gpu("TClog",transitionIdx,true,true);
+	//this->logInternal_gpu("TClog",transitionIdx,true,false);
+        //this->logInternal_gpu("TClog",transitionIdx,true,true);
     }
     //deploy buffer to bottom diff
-    this->logInternal_gpu("TClog",-1,false,false);
+    //this->logInternal_gpu("TClog",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);

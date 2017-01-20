@@ -655,10 +655,10 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
   { 
     //init CPU
     if (!this->cpuInited){  
-	std::cout<<"fwd cpu init"<<std::endl;
+	//std::cout<<"fwd cpu init"<<std::endl;
 	this->CPU_Initialization();
         this->cpuInited = true;
-	std::cout<<"fwd cpu init done"<<std::endl;
+	//std::cout<<"fwd cpu init done"<<std::endl;
     }
     //deploy init data
     this->merged_conv[0]->CopyFrom(*(bottom[0]));
@@ -694,7 +694,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     //deploy output data
     top[0]->CopyFrom(*(this->merged_conv[this->numTransition]));
     this->trainCycleIdx+=1;
-    //this->logInternal_cpu("TClog");
   }
 
 
@@ -704,43 +703,32 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
                                     const vector<Blob<Dtype>*>& bottom) 
   {
     if (!this->cpuInited){
-	std::cout<<"bwd cpu init"<<std::endl;
-    	this->CPU_Initialization();
+	this->CPU_Initialization();
         this->cpuInited = true;
-	std::cout<<"bwd cpu init done"<<std::endl;
     }
     //deploy top diff
-    std::cout<<"Bwd deploy top diff"<<std::endl;
     this->merged_conv[this->numTransition]->CopyFrom(*(top[0]),true);
-    std::cout<<"Bwd deploy top diff done"<<std::endl;
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
       //distribute diff
-      std::cout<<"distribute diff transition "<<transitionIdx<<std::endl;
       distributeChannelDiff(this->merged_conv[transitionIdx+1],this->postReLU_blobVec[transitionIdx],this->postConv_blobVec[transitionIdx]);
       //Conv Bwd
-      std::cout<<"Conv transition"<<transitionIdx<<std::endl;
       Blob<Dtype>* conv_top=this->postConv_blobVec[transitionIdx];
       Blob<Dtype>* conv_bottom=this->postReLU_blobVec[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx].get();
       int c_input = this->initChannel + this->growthRate * transitionIdx;
       convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->filter_H,this->filter_W);
-      std::cout<<"ReLU transition"<<transitionIdx<<std::endl;
       //ReLU Bwd
       int localChannel = this->initChannel+this->growthRate*transitionIdx;
       ReLU_Bwd<Dtype>(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
       //BN Bwd
-      std::cout<<"BN transition"<<transitionIdx<<std::endl;
       Blob<Dtype>* BN_bottom = this->merged_conv[transitionIdx];
       Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx].get();
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx].get();
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
     }
-    std::cout<<"deploy result"<<std::endl;
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
-    this->logInternal_cpu("TClog");
     this->LoopEndCleanup_cpu();
-    std::cout<<"deploy result done"<<std::endl;
-  }
+}
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_cpu_public(const vector<Blob<Dtype>*>& bottom,const vector<Blob<Dtype>*>& top){

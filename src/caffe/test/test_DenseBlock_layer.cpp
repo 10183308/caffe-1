@@ -44,7 +44,11 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
       : blob_bottom_cpu(new Blob<Dtype>(2,3,5,5)),
         blob_top_cpu(new Blob<Dtype>(2,7,5,5)),
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
-	blob_top_gpu(new Blob<Dtype>(2,7,5,5))
+	blob_top_gpu(new Blob<Dtype>(2,7,5,5)),
+	bigBlob_bottom_cpu(new Blob<Dtype>(64,304,100,100)),
+	bigBlob_top_cpu(new Blob<Dtype>(64,448,100,100)),
+	bigBlob_bottom_gpu(new Blob<Dtype>(64,304,100,100)),
+	bigBlob_top_gpu(new Blob<Dtype>(64,448,100,100))
   {
     Caffe::set_random_seed(1704);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -61,10 +65,29 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
   
+   DenseBlockParameter* bigDB_param = this->layer_param.mutable_denseblock_param();
+    bigDB_param->set_numtransition(12);
+    bigDB_param->set_initchannel(304);
+    bigDB_param->set_growthrate(12);
+    bigDB_param->set_pad_h(1);
+    bigDB_param->set_pad_w(1);
+    bigDB_param->set_conv_verticalstride(1);
+    bigDB_param->set_conv_horizentalstride(1);
+    bigDB_param->set_filter_h(3);
+    bigDB_param->set_filter_w(3);
+    bigDB_param->mutable_filter_filler()->set_type("gaussian");
+    bigDB_param->mutable_bn_scaler_filler()->set_type("gaussian");
+    bigDB_param->mutable_bn_bias_filler()->set_type("gaussian");
+   
     this->bottomVec_gpu.push_back(this->blob_bottom_gpu);
     this->bottomVec_cpu.push_back(this->blob_bottom_cpu);
     this->topVec_gpu.push_back(this->blob_top_gpu);
     this->topVec_cpu.push_back(this->blob_top_cpu);
+
+    this->bigBottomVec_cpu.push_back(this->bigBlob_bottom_cpu);
+    this->bigTopVec_cpu.push_back(this->bigBlob_top_cpu);
+    this->bigBottomVec_gpu.push_back(this->bigBlob_bottom_gpu);
+    this->bigTopVec_gpu.push_back(this->bigBlob_top_gpu);
   }
   virtual ~DenseBlockLayerTest() {}
 
@@ -73,15 +96,27 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
   }
  
   LayerParameter layer_param;
+  LayerParameter bigLayer_param;
+
   Blob<Dtype>* blob_bottom_cpu;
   Blob<Dtype>* blob_top_cpu;
   Blob<Dtype>* blob_bottom_gpu;
   Blob<Dtype>* blob_top_gpu;
 
+  Blob<Dtype>* bigBlob_bottom_cpu;
+  Blob<Dtype>* bigBlob_top_cpu;
+  Blob<Dtype>* bigBlob_bottom_gpu;
+  Blob<Dtype>* bigBlob_top_gpu;
+
   vector<Blob<Dtype>*> bottomVec_cpu;
   vector<Blob<Dtype>*> topVec_cpu;
   vector<Blob<Dtype>*> bottomVec_gpu;
   vector<Blob<Dtype>*> topVec_gpu;
+  
+  vector<Blob<Dtype>*> bigBottomVec_cpu;
+  vector<Blob<Dtype>*> bigTopVec_cpu;
+  vector<Blob<Dtype>*> bigBottomVec_gpu;
+  vector<Blob<Dtype>*> bigTopVec_gpu;
 };
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
@@ -128,12 +163,10 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* layer3=new DenseBlockLayer<Dtype>(this->layer_param);
   DenseBlockLayer<Dtype>* layer4=new DenseBlockLayer<Dtype>(this->layer_param);
-  std::cout<<"a1"<<std::endl; 
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
   //bottom fill
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
-  std::cout<<"a2"<<std::endl;
   layer3->SetUp(this->bottomVec_cpu,this->topVec_cpu);
   layer4->SetUp(this->bottomVec_gpu,this->topVec_gpu);
   
@@ -141,24 +174,18 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   global_id += 1;
   layer4->setLogId(global_id);
   global_id += 1;
-  std::cout<<"a3"<<std::endl;
   //synchronize the random filled parameters of layer and layers
   layer4->syncBlobs(layer3);
-  std::cout<<"a4"<<std::endl;
   //forward
   layer3->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
   layer4->Forward(this->bottomVec_gpu,this->topVec_gpu);
-  std::cout <<"Forward of BWD done"<<std::endl;
   //top fill
   this->FillDiff(this->blob_top_cpu);
   this->blob_top_gpu->CopyFrom(*this->blob_top_cpu,true);
-  //this->blob_top_gpu->CopyFrom(*this->blob_top_cpu);
-  std::cout<<"top Fill done"<<std::endl; 
   //backward
   vector<bool> propagate_down(1,true);
   layer3->Backward_cpu_public(this->topVec_cpu,propagate_down,this->bottomVec_cpu);
   layer4->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
-  std::cout<<"bwd done"<<std::endl;
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
@@ -169,8 +196,23 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     }
   }
 
-  //delete layer3;
-  //delete layer4;
+}
+
+TYPED_TEST(DenseBlockLayerTest, TestSpeed){
+  typedef typename TypeParam::Dtype Dtype;
+  DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
+  DenseBlockLayer<Dtype>* layer5=new DenseBlockLayer<Dtype>(this->bigLayer_param);
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(bigDB_param->bn_scaler_filler()));
+  //bottom fill
+  gaussianFiller->Fill(this->bigBlob_bottom_cpu);
+  this->bigBlob_bottom_gpu->CopyFrom(*this->bigBlob_bottom_cpu);
+  vector<bool> propagate_down(1,true);
+  layer5->SetUp(this->bigBottomVec_gpu,this->bigTopVec_gpu);
+ 
+  layer5->Forward(this->bigBottomVec_gpu,this->bigTopVec_gpu);
+
+  layer5->Backward(this->bigTopVec_gpu,propagate_down,this->topBottomVec_gpu);
+
 }
 
 }  // namespace caffe
