@@ -21,6 +21,9 @@
 namespace caffe {
 
 int global_id = 1;
+int big_initC = 160;
+int big_growthRate = 12;
+int big_numTransition = 12;
 
 template <typename Dtype>
 void printBlobDiff(Blob<Dtype>* B){
@@ -46,10 +49,10 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
         blob_top_cpu(new Blob<Dtype>(2,7,5,5)),
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
 	blob_top_gpu(new Blob<Dtype>(2,7,5,5)),
-	bigBlob_bottom_cpu(new Blob<Dtype>(64,304,100,100)),
-	bigBlob_top_cpu(new Blob<Dtype>(64,448,100,100)),
-	bigBlob_bottom_gpu(new Blob<Dtype>(64,304,100,100)),
-	bigBlob_top_gpu(new Blob<Dtype>(64,448,100,100))
+	bigBlob_bottom_cpu(new Blob<Dtype>(64,big_initC,100,100)),
+	bigBlob_top_cpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,100,100)),
+	bigBlob_bottom_gpu(new Blob<Dtype>(64,big_initC,100,100)),
+	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,100,100))
   {
     Caffe::set_random_seed(1704);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -67,9 +70,9 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
   
    DenseBlockParameter* bigDB_param = this->layer_param.mutable_denseblock_param();
-    bigDB_param->set_numtransition(12);
-    bigDB_param->set_initchannel(304);
-    bigDB_param->set_growthrate(12);
+    bigDB_param->set_numtransition(big_numTransition);
+    bigDB_param->set_initchannel(big_initC);
+    bigDB_param->set_growthrate(big_growthRate);
     bigDB_param->set_pad_h(1);
     bigDB_param->set_pad_w(1);
     bigDB_param->set_conv_verticalstride(1);
