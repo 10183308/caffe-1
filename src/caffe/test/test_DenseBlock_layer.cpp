@@ -201,7 +201,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
-
+/*
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
@@ -215,5 +215,5 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   layer5->Forward_gpu_public(this->bigBottomVec_gpu,this->bigTopVec_gpu);
   layer5->Backward_gpu_public(this->bigTopVec_gpu,propagate_down,this->bigBottomVec_gpu);
 }
-
+*/
 }  // namespace caffe
