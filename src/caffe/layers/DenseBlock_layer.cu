@@ -340,12 +340,23 @@ void distributeBwdInput(Dtype* input,Dtype* frontB,Dtype* backB,int N,int channe
 }
 
 template <typename Dtype>
+void LogBlobHashValue(vector<shared_ptr<Blob<Dtype> > >& BVec){
+  for (int i=0;i<BVec;++i){
+    std::cout<<BVec[i]->asum_data()<<",";
+  }
+  std::endl;
+}
+
+template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
       std::cout<<"Initializing GPU local"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
+  }
+  if (this->trainCycleIdx < 10 || this->trainCycleIdx > 790 || this->phase_==TEST){
+    LogBlobHashValue(this->blobs_);
   }
   //clock_t begin_fwd = std::clock();
   const Dtype* bottom_data = bottom[0]->gpu_data();
