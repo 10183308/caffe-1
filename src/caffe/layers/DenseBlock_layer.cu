@@ -142,6 +142,7 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
+    std::cout<<"GPU intermediate pointers start"<<std::endl;
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
     CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
@@ -159,7 +160,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //workspace
     CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
     cudaMemset(this->workspace,0,this->workspace_size_bytes);
-        
+    std::cout<<"handles and descriptors start"<<std::endl;
     //handles and descriptors
     //cudnn handle
     this->cudnnHandlePtr = new cudnnHandle_t;
@@ -170,6 +171,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
     //per transition variables
     for (int i=0;i<this->numTransition;++i){
+	std::cout<< "transition"<<i<<std::endl;
 	//Result Running/Saving Mean/Variance/InvVariance
     	int localChannel = this->initChannel + i * this->growthRate;
     	Dtype* local_ResultMean;
@@ -254,26 +256,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
 }
-
-/*
-template <typename Dtype>
-__global__ void helper_computeBatchMean(int n,Dtype* xPtr,Dtype* batchMeanPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W,int channelLimit){
-  CUDA_KERNEL_LOOP(index, n){
-    int localChannelIdx = (index / (H * W)) % (initChannel + growthRate * numTransition);
-    if (localChannelIdx < channelLimit){
-      caffe_gpu_atomic_add(xPtr[index],batchMeanPtr+localChannelIdx);
-    }
-  }
-}
-
-template <typename Dtype>
-void computeBatchMean(int n,Dtype* xPtr,Dtype* batchMeanPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
-  int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
-  helper_computeBatchMean<Dtype><<<CAFFE_GET_BLOCKS(n), CAFFE_CUDA_NUM_THREADS>>>(n,xPtr,batchMeanPtr,transitionIdx,numTransition,N,initChannel,growthRate,H,W,channelLimit);
-  int M = N * H * W;
-  caffe_gpu_scal<Dtype>(channelLimit,1.0/M,batchMeanPtr);
-}
-*/
 
 template <typename Dtype>
 __global__ void helper_computeBatchVariance(int n,Dtype* xPtr,Dtype* batchMeanPtr,Dtype* batchVarPtr,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W,int channelLimit){
