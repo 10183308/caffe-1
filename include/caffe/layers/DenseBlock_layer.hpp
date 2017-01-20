@@ -96,9 +96,7 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Dtype*> ResultRunningVariance_gpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
-  //vector<Dtype*> ResultTmpMean_gpu;
-  vector<Dtype*> ResultTmpVariance_gpu;
-
+    
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase
   int trainCycleIdx; //used in BN train phase for EMA Mean/Var estimation
