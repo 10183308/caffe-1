@@ -116,7 +116,6 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
     }
     else {
       for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
-	int numChannel_wide = (transitionIdx==0)?0:this->initChannel + this->growthRate * (transitionIdx - 1);
 	int numChannel_moreWide = this->initChannel + this->growthRate * transitionIdx;
         //global/batch Mean/Variance
         log_gpuPtr(this->blobs_[3*this->numTransition+transitionIdx]->gpu_data(),numChannel_moreWide,localDir+"globalMean_gpu_transition"+itos_cu(transitionIdx));
