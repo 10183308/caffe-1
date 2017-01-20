@@ -678,7 +678,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
         BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias);
       }
       else {
-        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx],this->blobs_[4*this->numTransition+transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
+        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
       }
       std::cout<<"ReLU"<<std::endl;
       //ReLU
