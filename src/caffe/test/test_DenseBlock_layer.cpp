@@ -209,7 +209,9 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   gaussianFiller->Fill(this->bigBlob_bottom_cpu);
   this->bigBlob_bottom_gpu->CopyFrom(*this->bigBlob_bottom_cpu);
   vector<bool> propagate_down(1,true);
+  std::cout<<"preSetup"<<std::endl;
   layer5->SetUp(this->bigBottomVec_gpu,this->bigTopVec_gpu);
+  std::cout<<"postSetup"<<std::endl;
   clock_t begin1 = std::clock();
   layer5->Forward(this->bigBottomVec_gpu,this->bigTopVec_gpu);
   clock_t end1 = std::clock();
