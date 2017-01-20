@@ -356,7 +356,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->gpuInited = true;
   }
   if (this->trainCycleIdx < 10 || this->trainCycleIdx > 790 || this->phase_==TEST){
-    for (int i=this->numTransition;i<this->3*this->numTransition;++i){
+    for (int i=this->numTransition;i<3*this->numTransition;++i){
       LogBlobHashValue<Dtype>(this->blobs_[i].get());
     }
     std::cout<<std::endl;
