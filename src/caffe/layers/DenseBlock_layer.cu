@@ -491,7 +491,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
   clock_t end_fwd = std::clock();
   double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
-  std::cout<<"elapsed fwd gpu:"<<std::endl;
+  std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
   //this->logInternal_gpu("TClog",-1,false,false);
   //this->logInternal_gpu("TClog");
 }
@@ -615,7 +615,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
     this->LoopEndCleanup_gpu();
-    clock_t end_bwd = std::clock;
+    clock_t end_bwd = std::clock();
     double elapsed_bwd = double(end_bwd - begin_bwd) / CLOCKS_PER_SEC;
     std::cout<<"elapsed bwd time:"<<elapsed_bwd<<std::endl;
 }
