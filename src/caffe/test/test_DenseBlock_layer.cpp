@@ -201,7 +201,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
-/*
+
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
@@ -225,5 +225,5 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   double elapsed_sec2 = double(end2-begin2) / CLOCKS_PER_SEC;
   std::cout<<"elapsed time 2:"<<elapsed_sec2<<std::endl;
 }
-*/
+
 }  // namespace caffe
