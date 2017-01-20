@@ -426,7 +426,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_y_ptr = this->postBN_data_gpu;
 	Dtype* BN_wide_globalMean = this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data();
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
-	
+        Dtype* BN_wide_globalMean_readOnly = this->blobs_[3*this->numTransition+transitionIdx]->gpu_data();
+        Dtype* BN_wide_globalVar_readOnly = this->blobs_[4*this->numTransition+transitionIdx]->gpu_data();
+
 	if (this->phase_ == TEST){
 	  //std::cout<<"gpu test fwd"<<std::endl;
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
@@ -437,7 +439,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *wideBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
             this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data(),
-	    BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON)
+	    BN_wide_globalMean_readOnly,BN_wide_globalVar_readOnly,CUDNN_BN_MIN_EPSILON)
 	  );
 	}
 	else {
