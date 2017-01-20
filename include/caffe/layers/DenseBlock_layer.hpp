@@ -26,6 +26,10 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   virtual void Backward_cpu_public(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
+  void Forward_gpu_public(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+
+  void Backward_gpu_public(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+  
   virtual void syncBlobs(DenseBlockLayer<Dtype>* originLayer);
 
   virtual void setLogId(int uid);

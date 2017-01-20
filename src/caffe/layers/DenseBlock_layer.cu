@@ -620,6 +620,16 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     std::cout<<"elapsed bwd time:"<<elapsed_bwd<<std::endl;
 }
 
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::Forward_gpu_public(const vector<Blob<Dtype>*>& bottom,const vector<Blob<Dtype>*>& top){
+  this->Forward_gpu(bottom,top);
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::Backward_gpu_public(const vector<Blob<Dtype>*>& top,const vector<bool>& propagate_down,const vector<Blob<Dtype>*>& bottom){
+  this-?Backward_gpu(top,propagate_down,bottom);
+}
+
 INSTANTIATE_LAYER_GPU_FUNCS(DenseBlockLayer);
 
 }  // namespace caffe
