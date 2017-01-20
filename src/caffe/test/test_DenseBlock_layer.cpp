@@ -69,7 +69,7 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
   
-   DenseBlockParameter* bigDB_param = this->layer_param.mutable_denseblock_param();
+    DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
     bigDB_param->set_numtransition(big_numTransition);
     bigDB_param->set_initchannel(big_initC);
     bigDB_param->set_growthrate(big_growthRate);
