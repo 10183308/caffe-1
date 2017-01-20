@@ -413,7 +413,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
 	
 	if (this->phase_ == TEST){
-	  std::cout<<"gpu test fwd"<<std::endl;
+	  //std::cout<<"gpu test fwd"<<std::endl;
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -426,7 +426,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	}
 	else {
-	  std::cout<<"gpu train fwd"<<std::endl;
+	  //std::cout<<"gpu train fwd"<<std::endl;
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
 	  Dtype* batchInvVar = this->ResultSaveInvVariance_gpu[transitionIdx];
           double EMA_factor = 1.0/(1+this->trainCycleIdx);
