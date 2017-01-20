@@ -162,6 +162,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   delete layer2;
 }
 
+/*
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -201,6 +202,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
+*/
+
 /*
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   typedef typename TypeParam::Dtype Dtype;
