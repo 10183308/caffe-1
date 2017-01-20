@@ -342,7 +342,7 @@ void distributeBwdInput(Dtype* input,Dtype* frontB,Dtype* backB,int N,int channe
 template <typename Dtype>
 void LogBlobHashValue(Blob<Dtype>* B){
   
-  std::cout<<B[i]->asum_data()<<",";
+  std::cout<<B->asum_data()<<",";
   
   //std::cout<<std::endl;
 }
