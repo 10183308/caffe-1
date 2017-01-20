@@ -663,6 +663,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     //deploy init data
     std::cout<<"bottom shape"<<bottom[0]->shape(0)<<","<<bottom[0]->shape(1)<<","<<bottom[0]->shape(2)<<","<<bottom[0]->shape(3)<<std::endl;
     this->merged_conv[0]->CopyFrom(*(bottom[0]));
+    std::cout<<"initial deploy complete"<<std::endl;
     //init CPU finish
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
       //BN
