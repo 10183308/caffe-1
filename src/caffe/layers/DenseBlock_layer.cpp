@@ -667,6 +667,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     std::cout<<"initial deploy complete"<<std::endl;
     //init CPU finish
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
+      std::cout<<"transition "<<transitionIdx<<" BN"<<std::endl;
       //BN
       Blob<Dtype>* BN_bottom = this->merged_conv[transitionIdx];
       Blob<Dtype>* BN_top = this->postBN_blobVec[transitionIdx];
@@ -679,15 +680,18 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       else {
         BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->global_Mean[transitionIdx],this->global_Var[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
       }
+      std::cout<<"ReLU"<<std::endl;
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
       ReLU_Fwd<Dtype>(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
+      std::cout<<"conv"<<std::endl;
       //Conv
       Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
       Blob<Dtype>* conv_x = this->postReLU_blobVec[transitionIdx];
       Blob<Dtype>* conv_y = this->postConv_blobVec[transitionIdx];
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
       convolution_Fwd<Dtype>(conv_x,conv_y,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W);
+      std::cout<<"merge"<<std::endl;
       //post Conv merge
       Blob<Dtype>* mergeOutput = merged_conv[transitionIdx+1];
       Blob<Dtype>* mergeInputA = postReLU_blobVec[transitionIdx];
