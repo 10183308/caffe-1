@@ -130,6 +130,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   this->layer_param.set_phase(TEST);//To be disabled
   DenseBlockLayer<Dtype>* layer=new DenseBlockLayer<Dtype>(this->layer_param);
+  this->layer_param.set_phase(TRAIN);
   DenseBlockLayer<Dtype>* layer2=new DenseBlockLayer<Dtype>(this->layer_param);
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
