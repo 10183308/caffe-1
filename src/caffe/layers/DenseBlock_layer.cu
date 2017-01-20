@@ -343,6 +343,7 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
+      std::cout<<"Initializing GPU local"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
   }
