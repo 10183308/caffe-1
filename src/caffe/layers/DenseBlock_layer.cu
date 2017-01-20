@@ -400,13 +400,13 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    batchMean,batchInvVar)
 	  );
       }
-      if (transitionIdx==10 && this->initChannel == 16){
+      /*if (transitionIdx==10 && this->initChannel == 16){
           std::cout<<trainCycleIdx<<"narrow"<<std::endl;
           print_gpuPtr(BN_narrow_globalMean,this->growthRate);
           printf("\n");
           print_gpuPtr(BN_narrow_globalVar,this->growthRate);
           std::cout<<std::endl;
-      }
+      }*/
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
       if (transitionIdx > 0){
@@ -417,6 +417,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
 	
 	if (this->phase_ == TEST){
+	  std::cout<<"test fwd"<<std::endl;
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -429,6 +430,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	}
 	else {
+	  std::cout<<"train fwd"<<std::endl;
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
 	  Dtype* batchInvVar = this->ResultSaveInvVariance_gpu[transitionIdx];
           double EMA_factor = 1.0/(1+this->trainCycleIdx);
@@ -466,7 +468,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       );
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
-  this->trainCycleIdx += 1;
+  if (this->phase_ == TRAIN){
+    this->trainCycleIdx += 1;
+  }
   //deploy top data
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
   //clock_t end_fwd = std::clock();
