@@ -215,7 +215,7 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   double elapsed_sec1 = double(end1-begin1) / CLOCKS_PER_SEC;
   std::cout<<"elapsed time 1:"<<elapsed_sec1<<std::endl;
   clock_t begin2 = std::clock();
-  layer5->Backward(this->bigTopVec_gpu,propagate_down,this->topBottomVec_gpu);
+  layer5->Backward(this->bigTopVec_gpu,propagate_down,this->bigBottomVec_gpu);
   clock_t end2 = std::clock();
   double elapsed_sec2 = double(end2-begin2) / CLOCKS_PER_SEC;
   std::cout<<"elapsed time 2:"<<elapsed_sec2<<std::endl;
