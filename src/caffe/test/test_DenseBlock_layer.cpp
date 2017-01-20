@@ -211,7 +211,7 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
  
   layer5->Forward(this->bigBottomVec_gpu,this->bigTopVec_gpu);
 
-  layer5->Backward(this->bigTopVec_gpu,propagate_down,this->topBottomVec_gpu);
+  layer5->Backward(this->bigTopVec_gpu,propagate_down,this->bigBottomVec_gpu);
 
 }
 
