@@ -401,10 +401,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
       }
       std::cout<<trainCycleIdx<<"narrow"<<transitionIdx<<std::endl;
-      for (int localI=0;localI<this->growthRate;++localI){
-        std::cout<<BN_narrow_globalMean[localI];
-	std::cout<<BN_narrow_globalVar[localI];
-      }
+      print_gpuPtr(BN_narrow_globalMean,this->growthRate);
+      printf("\n");
+      print_gpuPtr(BN_narrow_globalVar,this->growthRate);
       std::cout<<std::endl;
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
