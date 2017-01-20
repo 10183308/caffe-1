@@ -49,10 +49,10 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
         blob_top_cpu(new Blob<Dtype>(2,7,5,5)),
 	blob_bottom_gpu(new Blob<Dtype>(2,3,5,5)),
 	blob_top_gpu(new Blob<Dtype>(2,7,5,5)),
-	bigBlob_bottom_cpu(new Blob<Dtype>(64,big_initC,100,100)),
-	bigBlob_top_cpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,100,100)),
-	bigBlob_bottom_gpu(new Blob<Dtype>(64,big_initC,100,100)),
-	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,100,100))
+	bigBlob_bottom_cpu(new Blob<Dtype>(64,big_initC,32,32)),
+	bigBlob_top_cpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32)),
+	bigBlob_bottom_gpu(new Blob<Dtype>(64,big_initC,32,32)),
+	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32))
   {
     Caffe::set_random_seed(1704);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
