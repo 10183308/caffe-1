@@ -627,7 +627,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu_public(const vector<Blob<Dtype>*>& bott
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Backward_gpu_public(const vector<Blob<Dtype>*>& top,const vector<bool>& propagate_down,const vector<Blob<Dtype>*>& bottom){
-  this-?Backward_gpu(top,propagate_down,bottom);
+  this->Backward_gpu(top,propagate_down,bottom);
 }
 
 INSTANTIATE_LAYER_GPU_FUNCS(DenseBlockLayer);
