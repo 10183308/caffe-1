@@ -128,9 +128,9 @@ TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-  this->layer_param.set_phase(TEST);//To be disabled
+  this->layer_param.set_phase(TRAIN);//To be disabled
   DenseBlockLayer<Dtype>* layer=new DenseBlockLayer<Dtype>(this->layer_param);
-  this->layer_param.set_phase(TRAIN);
+  this->layer_param.set_phase(TEST);
   DenseBlockLayer<Dtype>* layer2=new DenseBlockLayer<Dtype>(this->layer_param);
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
@@ -147,9 +147,9 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   global_id += 1;
 
   //synchronize the random filled parameters of layer and layers
-  layer2->syncBlobs(layer);
-
   layer->Forward_cpu_public(this->bottomVec_cpu,this->topVec_cpu);
+  
+  layer2->syncBlobs(layer);
   layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
 
   for (int n=0;n<2;++n){

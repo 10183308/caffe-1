@@ -138,8 +138,6 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
-    std::cout<<"GPU intermediate pointers start"<<std::endl;
-    std::cout<<"this->N"<<this->N<<";this->H"<<this->H<<";this->W"<<this->W<<std::endl;
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
     CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
@@ -157,7 +155,6 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //workspace
     CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
     cudaMemset(this->workspace,0,this->workspace_size_bytes);
-    std::cout<<"handles and descriptors start"<<std::endl;
     //handles and descriptors
     //cudnn handle
     this->cudnnHandlePtr = new cudnnHandle_t;
@@ -168,7 +165,6 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
     //per transition variables
     for (int i=0;i<this->numTransition;++i){
-	std::cout<< "transition"<<i<<std::endl;
 	//Result Running/Saving Mean/Variance/InvVariance
     	int localChannel = this->initChannel + i * this->growthRate;
     	Dtype* local_SaveMean;
@@ -417,7 +413,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
 	
 	if (this->phase_ == TEST){
-	  std::cout<<"test fwd"<<std::endl;
+	  std::cout<<"gpu test fwd"<<std::endl;
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -430,7 +426,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	}
 	else {
-	  std::cout<<"train fwd"<<std::endl;
+	  std::cout<<"gpu train fwd"<<std::endl;
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
 	  Dtype* batchInvVar = this->ResultSaveInvVariance_gpu[transitionIdx];
           double EMA_factor = 1.0/(1+this->trainCycleIdx);

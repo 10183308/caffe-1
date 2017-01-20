@@ -661,13 +661,9 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
 	//std::cout<<"fwd cpu init done"<<std::endl;
     }
     //deploy init data
-    std::cout<<"bottom shape"<<bottom[0]->shape(0)<<","<<bottom[0]->shape(1)<<","<<bottom[0]->shape(2)<<","<<bottom[0]->shape(3)<<std::endl;
-    std::cout<<"merge shape"<<merged_conv[0]->shape(0)<<","<<merged_conv[0]->shape(1)<<","<<merged_conv[0]->shape(2)<<","<<merged_conv[0]->shape(3)<<std::endl;
     this->merged_conv[0]->CopyFrom(*(bottom[0]));
-    std::cout<<"initial deploy complete"<<std::endl;
     //init CPU finish
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
-      std::cout<<"transition "<<transitionIdx<<" BN"<<std::endl;
       //BN
       Blob<Dtype>* BN_bottom = this->merged_conv[transitionIdx];
       Blob<Dtype>* BN_top = this->postBN_blobVec[transitionIdx];
@@ -675,23 +671,22 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx].get();
       int localChannels = this->initChannel+transitionIdx*this->growthRate;
       if (this->phase_ == TEST){
+	std::cout<<"cpu BN test forward"<<std::endl;
         BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias);
       }
       else {
+	std::cout<<"cpu BN train forward"<<std::endl;
         BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
       }
-      std::cout<<"ReLU"<<std::endl;
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
       ReLU_Fwd<Dtype>(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
-      std::cout<<"conv"<<std::endl;
       //Conv
       Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
       Blob<Dtype>* conv_x = this->postReLU_blobVec[transitionIdx];
       Blob<Dtype>* conv_y = this->postConv_blobVec[transitionIdx];
       int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
       convolution_Fwd<Dtype>(conv_x,conv_y,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W);
-      std::cout<<"merge"<<std::endl;
       //post Conv merge
       Blob<Dtype>* mergeOutput = merged_conv[transitionIdx+1];
       Blob<Dtype>* mergeInputA = postReLU_blobVec[transitionIdx];
