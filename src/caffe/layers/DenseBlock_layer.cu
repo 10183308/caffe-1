@@ -427,7 +427,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_globalMean = this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data();
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
 	
-	/*if (this->phase_ == TEST){
+	if (this->phase_ == TEST){
 	  //std::cout<<"gpu test fwd"<<std::endl;
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
@@ -439,8 +439,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
             this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data(),
 	    BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON)
 	  );
-	}*/
-	//else {
+	}
+	else {
 	  //std::cout<<"gpu train fwd"<<std::endl;
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
 	  Dtype* batchInvVar = this->ResultSaveInvVariance_gpu[transitionIdx];
@@ -456,7 +456,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    EMA_factor,BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
-	//}
+	}
       }
 
       //ReLU
