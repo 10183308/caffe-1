@@ -400,6 +400,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    batchMean,batchInvVar)
 	  );
       }
+      std::cout<<trainCycleIdx<<"narrow"<<transitionIdx<<std::endl;
+      for (int localI=0;localI<this->growthRate;++localI){
+        std::cout<<BN_narrow_globalMean[localI];
+	std::cout<<BN_narrow_globalVar[localI];
+      }
+      std::cout<<std::endl;
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
       if (transitionIdx > 0){
