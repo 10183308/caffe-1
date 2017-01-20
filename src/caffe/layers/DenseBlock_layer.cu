@@ -364,12 +364,10 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
-      //std::cout<< "start gpu init"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
-      //std::cout<< "end gpu init"<<std::endl;
   }
-  clock_t begin_fwd = std::clock();
+  //clock_t begin_fwd = std::clock();
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
@@ -481,9 +479,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   this->trainCycleIdx += 1;
   //deploy top data
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
-  clock_t end_fwd = std::clock();
-  double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
-  std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
+  //clock_t end_fwd = std::clock();
+  //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
+  //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
   //this->logInternal_gpu("TClog",-1,false,false);
   //this->logInternal_gpu("TClog");
 }
@@ -496,7 +494,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	this->GPU_Initialization();
     	this->gpuInited = true;
     }
-    clock_t begin_bwd = std::clock();
+    //clock_t begin_bwd = std::clock();
     //assuming buffers store already computed value, always propagate down
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     //deploy top diff to buffer
@@ -607,9 +605,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
     this->LoopEndCleanup_gpu();
-    clock_t end_bwd = std::clock();
-    double elapsed_bwd = double(end_bwd - begin_bwd) / CLOCKS_PER_SEC;
-    std::cout<<"elapsed bwd time:"<<elapsed_bwd<<std::endl;
+    //clock_t end_bwd = std::clock();
+    //double elapsed_bwd = double(end_bwd - begin_bwd) / CLOCKS_PER_SEC;
+    //std::cout<<"elapsed bwd time:"<<elapsed_bwd<<std::endl;
 }
 
 template <typename Dtype>
