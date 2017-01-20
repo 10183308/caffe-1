@@ -356,12 +356,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->gpuInited = true;
   }
   if (this->trainCycleIdx < 10 || this->trainCycleIdx > 790 || this->phase_==TEST){
-    for (int i=0;i<this->blobs_.size();++i){
+    for (int i=this->numTransition;i<this->3*this->numTransition;++i){
       LogBlobHashValue<Dtype>(this->blobs_[i].get());
     }
     std::cout<<std::endl;
   }
-  //clock_t begin_fwd = std::clock();
+  clock_t begin_fwd = std::clock();
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
