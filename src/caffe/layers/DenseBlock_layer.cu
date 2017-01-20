@@ -401,7 +401,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
       }
       if (transitionIdx==10){
-          std::cout<<trainCycleIdx<<"narrow"<<<<std::endl;
+          std::cout<<trainCycleIdx<<"narrow"<<std::endl;
           print_gpuPtr(BN_narrow_globalMean,this->growthRate);
           printf("\n");
           print_gpuPtr(BN_narrow_globalVar,this->growthRate);
