@@ -400,7 +400,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    batchMean,batchInvVar)
 	  );
       }
-      if (transitionIdx==10){
+      if (transitionIdx==10 && this->initChannel == 16){
           std::cout<<trainCycleIdx<<"narrow"<<std::endl;
           print_gpuPtr(BN_narrow_globalMean,this->growthRate);
           printf("\n");
