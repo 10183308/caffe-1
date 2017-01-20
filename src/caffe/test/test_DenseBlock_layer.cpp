@@ -1,3 +1,4 @@
+#include <time.h>
 #include <algorithm>
 #include <vector>
 #include <iostream>
@@ -208,11 +209,16 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   this->bigBlob_bottom_gpu->CopyFrom(*this->bigBlob_bottom_cpu);
   vector<bool> propagate_down(1,true);
   layer5->SetUp(this->bigBottomVec_gpu,this->bigTopVec_gpu);
- 
+  clock_t begin1 = std::clock();
   layer5->Forward(this->bigBottomVec_gpu,this->bigTopVec_gpu);
-
+  clock_t end1 = std::clock();
+  double elapsed_sec1 = double(end1-begin1) / CLOCKS_PER_SEC;
+  std::cout<<"elapsed time 1:"<<elapsed_sec1<<std::endl;
+  clock_t begin2 = std::clock();
   layer5->Backward(this->bigTopVec_gpu,propagate_down,this->topBottomVec_gpu);
-
+  clock_t end2 = std::clock();
+  double elapsed_sec2 = double(end2-begin2) / CLOCKS_PER_SEC;
+  std::cout<<"elapsed time 2:"<<elapsed_sec2<<std::endl;
 }
 
 }  // namespace caffe
