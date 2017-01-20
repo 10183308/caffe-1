@@ -143,6 +143,7 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
     std::cout<<"GPU intermediate pointers start"<<std::endl;
+    std::cout<<"this->N"<<this->N<<";this->H"<<this->H<<";this->W"<<this->W<<std::endl;
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
     CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
