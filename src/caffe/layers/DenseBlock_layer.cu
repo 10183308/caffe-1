@@ -344,7 +344,7 @@ Dtype gpuPtrMean(Dtype* ptr,int len){
   Dtype output = 0;
   Dtype* cpuPtr = new Dtype[len];
   cudaMemcpy(cpuPtr,ptr,len*sizeof(Dtype),cudaMemcpyDeviceToHost);
-  for (int i=0;i<len;++i){output += ptr[i];}
+  for (int i=0;i<len;++i){output += cpuPtr[i];}
   return output/len;
 }
 
