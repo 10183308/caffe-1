@@ -92,8 +92,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype* postReLU_data_gpu;
   Dtype* postReLU_grad_gpu;
   Dtype* workspace;
-  vector<Dtype*> ResultRunningMean_gpu;
-  vector<Dtype*> ResultRunningVariance_gpu;
+  //vector<Dtype*> ResultRunningMean_gpu;
+  //vector<Dtype*> ResultRunningVariance_gpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
     

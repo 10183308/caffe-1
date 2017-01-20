@@ -64,7 +64,9 @@ namespace caffe {
 	//blobs_[i] is its filter blob
 	//blobs_[numTransition + i] is its scaler blob
 	//blobs_[2*numTransition + i] is its bias blob
-        this->blobs_.resize(3*this->numTransition);
+	//blobs_[3*numTransition + i] is its globalMean
+	//blobs_[4*numTransition + i] is its globalVar
+        this->blobs_.resize(5*this->numTransition);
 	for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
 	    //filter
 	    int inChannels = initChannel + transitionIdx * growthRate;
@@ -83,7 +85,19 @@ namespace caffe {
 	    //bias
 	    this->blobs_[2*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
 	    shared_ptr<Filler<Dtype> > weight_filler1(GetFiller<Dtype>(dbParam.bn_bias_filler()));
-	    weight_filler1->Fill(this->blobs_[2*numTransition+transitionIdx].get()); 
+	    weight_filler1->Fill(this->blobs_[2*numTransition+transitionIdx].get());
+	    //globalMean
+	    this->blobs_[3*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
+	    for (int blobIdx=0;blobIdx<inChannels;++blobIdx){
+	      shared_ptr<Blob<Dtype> > localB = this->blobs_[3*numTransition+transitionIdx];
+	      localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 0;
+	    }
+	    //globalVar
+	    this->blobs_[4*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
+	    for (int blobIdx=0;blobIdx<inChannels;++blobIdx){
+	      shared_ptr<Blob<Dtype> > localB = this->blobs_[4*numTransition+transitionIdx];
+	      localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 1;
+	    } 
 	}
 	
 }
