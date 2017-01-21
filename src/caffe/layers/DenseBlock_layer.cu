@@ -443,12 +443,14 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    EMA_factor,BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
+          if (((this->trainCycleIdx<10) || (this->trainCycleIdx>790) || (this->phase_==TEST)) && transitionIdx==11){
 
-	  std::cout<<"Train Batch Mean/InvVar"<<std::endl;
-	  print_gpuPtr<Dtype>(batchMean,16);
-	  std::cout<<std::endl;
-	  print_gpuPtr<Dtype>(batchInvVar,16);
-	  std::cout<<std::endl;
+	    std::cout<<"Train Batch Mean/InvVar"<<std::endl;
+	    print_gpuPtr<Dtype>(batchMean,16);
+	    std::cout<<std::endl;
+	    print_gpuPtr<Dtype>(batchInvVar,16);
+	    std::cout<<std::endl;
+	  }
 	}
         if (((this->trainCycleIdx<10) || (this->trainCycleIdx>790) || (this->phase_==TEST)) && transitionIdx==11){
           //std::cout<<gpuPtrMean(BN_wide_y_ptr,this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W)<<std::endl;
