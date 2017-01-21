@@ -446,13 +446,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	}
         if (((this->trainCycleIdx<10) || (this->trainCycleIdx>790) || (this->phase_==TEST)) && transitionIdx==11){
           //std::cout<<gpuPtrMean(BN_wide_y_ptr,this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W)<<std::endl;
-          for (int i=0;i<16;++i){
-	    std::cout<<BN_wide_globalMean[i]<<",";
-	  }
+          print_gpuPtr<Dtype>(BN_wide_globalMean,16);  	  
 	  std::cout<<std::endl;
-	  for (int i=0;i<16;++i){
-	    std::cout<<BN_wide_globalVar[i]<<",";
-	  }
+	  print_gpuPtr<Dtype>(BN_wide_globalVar,16);
 	  std::cout<<std::endl;
 	}
       }
