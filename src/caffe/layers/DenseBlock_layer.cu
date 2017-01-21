@@ -419,10 +419,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
         if (this->phase_ == TEST){
 	  //std::cout<<"gpu test fwd"<<std::endl;
-          BNForwardInf<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_wide_x_ptr,BN_wide_y_ptr,
-	    this->blobs_[this->numTransition+transitionIdx]->gpu_data(),this->blobs_[2*this->numTransition+transitionIdx]->gpu_data(),
-	    BN_wide_globalMean,BN_wide_globalVar, 
-	    transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W
+          BNForwardInf<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BN_wide_x_ptr,BN_wide_y_ptr,this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data(),this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data(),BN_wide_globalMean,BN_wide_globalVar,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W
 	  );
 	  /*CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
