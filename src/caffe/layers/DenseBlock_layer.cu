@@ -378,7 +378,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       Dtype* BN_narrow_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
       cudnnTensorDescriptor_t * narrowBN_paramDesc = (transitionIdx==0?tensorDescriptor_BN_initChannel:tensorDescriptor_BN_growthRate);
       
-      if (this->phase_ == TEST){
+      /*if (this->phase_ == TEST){
           CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -389,8 +389,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
             this->blobs_[2*this->numTransition+transitionIdx]->gpu_data()+channelsBefore_noself,
 	    BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON)
 	  );
-      }
-      else{
+      }*/
+      //else{
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
           Dtype* batchInvVar =  this->ResultSaveInvVariance_gpu[transitionIdx] + channelsBefore_noself;
 	  double EMA_factor = 1.0/(1+this->trainCycleIdx);
@@ -405,7 +405,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    EMA_factor,BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
-      }
+      //}
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
       if (transitionIdx > 0){
