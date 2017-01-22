@@ -11,7 +11,8 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   BatchNormParameter param = this->layer_param_.batch_norm_param();
   moving_average_fraction_ = param.moving_average_fraction();
-  use_log_ = param.use_log();
+  use_log_ = param.use_log(); //TO DELETE
+  tIdx=0; //TO DELETE
   use_global_stats_ = this->phase_ == TEST;
   if (param.has_use_global_stats())
     use_global_stats_ = param.use_global_stats();
