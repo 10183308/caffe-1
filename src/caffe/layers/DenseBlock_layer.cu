@@ -509,7 +509,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	ReLUBackward<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,ReLU_x_local,ReLU_dx_local,ReLU_dy_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
         //use cache to restore postReLU region data
 	int cache_size = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
-        CUDA_CHECK(cudaMemcpy(postReLU_data_gpu,postReLU_cache_cpu[transitionIdx],cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost)); 
+        CUDA_CHECK(cudaMemcpy(postReLU_data_gpu,postReLU_cache_cpu[transitionIdx],cache_size*sizeof(Dtype),cudaMemcpyHostToDevice)); 
 	//BN Bwd, type2, wide
 	if (transitionIdx > 0){
 	  Dtype* BNwide_x_local = this->postReLU_data_gpu;
