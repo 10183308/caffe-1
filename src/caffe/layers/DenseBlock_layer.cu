@@ -217,6 +217,10 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
     CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION));
 
+    //Mean and Var tmp
+    int totalNumChannel = this->initChannel + this->growthRate * this->numTransition;
+    CUDA_CHECK(cudaMalloc(&this->Mean_tmp, totalNumChannel*sizeof(Dtype)));
+    CUDA_CHECK(cudaMalloc(&this->Var_tmp, totalNumChannel*sizeof(Dtype)));
 }
 
 template <typename Dtype>
@@ -354,9 +358,17 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       Dtype* BN_narrow_globalMean= this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
       Dtype* BN_narrow_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data() + channelsBefore_noself;
       cudnnTensorDescriptor_t * narrowBN_paramDesc = (transitionIdx==0?tensorDescriptor_BN_initChannel:tensorDescriptor_BN_growthRate);
-      
+      int narrow_numChannels = transitionIdx==0?this->initChannel:this->growthRate;
+      Dtype* local_MeanInf = this->Mean_tmp + channelsBefore_noself;
+      Dtype* local_VarInf = this->Var_tmp + channelsBefore_noself;
+	      
       if (this->phase_ == TEST){
-          CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
+          Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ?
+            0 : 1 / this->blobs_[5*this->numTransition]->cpu_data()[0];
+	  caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalMean,local_MeanInf);
+          caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalVar,local_VarInf);
+
+	  CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
 	    *(this->tensorDescriptorVec_narrow[transitionIdx]),BN_narrow_x_ptr,
@@ -364,13 +376,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *narrowBN_paramDesc,
 	    this->blobs_[this->numTransition+transitionIdx]->gpu_data()+channelsBefore_noself,
             this->blobs_[2*this->numTransition+transitionIdx]->gpu_data()+channelsBefore_noself,
-	    BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON)
+	    local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON)
 	  );
       }
       else{
           Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx] + channelsBefore_noself;
           Dtype* batchInvVar =  this->ResultSaveInvVariance_gpu[transitionIdx] + channelsBefore_noself;
-	  double EMA_factor = 1.0/(1+this->trainCycleIdx);
 	  CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -379,9 +390,16 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *narrowBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
 	    this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
-	    0.001,BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON,
+	    0,BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
+	  //update global Mean/Var manually
+          //Mean:
+	  caffe_gpu_axpby<Dtype>(narrow_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_narrow_globalMean);
+          //Var:
+	  caffe_gpu_powx<Dtype>(narrow_numChannels,batchInvVar,Dtype(-2),local_VarInf);
+	  caffe_gpu_add_scalar<Dtype>(narrow_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
+	  caffe_gpu_axpby<Dtype>(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
       }
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
@@ -391,9 +409,16 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* BN_wide_y_ptr = this->postBN_data_gpu;
 	Dtype* BN_wide_globalMean = this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data();
 	Dtype* BN_wide_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
+        Dtype* local_MeanInf = this->Mean_tmp;
+	Dtype* local_VarInf = this->Var_tmp;
+	int wide_numChannels = transitionIdx==0?0:this->initChannel+this->growthRate*(transitionIdx-1);   
         if (this->phase_ == TEST){
-	  //std::cout<<"gpu test fwd"<<std::endl;
-          CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
+	  Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ?
+            0 : 1 / this->blobs_[5*this->numTransition]->cpu_data()[0];
+	  caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalMean,local_MeanInf);
+          caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalVar,local_VarInf);
+	  
+	  CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
 	    *(this->tensorDescriptorVec_conv_x[transitionIdx-1]),BN_wide_x_ptr,
@@ -401,14 +426,12 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *wideBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
             this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data(),
-	    BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON)
+	    local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON)
 	  );
 	}
 	else {
-	  //std::cout<<"gpu train fwd"<<std::endl;
-          Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
+	  Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
 	  Dtype* batchInvVar = this->ResultSaveInvVariance_gpu[transitionIdx];
-          double EMA_factor = 1.0/(1+this->trainCycleIdx);
           CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
@@ -417,9 +440,17 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *wideBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
 	    this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data(),
-	    0.001,BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON,
+	    0,BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
+          //update global Mean/Var manually
+          //Mean:
+	  caffe_gpu_axpby<Dtype>(wide_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_wide_globalMean);
+          //Var:
+	  caffe_gpu_powx<Dtype>(wide_numChannels,batchInvVar,Dtype(-2),local_VarInf);
+	  caffe_gpu_add_scalar<Dtype>(wide_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
+	  caffe_gpu_axpby<Dtype>(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
+
         }
       }
       //cache postReLU to cache region
@@ -446,7 +477,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   if (this->phase_ == TRAIN){
-    this->trainCycleIdx += 1;
+    this->blobs_[5*this->numTransition]->mutable_cpu_data[0] *= 0.999;
+    this->blobs_[5*this->numTransition]->mutable_cpu_data[0] += 1;
   }
   //deploy top data
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);

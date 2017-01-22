@@ -66,7 +66,7 @@ namespace caffe {
 	//blobs_[2*numTransition + i] is its bias blob
 	//blobs_[3*numTransition + i] is its globalMean
 	//blobs_[4*numTransition + i] is its globalVar
-        this->blobs_.resize(5*this->numTransition);
+        this->blobs_.resize(5*this->numTransition + 1);
 	for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
 	    //filter
 	    int inChannels = initChannel + transitionIdx * growthRate;
@@ -99,6 +99,11 @@ namespace caffe {
 	      localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 1;
 	    } 
 	}
+     //final parameter for the equivalent of blobs_[2] in Caffe-BN
+     vector<int> singletonShapeVec;
+     singletonShapeVec.push_back(1);
+     this->blobs_[5*this->numTransition].reset(new Blob<Dtype>(singletonShapeVec));
+     this->blobs_[5*this->numTransition]->mutable_cpu_data[0] = Dtype(0);
      //parameter specification: globalMean/Var weight decay and lr is 0
      for (int i=0;i<this->blobs_.size();++i){
        if (this->layer_param_.param_size()!=i){

@@ -94,6 +94,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Dtype*> postReLU_cache_cpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
+  Dtype* Mean_tmp;//used in BN inf
+  Dtype* Var_tmp;//used in BN inf
     
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase
