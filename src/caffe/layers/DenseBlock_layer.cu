@@ -409,7 +409,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_add_scalar(narrow_numChannels,Dtype(-1e-5),local_VarInf);
 	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
 
-          if (transitionIdx==5 && this->trainCycleIdx >= 798){
+          if (transitionIdx==5){
 	    std::cout<<"narrow"<<std::endl;
 	    print_gpuPtr(batchMean,narrow_numChannels);
 	    std::cout<<std::endl;
@@ -474,7 +474,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_powx(wide_numChannels,batchInvVar,Dtype(-2),local_VarInf);
 	  caffe_gpu_add_scalar(wide_numChannels,Dtype(-1e-5),local_VarInf);
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
-          if (transitionIdx==5 && this->trainCycleIdx >= 798){
+          if (transitionIdx==5){
 	    std::cout<<"wide"<<std::endl;
 	    print_gpuPtr(batchMean,wide_numChannels);
 	    std::cout<<std::endl;
