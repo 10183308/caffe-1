@@ -395,11 +395,11 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	  //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby<Dtype>(narrow_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_narrow_globalMean);
+	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_narrow_globalMean);
           //Var:
-	  caffe_gpu_powx<Dtype>(narrow_numChannels,batchInvVar,Dtype(-2),local_VarInf);
-	  caffe_gpu_add_scalar<Dtype>(narrow_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
-	  caffe_gpu_axpby<Dtype>(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
+	  caffe_gpu_powx(narrow_numChannels,batchInvVar,Dtype(-2),local_VarInf);
+	  caffe_gpu_add_scalar(narrow_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
+	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
       }
       //BN :: type2: wide channels, for anything prior to channels for
       //type1 BN
@@ -445,11 +445,11 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
           //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby<Dtype>(wide_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_wide_globalMean);
+	  caffe_gpu_axpby(wide_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_wide_globalMean);
           //Var:
-	  caffe_gpu_powx<Dtype>(wide_numChannels,batchInvVar,Dtype(-2),local_VarInf);
-	  caffe_gpu_add_scalar<Dtype>(wide_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
-	  caffe_gpu_axpby<Dtype>(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
+	  caffe_gpu_powx(wide_numChannels,batchInvVar,Dtype(-2),local_VarInf);
+	  caffe_gpu_add_scalar(wide_numChannels,local_VarInf,Dtype(-1e-5),local_VarInf);
+	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
 
         }
       }

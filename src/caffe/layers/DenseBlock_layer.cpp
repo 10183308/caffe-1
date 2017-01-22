@@ -103,7 +103,7 @@ namespace caffe {
      vector<int> singletonShapeVec;
      singletonShapeVec.push_back(1);
      this->blobs_[5*this->numTransition].reset(new Blob<Dtype>(singletonShapeVec));
-     this->blobs_[5*this->numTransition]->mutable_cpu_data[0] = Dtype(0);
+     this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] = Dtype(0);
      //parameter specification: globalMean/Var weight decay and lr is 0
      for (int i=0;i<this->blobs_.size();++i){
        if (this->layer_param_.param_size()!=i){
