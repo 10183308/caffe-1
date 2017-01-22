@@ -167,9 +167,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     for (int i=0;i<this->numTransition;++i){
         int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
         Dtype* localCache_cpu = new Dtype[cache_size];
-	Dtype* localCache_cpu2 = new Dtype[cache_size];
         postReLU_cache_cpu.push_back(localCache_cpu);
-	postBN_cache_cpu.push_back(localCache_cpu2);
 	//Result Running/Saving Mean/Variance/InvVariance
     	int localChannel = this->initChannel + i * this->growthRate;
     	Dtype* local_SaveMean;
@@ -347,8 +345,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   gpu_copy_one_to_many<Dtype>(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
-      int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-      CUDA_CHECK(cudaMemcpy(this->postBN_cache_cpu[transitionIdx],this->postBN_data_gpu,cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost)); 
       //use scaler protector before forward
       int work_n = this->N * (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;         
       //BN::type1 normal narrow channels::postConv -> postBN 
@@ -427,6 +423,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         }
       }
       //cache postReLU to cache region
+      int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
       CUDA_CHECK(cudaMemcpy(this->postReLU_cache_cpu[transitionIdx],this->postReLU_data_gpu,cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost));
       //ReLU
       Dtype* ReLU_x_ptr = this->postBN_data_gpu;
@@ -559,10 +556,9 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  )		
 	);	
 	//BN data region reverse using ReLUReverse
-        //Dtype* BNregion_reverse_y_local = this->postReLU_data_gpu;
-	//Dtype* BNregion_reverse_x_local = this->postBN_data_gpu;
-	CUDA_CHECK(cudaMemcpy(this->postBN_data_gpu,postBN_cache_cpu[transitionIdx],cache_size*sizeof(Dtype),cudaMemcpyHostToDevice));
-	//ReLUReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BNregion_reverse_y_local,BNregion_reverse_x_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
+        Dtype* BNregion_reverse_y_local = this->postReLU_data_gpu;
+	Dtype* BNregion_reverse_x_local = this->postBN_data_gpu;
+	ReLUReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BNregion_reverse_y_local,BNregion_reverse_x_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
 	
 	//this->logInternal_gpu("TClog",transitionIdx,true,false);
         //this->logInternal_gpu("TClog",transitionIdx,true,true);
