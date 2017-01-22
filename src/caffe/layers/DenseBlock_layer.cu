@@ -167,7 +167,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     for (int i=0;i<this->numTransition;++i){
         int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
         Dtype* localCache_cpu = new Dtype[cache_size];
-        postBN_cache_cpu.push_back(localCache_cpu);
+        postReLU_cache_cpu.push_back(localCache_cpu);
 	//Result Running/Saving Mean/Variance/InvVariance
     	int localChannel = this->initChannel + i * this->growthRate;
     	Dtype* local_SaveMean;
