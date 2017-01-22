@@ -301,35 +301,6 @@ __global__ void BNForwardInf(int n,Dtype* xPtr,Dtype* yPtr,Dtype* scalerPtr,Dtyp
     }
   }
 }
-/*
-template <typename Dtype>
-__global__ void BNReverse(int n,Dtype* yPtr,Dtype* xPtr,Dtype* scalerPtr,Dtype* biasPtr,Dtype* batchMeanPtr,Dtype* batchInvVarPtr,double epsilon,int transitionIdx,int numTransition,int N,int initChannel,int growthRate,int H,int W){
-  int channelLimit = transitionIdx==0?0:initChannel+(transitionIdx-1)*growthRate;
-  CUDA_KERNEL_LOOP(index, n){
-    int localChannelIdx = (index/(H*W)) % (initChannel + growthRate * numTransition); 
-    //i.e. for transitionIdx==1, only reverse transform region 0
-    if (localChannelIdx < channelLimit){
-      //x = a * y + b :: affine transform, find out a and b
-      double a = 1.0 / (batchInvVarPtr[localChannelIdx] * scalerPtr[localChannelIdx]);
-      double b = batchMeanPtr[localChannelIdx] - (biasPtr[localChannelIdx])/(batchInvVarPtr[localChannelIdx] * scalerPtr[localChannelIdx]);
-      xPtr[index] = a * yPtr[index] + b;
-    }
-  }
-}
-*/
-/*
-//acts on cpu pointer
-template <typename Dtype>
-void ScalerProtector(Dtype* scaler_mutable_data,int numValues){
-  for (int i=0;i<numValues;++i){
-    Dtype localVal = scaler_mutable_data[i];
-    if ((localVal < 1e-3) && (localVal > -1e-3)){
-        if (localVal>=0){scaler_mutable_data[i] = 1e-3;}
-	else {scaler_mutable_data[i] = -1e-3;}
-    }
-  }
-}
-*/
 
 template <typename Dtype>
 void composeFwdOutput(Dtype* output,Dtype* frontB,Dtype* backB,int N,int channelFront,int channelBack,int H,int W){
@@ -376,7 +347,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
       //use scaler protector before forward
       int totalLocalChannel = initChannel + growthRate * transitionIdx;
-      //ScalerProtector(this->blobs_[numTransition + transitionIdx]->mutable_cpu_data(),totalLocalChannel);
       int work_n = this->N * (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;         
       //BN::type1 normal narrow channels::postConv -> postBN 
       int channelsBefore_noself = (transitionIdx==0?0:(this->initChannel + (transitionIdx - 1)*this->growthRate));
