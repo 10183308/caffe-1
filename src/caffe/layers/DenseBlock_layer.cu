@@ -339,6 +339,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->GPU_Initialization();
       this->gpuInited = true;
   }
+  Dtype EMA_decay = 0.99;
   clock_t begin_fwd = std::clock();
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
@@ -403,9 +404,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	  //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_MeanInf,Dtype(0.999),BN_narrow_globalMean);
+	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_MeanInf,EMA_decay,BN_narrow_globalMean);
           //Var:
-	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
+	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,EMA_decay,BN_narrow_globalVar);
 
           if (transitionIdx==5 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
@@ -467,9 +468,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  );
 	  //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_MeanInf,Dtype(0.999),BN_wide_globalMean);
+	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_MeanInf,EMA_decay,BN_wide_globalMean);
           //Var:
-	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
+	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,EMA_decay,BN_wide_globalVar);
           if (transitionIdx==5 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
 	    std::cout<<"wide TRAIN"<<std::endl;
 	    print_gpuPtr(batchMean,wide_numChannels);
@@ -503,7 +504,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   if (this->phase_ == TRAIN){
-    this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= 0.999;
+    this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= EMA_decay;
     this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] += 1;
     this->trainCycleIdx+=1;
   }
