@@ -37,8 +37,8 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         this->blobs_[1]->gpu_data(), variance_.mutable_gpu_data());
     if (use_log_){
       std::cout<<"TEST"<<std::endl;
-      printBlob(&mean_);
-      printBlob(&variance_);
+      //printBlob(&mean_);
+      //printBlob(&variance_);
     }
   } else {
     // compute mean
@@ -51,7 +51,7 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         mean_.mutable_gpu_data());
     if (use_log_){
       std::cout<<"Train"<<std::endl;
-      printBlob(&mean_);
+      //printBlob(&mean_);
     }
   }
 
@@ -92,7 +92,7 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   caffe_gpu_powx(variance_.count(), variance_.gpu_data(), Dtype(0.5),
       variance_.mutable_gpu_data());
   if (use_log_){
-      printBlob(&variance_);
+      //printBlob(&variance_);
   }
 
   // replicate variance to input size
