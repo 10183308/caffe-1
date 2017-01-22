@@ -128,9 +128,9 @@ TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
-  this->layer_param.set_phase(TRAIN);//To be disabled
+  //this->layer_param.set_phase(TRAIN);//To be disabled
   DenseBlockLayer<Dtype>* layer=new DenseBlockLayer<Dtype>(this->layer_param);
-  this->layer_param.set_phase(TEST);
+  //this->layer_param.set_phase(TEST);
   DenseBlockLayer<Dtype>* layer2=new DenseBlockLayer<Dtype>(this->layer_param);
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
@@ -165,7 +165,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   delete layer2;
 }
 
-/*
+
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -205,7 +205,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
-*/
+
 
 /*
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
