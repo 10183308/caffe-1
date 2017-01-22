@@ -53,6 +53,17 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 template <typename Dtype>
 void BatchNormLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
+  if (use_log_){
+    if (this->phase_ == TEST){
+      std::cout<< "CPU TEST"<<std::endl;
+      std::cout<<std::endl;
+    }
+    else {
+      std::cout<< "CPU TRAIN"<<std::endl;
+      std::cout<<std::endl;
+    }
+  }
+	
   if (bottom[0]->num_axes() >= 1)
     CHECK_EQ(bottom[0]->shape(1), channels_);
   top[0]->ReshapeLike(*bottom[0]);
