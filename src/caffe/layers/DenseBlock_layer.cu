@@ -411,9 +411,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 
           if (transitionIdx==5 && this->trainCycleIdx >= 798){
 	    std::cout<<"narrow"<<std::endl;
-	    print_gpuPtr(batchMean,wide_numChannels);
+	    print_gpuPtr(batchMean,narrow_numChannels);
 	    std::cout<<std::endl;
-	    print_gpuPtr(batchInvVar,wide_numChannels);
+	    print_gpuPtr(batchInvVar,narrow_numChannels);
 	    std::cout<<std::endl;
 	  }
 
