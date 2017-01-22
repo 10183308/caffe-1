@@ -398,22 +398,20 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *narrowBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
 	    this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
-	    0,BN_narrow_globalMean,BN_narrow_globalVar,CUDNN_BN_MIN_EPSILON,
+	    Dtype(1),local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
 	  //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_narrow_globalMean);
+	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_MeanInf,Dtype(0.999),BN_narrow_globalMean);
           //Var:
-	  caffe_gpu_powx(narrow_numChannels,batchInvVar,Dtype(-2),local_VarInf);
-	  caffe_gpu_add_scalar(narrow_numChannels,Dtype(-1e-5),local_VarInf);
 	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_narrow_globalVar);
 
           if (transitionIdx==5 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
-	    print_gpuPtr(batchMean,narrow_numChannels);
+	    print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
-	    print_gpuPtr(batchInvVar,narrow_numChannels);
+	    print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
 	  }
 
@@ -464,15 +462,13 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *wideBN_paramDesc,
 	    this->blobs_[this->numTransition + transitionIdx]->gpu_data(),
 	    this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data(),
-	    0,BN_wide_globalMean,BN_wide_globalVar,CUDNN_BN_MIN_EPSILON,
+	    Dtype(1),local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
 	  //update global Mean/Var manually
           //Mean:
-	  caffe_gpu_axpby(wide_numChannels,Dtype(1),batchMean,Dtype(0.999),BN_wide_globalMean);
+	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_MeanInf,Dtype(0.999),BN_wide_globalMean);
           //Var:
-	  caffe_gpu_powx(wide_numChannels,batchInvVar,Dtype(-2),local_VarInf);
-	  caffe_gpu_add_scalar(wide_numChannels,Dtype(-1e-5),local_VarInf);
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,Dtype(0.999),BN_wide_globalVar);
           if (transitionIdx==5 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
 	    std::cout<<"wide TRAIN"<<std::endl;
