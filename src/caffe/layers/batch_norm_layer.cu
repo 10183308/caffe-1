@@ -37,6 +37,7 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         this->blobs_[1]->gpu_data(), variance_.mutable_gpu_data());
     if (use_log_){
       std::cout<<"TEST"<<std::endl;
+      std::cout<<std::endl;
       //printBlob(&mean_);
       //printBlob(&variance_);
     }
@@ -51,6 +52,7 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         mean_.mutable_gpu_data());
     if (use_log_){
       std::cout<<"Train"<<std::endl;
+      std::cout<<std::endl;
       //printBlob(&mean_);
     }
   }
