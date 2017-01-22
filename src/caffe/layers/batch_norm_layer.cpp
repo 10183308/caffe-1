@@ -53,17 +53,6 @@ void BatchNormLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 template <typename Dtype>
 void BatchNormLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
-  if (use_log_){
-    if (this->phase_ == TEST){
-      std::cout<< "CPU TEST"<<std::endl;
-      std::cout<<std::endl;
-    }
-    else {
-      std::cout<< "CPU TRAIN"<<std::endl;
-      std::cout<<std::endl;
-    }
-  }
-	
   if (bottom[0]->num_axes() >= 1)
     CHECK_EQ(bottom[0]->shape(1), channels_);
   top[0]->ReshapeLike(*bottom[0]);
@@ -103,7 +92,18 @@ void BatchNormLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   Dtype* top_data = top[0]->mutable_cpu_data();
   int num = bottom[0]->shape(0);
   int spatial_dim = bottom[0]->count()/(bottom[0]->shape(0)*channels_);
-
+  
+  if (use_log_){
+    if (this->phase_ == TEST){
+      std::cout<< "CPU TEST"<<std::endl;
+      std::cout<<std::endl;
+    }
+    else {
+      std::cout<< "CPU TRAIN"<<std::endl;
+      std::cout<<std::endl;
+    }
+  }
+	
   if (bottom[0] != top[0]) {
     caffe_copy(bottom[0]->count(), bottom_data, top_data);
   }
