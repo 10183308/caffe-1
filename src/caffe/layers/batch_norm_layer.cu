@@ -51,7 +51,12 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         num_by_chans_.gpu_data(), batch_sum_multiplier_.gpu_data(), 0.,
         mean_.mutable_gpu_data());
     if (use_log_){
-      std::cout<<"Train"<<std::endl;
+      if (this->phase_){
+        std::cout<<"Train"<<std::endl;
+      }
+      else {
+        std::cout<<"Test"<<std::endl;
+      }
       std::cout<<std::endl;
       //printBlob(&mean_);
     }
