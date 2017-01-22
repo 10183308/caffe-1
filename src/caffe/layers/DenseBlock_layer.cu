@@ -346,7 +346,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
       //use scaler protector before forward
-      int totalLocalChannel = initChannel + growthRate * transitionIdx;
       int work_n = this->N * (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;         
       //BN::type1 normal narrow channels::postConv -> postBN 
       int channelsBefore_noself = (transitionIdx==0?0:(this->initChannel + (transitionIdx - 1)*this->growthRate));
@@ -425,7 +424,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       }
       //cache postReLU to cache region
       int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-      CUDA_CHECK(cudaMemcpy(this->postReLU_cache_cpu[i],this->postReLU_data_gpu,cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost));
+      CUDA_CHECK(cudaMemcpy(this->postReLU_cache_cpu[transitionIdx],this->postReLU_data_gpu,cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost));
       //ReLU
       Dtype* ReLU_x_ptr = this->postBN_data_gpu;
       Dtype* ReLU_y_ptr = this->postReLU_data_gpu;
@@ -510,7 +509,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	ReLUBackward<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,ReLU_x_local,ReLU_dx_local,ReLU_dy_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
         //use cache to restore postReLU region data
 	int cache_size = this->N * (this->initChannel+this->growthRate*this->numTransition) * this->H * this->W; 
-        CUDA_CHECK(cudaMemcpy(postReLU_data_gpu,postReLU_cache_gpu[transitionIdx],cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost)); 
+        CUDA_CHECK(cudaMemcpy(postReLU_data_gpu,postReLU_cache_cpu[transitionIdx],cache_size*sizeof(Dtype),cudaMemcpyDeviceToHost)); 
 	//BN Bwd, type2, wide
 	if (transitionIdx > 0){
 	  Dtype* BNwide_x_local = this->postReLU_data_gpu;
