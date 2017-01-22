@@ -1,10 +1,19 @@
 #include <algorithm>
 #include <vector>
+#include <iostream>
 
 #include "caffe/layers/batch_norm_layer.hpp"
 #include "caffe/util/math_functions.hpp"
 
 namespace caffe {
+
+template <typename Dtype>
+void printBlob(Blob<Dtype>* B){
+  for (int i=0;i<B->count();++i){
+    std::cout<<B->cpu_data()[i]<<",";
+  }
+  std::cout<<std::endl;
+}
 
 template <typename Dtype>
 void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
@@ -27,6 +36,11 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         this->blobs_[0]->gpu_data(), mean_.mutable_gpu_data());
     caffe_gpu_scale(variance_.count(), scale_factor,
         this->blobs_[1]->gpu_data(), variance_.mutable_gpu_data());
+    if (use_log_){
+      std::cout<<"TEST"<<std::endl;
+      printBlob(&mean_);
+      printBlob(&variance_);
+    }
   } else {
     // compute mean
     caffe_gpu_gemv<Dtype>(CblasNoTrans, channels_ * num, spatial_dim,
@@ -36,6 +50,10 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     caffe_gpu_gemv<Dtype>(CblasTrans, num, channels_, 1.,
         num_by_chans_.gpu_data(), batch_sum_multiplier_.gpu_data(), 0.,
         mean_.mutable_gpu_data());
+    if (use_log_){
+      std::cout<<"Train"<<std::endl;
+      printBlob(&mean_);
+    }
   }
 
   // subtract mean
@@ -74,6 +92,9 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   caffe_gpu_add_scalar(variance_.count(), eps_, variance_.mutable_gpu_data());
   caffe_gpu_powx(variance_.count(), variance_.gpu_data(), Dtype(0.5),
       variance_.mutable_gpu_data());
+  if (use_log_){
+      printBlob(&variance_);
+  }
 
   // replicate variance to input size
   caffe_gpu_gemm<Dtype>(CblasNoTrans, CblasNoTrans, num, channels_, 1, 1,
