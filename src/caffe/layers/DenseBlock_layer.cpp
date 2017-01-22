@@ -101,6 +101,10 @@ namespace caffe {
 	}
      //parameter specification: globalMean/Var weight decay and lr is 0
      for (int i=0;i<this->blobs_.size();++i){
+       if (this->layer_param_.param_size()!=i){
+         CHECK_EQ(0, 1)
+           << "Nope";
+       }
        ParamSpec* fixed_param_spec = this->layer_param_.add_param();  
        if (i>=3*this->numTransition){
          fixed_param_spec->set_lr_mult(0.f);
