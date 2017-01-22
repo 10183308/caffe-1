@@ -476,8 +476,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   if (this->phase_ == TRAIN){
-    this->blobs_[5*this->numTransition]->mutable_cpu_data[0] *= 0.999;
-    this->blobs_[5*this->numTransition]->mutable_cpu_data[0] += 1;
+    this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= 0.999;
+    this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] += 1;
   }
   //deploy top data
   composeFwdOutput(top[0]->mutable_gpu_data(),this->postReLU_data_gpu,this->postConv_data_gpu,this->N,this->initChannel+this->growthRate*(this->numTransition-1),this->growthRate,this->H,this->W);
