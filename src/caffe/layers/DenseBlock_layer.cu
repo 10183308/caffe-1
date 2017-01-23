@@ -339,7 +339,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->GPU_Initialization();
       this->gpuInited = true;
   }
-  Dtype EMA_decay = 0.999;
+  Dtype EMA_decay = 0.99;
   clock_t begin_fwd = std::clock();
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
