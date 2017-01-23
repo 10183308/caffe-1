@@ -369,7 +369,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalMean,local_MeanInf);
           caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalVar,local_VarInf);
 
-	  if (transitionIdx==5){
+	  if (transitionIdx==1){
 	    std::cout<<"narrow TEST"<<std::endl;
 	    print_gpuPtr(local_MeanInf,narrow_numChannels);
 	    std::cout<<std::endl;
@@ -408,7 +408,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           //Var:
 	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,EMA_decay,BN_narrow_globalVar);
 
-          if (transitionIdx==5 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
+          if (transitionIdx==1 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
 	    print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
@@ -433,7 +433,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalMean,local_MeanInf);
           caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalVar,local_VarInf);
 	  
-	  if (transitionIdx==5){
+	  if (transitionIdx==1){
 	    std::cout<<"wide TEST"<<std::endl;
 	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
@@ -471,7 +471,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_MeanInf,EMA_decay,BN_wide_globalMean);
           //Var:
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,EMA_decay,BN_wide_globalVar);
-          if (transitionIdx==5 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
+          if (transitionIdx==1 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
 	    std::cout<<"wide TRAIN"<<std::endl;
 	    print_gpuPtr(batchMean,wide_numChannels);
 	    std::cout<<std::endl;

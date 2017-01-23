@@ -20,10 +20,10 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (use_log_){
       if (this->phase_ == TRAIN){
-        std::cout<<"Train"<<std::endl;
+        std::cout<<"Train with moving_average "<<moving_average_fraction_<<std::endl;
       }
       else {
-        std::cout<<"Test"<<std::endl;
+        std::cout<<"Test with moving_average "<<moving_average_fraction_<<std::endl;
       }
       std::cout<<std::endl;
       //printBlob(&mean_);
@@ -96,15 +96,14 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         variance_.gpu_data(), moving_average_fraction_,
         this->blobs_[1]->mutable_gpu_data());
   }
-  if (use_log_){
-    std::cout<<"Var"<<std::endl;  
-    printBlob(&variance_);
-  }
   // normalize variance
   caffe_gpu_add_scalar(variance_.count(), eps_, variance_.mutable_gpu_data());
   caffe_gpu_powx(variance_.count(), variance_.gpu_data(), Dtype(0.5),
       variance_.mutable_gpu_data());
-  
+  if (use_log_){
+    std::cout<<"Var"<<std::endl;  
+    printBlob(&variance_);
+  } 
 
   // replicate variance to input size
   caffe_gpu_gemm<Dtype>(CblasNoTrans, CblasNoTrans, num, channels_, 1, 1,
