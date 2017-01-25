@@ -232,8 +232,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
 
   //Scaler Grad
   for (int transitionIdx=0;transitionIdx<layer3->numTransition;++transitionIdx){
-    Blob<Dtype>* layer3localScaler = layer3->blobs()[layer3->numTransition+transitionIdx];
-    Blob<Dtype>* layer4localScaler = layer4->blobs()[layer4->numTransition+transitionIdx];
+    Blob<Dtype>* layer3localScaler = layer3->blobs()[layer3->numTransition+transitionIdx].get();
+    Blob<Dtype>* layer4localScaler = layer4->blobs()[layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
       EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),0.4); 
@@ -241,8 +241,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   } 
   //Bias Grad
   for (int transitionIdx=0;transitionIdx<layer3->numTransition;++transitionIdx){
-    Blob<Dtype>* layer3localBias = layer3->blobs()[2*layer3->numTransition+transitionIdx];
-    Blob<Dtype>* layer4localBias = layer4->blobs()[2*layer4->numTransition+transitionIdx];
+    Blob<Dtype>* layer3localBias = layer3->blobs()[2*layer3->numTransition+transitionIdx].get();
+    Blob<Dtype>* layer4localBias = layer4->blobs()[2*layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
       EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4); 
@@ -250,8 +250,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   } 
   //GlobalMean/Var should have no Grad
   for (int i=0;i<2*layer3->numTransition;++i){
-    Blob<Dtype>* layer3B = layer3->blobs()[3*layer3->numTransition+i];
-    Blob<Dtype>* layer4B = layer4->blobs()[3*layer4->numTransition+i];
+    Blob<Dtype>* layer3B = layer3->blobs()[3*layer3->numTransition+i].get();
+    Blob<Dtype>* layer4B = layer4->blobs()[3*layer4->numTransition+i].get();
     for (int c=0;c<layer3B->shape(1);++c){
       EXPECT_NEAR(layer3B->diff_at(0,c,0,0),0,1e-3);
       EXPECT_NEAR(layer4B->diff_at(0,c,0,0),0,1e-3);
