@@ -105,6 +105,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   int filter_H, filter_W;
   //gpu workspace size
   int workspace_size_bytes;
+  //Decay value used in EMA of BN
+  Dtype EMA_decay;
   //gpu handles and descriptors
   cudnnHandle_t* cudnnHandlePtr;
   vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;//for BN

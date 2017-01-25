@@ -59,6 +59,7 @@ namespace caffe {
         this->filter_H = dbParam.filter_h();
         this->filter_W = dbParam.filter_w();
         this->workspace_size_bytes = 10000000;
+	this->EMA_decay = 0.999;
         //Parameter Blobs
 	//for transition i, 
 	//blobs_[i] is its filter blob
@@ -401,7 +402,14 @@ Dtype getVar(Blob<Dtype>* A,int channelIdx){
 }
 
 template <typename Dtype>
-void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int w_img,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* scaler,Blob<Dtype>* bias){
+void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int w_img,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,Blob<Dtype>* factor_b){
+    int channelShape[] = {1,C,1,1};
+    vector<int> channelShapeVec(channelShape,channelShape+4);
+    Blob<Dtype>* localInf_Mean = new Blob<Dtype>(channelShapeVec);
+    Blob<Dtype>* localInf_Var = new Blob<Dtype>(channelShapeVec);
+    Dtype scale_factor = factor_b->cpu_data()[0] == 0 ? 0 : (1/factor_b->cpu_data()[0]);
+    caffe_gpu_scale(localInf_Mean.count(),scale_factor,globalMean,local_MeanInf);
+    caffe_gpu_scale(localInf_Var.count(),scale_factor,globalVar,local_VarInf);
     //Reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
@@ -412,10 +420,10 @@ void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int
 
     for (int n=0;n<N;++n){
       for (int cIdx=0;cIdx<C;++cIdx){
-        Dtype denom = 1.0 / sqrt(globalVar->data_at(0,cIdx,0,0) + epsilon);
+        Dtype denom = 1.0 / sqrt(localInf_Var->data_at(0,cIdx,0,0) + epsilon);
 	for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
-	    outputPtr[output->offset(n,cIdx,hIdx,wIdx)] = scaler->data_at(0,cIdx,0,0) * (denom * (input->data_at(n,cIdx,hIdx,wIdx) - globalMean->data_at(0,cIdx,0,0))) + bias->data_at(0,cIdx,0,0);
+	    outputPtr[output->offset(n,cIdx,hIdx,wIdx)] = scaler->data_at(0,cIdx,0,0) * (denom * (input->data_at(n,cIdx,hIdx,wIdx) - localInf_Mean->data_at(0,cIdx,0,0))) + bias->data_at(0,cIdx,0,0);
 	  }
 	}
       }
@@ -423,7 +431,7 @@ void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int
 }
 
 template <typename Dtype>
-void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int trainCycleIdx,int N,int C,int h_img,int w_img){
+void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,Blob<Dtype>* globalMean,Blob<Dtype>* globalVar,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int N,int C,int h_img,int w_img,Dtype EMA_decay){
     //reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
@@ -431,7 +439,6 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
     output_xhat->Reshape(outputShapeVec);
     //BN Fwd train
     double epsilon = 1e-5;
-    double EMA_factor = 1.0 / (1+trainCycleIdx);
     //get batch/global Mean/Var
     for (int channelIdx=0;channelIdx<C;++channelIdx){
       int variance_adjust_m = N*h_img*w_img;
@@ -443,8 +450,8 @@ void BN_train_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* output_xhat,
       //global
       Dtype* globalMean_mutable = globalMean->mutable_cpu_data();
       Dtype* globalVar_mutable = globalVar->mutable_cpu_data();
-      globalMean_mutable[channelIdx] = (1-EMA_factor) * globalMean->data_at(0,channelIdx,0,0) + EMA_factor * batchMean->data_at(0,channelIdx,0,0);
-      globalVar_mutable[channelIdx] = (1-EMA_factor) * globalVar->data_at(0,channelIdx,0,0) + EMA_factor * batchVar->data_at(0,channelIdx,0,0);
+      globalMean_mutable[channelIdx] = EMA_decay * globalMean->data_at(0,channelIdx,0,0) + batchMean->data_at(0,channelIdx,0,0);
+      globalVar_mutable[channelIdx] = EMA_decay * globalVar->data_at(0,channelIdx,0,0) + batchVar->data_at(0,channelIdx,0,0);
     }
     //process data
     for (int n=0;n<N;++n){
@@ -691,12 +698,12 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* Bias = this->blobs_[2*numTransition + transitionIdx].get();
       int localChannels = this->initChannel+transitionIdx*this->growthRate;
       if (this->phase_ == TEST){
-	std::cout<<"cpu BN test forward"<<std::endl;
-        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias);
+	//std::cout<<"cpu BN test forward"<<std::endl;
+        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias,this->blobs_[5*this->numTransition].get());
       }
       else {
-	std::cout<<"cpu BN train forward"<<std::endl;
-        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->trainCycleIdx,this->N,localChannels,this->H,this->W);
+	//std::cout<<"cpu BN train forward"<<std::endl;
+        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->N,localChannels,this->H,this->W,this->EMA_factor);
       }
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
@@ -715,7 +722,11 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     }
     //deploy output data
     top[0]->CopyFrom(*(this->merged_conv[this->numTransition]));
-    this->trainCycleIdx+=1;
+    if (this->phase_ == TRAIN){
+      this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= this->EMA_decay;
+      this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] += 1;
+      this->trainCycleidx+=1;
+    }    
   }
 
 
