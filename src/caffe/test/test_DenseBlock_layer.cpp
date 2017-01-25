@@ -40,7 +40,7 @@ void printBlobDiff(Blob<Dtype>* B){
 }
 
 template <typename TypeParam>
-class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
+class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
   typedef typename TypeParam::Dtype Dtype;
 
  protected:
@@ -68,7 +68,21 @@ class DenseBlockLayerTest : public MultiDeviceTest<TypeParam> {
     db_param->mutable_filter_filler()->set_type("gaussian");
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
-  
+    //For comparison with existing Caffe layer
+    BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
+    bn_param->set_moving_average_fraction(0.999);
+    bn_param->set_eps(1e-5);
+
+    ReLUParameter* relu_param = this->layer_param.mutable_relu_param();
+    relu_param->set_negative_slope(0.5);
+    
+    ConvolutionParameter* conv_param = this->layer_param.mutable_convolution_param();
+
+
+    ConcatParameter* concat_param = this->layer_param.mutable_concat_param();
+
+
+    //big for speed test
     DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
     bigDB_param->set_numtransition(big_numTransition);
     bigDB_param->set_initchannel(big_initC);
@@ -270,6 +284,24 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
 
 }
 
+template <typename Dtype>
+void Simulate_Fwd(vector<Blob<Dtype>*> bottom,vector<Blob<Dtype>*> top){
+  //BN1
+  
+  //ReLU1
+  //
+  //Conv1
+  //
+  //BN2
+  //
+  //ReLU2
+  //
+  //Conv2
+}
+
+void Simulate_Bwd(vector<Blob<Dtype>*> top,vector<Blob<Dtype>*> bottom){
+  
+}
 
 /*
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
