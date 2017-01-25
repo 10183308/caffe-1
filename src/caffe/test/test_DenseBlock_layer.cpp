@@ -300,6 +300,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*> bottom,vector<Blob<Dtype>*> top){
   //Conv2
 }
 
+template <typename Dtype>
 void Simulate_Bwd(vector<Blob<Dtype>*> top,vector<Blob<Dtype>*> bottom){
   
 }
