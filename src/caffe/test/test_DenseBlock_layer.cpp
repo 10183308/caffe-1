@@ -240,7 +240,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
       std::cout<<"CPU scaler"<<std::endl;
       std::cout<<layer3localScaler->diff_at(0,channelIdx,0,0)<<std::endl;
       std::cout<<"GPU scaler"<<std::endl;
-      std::cout<<layer4localScaler->diff_at(0,channelidx,0,0)<<std::endl;
+      std::cout<<layer4localScaler->diff_at(0,channelIdx,0,0)<<std::endl;
     }
   } 
   //Bias Grad
