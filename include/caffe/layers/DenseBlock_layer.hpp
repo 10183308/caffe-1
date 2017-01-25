@@ -38,6 +38,9 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   void logInternal_gpu(string dir,int transitionIdx,bool logDynamic,bool logDiff);
 
+  int initChannel, growthRate, numTransition; 
+  int N,H,W; //N,H,W of the input tensor, inited in reshape phase
+
  protected:
   
   virtual void CPU_Initialization();
@@ -97,8 +100,6 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype* Mean_tmp;//used in BN inf
   Dtype* Var_tmp;//used in BN inf
     
-  int initChannel, growthRate, numTransition; 
-  int N,H,W; //N,H,W of the input tensor, inited in reshape phase
   int trainCycleIdx; //used in BN train phase for EMA Mean/Var estimation
   //convolution Related
   int pad_h, pad_w, conv_verticalStride, conv_horizentalStride; 
