@@ -237,6 +237,10 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
       EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),0.4); 
+      std::cout<<"CPU scaler"<<std::endl;
+      std::cout<<layer3localScaler->diff_at(0,channelIdx,0,0)<<std::endl;
+      std::cout<<"GPU scaler"<<std::endl;
+      std::cout<<layer4localScaler->diff_at(0,channelidx,0,0)<<std::endl;
     }
   } 
   //Bias Grad
