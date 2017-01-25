@@ -249,7 +249,11 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     Blob<Dtype>* layer4localBias = layer4->blobs()[2*layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
-      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4); 
+      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4);
+      std::cout<<"CPU Bias"<<std::endl;
+      std::cout<<layer3localBias->diff_at(0,channelIdx,0,0)<<std::endl;
+      std::cout<<"GPU Bias"<<std::endl;
+      std::cout<<layer4localBias->diff_at(0,channelIdx,0,0)<<std::endl;
     }
   } 
   //GlobalMean/Var should have no Grad
