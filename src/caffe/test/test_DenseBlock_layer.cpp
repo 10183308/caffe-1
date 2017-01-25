@@ -69,6 +69,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     db_param->mutable_bn_scaler_filler()->set_type("gaussian");
     db_param->mutable_bn_bias_filler()->set_type("gaussian");
     //For comparison with existing Caffe layer
+    /*
     BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
     bn_param->set_moving_average_fraction(0.999);
     bn_param->set_eps(1e-5);
@@ -81,7 +82,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 
     ConcatParameter* concat_param = this->layer_param.mutable_concat_param();
 
-
+    */
     //big for speed test
     DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
     bigDB_param->set_numtransition(big_numTransition);
