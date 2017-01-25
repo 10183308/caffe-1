@@ -226,7 +226,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
       for (int filterHIdx=0;filterHIdx<3;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<3;++filterWIdx){
 	  EXPECT_NEAR(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.6); //slightly relax
-          std::cout<<(filter1layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter1layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
+          std::cout<<(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
 	}
       }
     }
