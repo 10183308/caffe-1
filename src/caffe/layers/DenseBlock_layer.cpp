@@ -408,8 +408,8 @@ void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int
     Blob<Dtype>* localInf_Mean = new Blob<Dtype>(channelShapeVec);
     Blob<Dtype>* localInf_Var = new Blob<Dtype>(channelShapeVec);
     Dtype scale_factor = factor_b->cpu_data()[0] == 0 ? 0 : (1/factor_b->cpu_data()[0]);
-    caffe_gpu_scale(localInf_Mean.count(),scale_factor,globalMean,local_MeanInf);
-    caffe_gpu_scale(localInf_Var.count(),scale_factor,globalVar,local_VarInf);
+    caffe_gpu_scale(localInf_Mean->count(),scale_factor,globalMean,localInf_Mean);
+    caffe_gpu_scale(localInf_Var->count(),scale_factor,globalVar,localInf_Var);
     //Reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
@@ -703,7 +703,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       }
       else {
 	//std::cout<<"cpu BN train forward"<<std::endl;
-        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->N,localChannels,this->H,this->W,this->EMA_factor);
+        BN_train_Fwd<Dtype>(BN_bottom,BN_top,this->BN_XhatVec[transitionIdx],this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],Scaler,Bias,this->N,localChannels,this->H,this->W,this->EMA_decay);
       }
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
@@ -725,7 +725,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     if (this->phase_ == TRAIN){
       this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= this->EMA_decay;
       this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] += 1;
-      this->trainCycleidx+=1;
+      this->trainCycleIdx+=1;
     }    
   }
 
