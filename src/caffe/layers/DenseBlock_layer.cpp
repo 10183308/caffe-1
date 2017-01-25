@@ -408,8 +408,8 @@ void BN_inf_Fwd(Blob<Dtype>* input,Blob<Dtype>* output,int N,int C,int h_img,int
     Blob<Dtype>* localInf_Mean = new Blob<Dtype>(channelShapeVec);
     Blob<Dtype>* localInf_Var = new Blob<Dtype>(channelShapeVec);
     Dtype scale_factor = factor_b->cpu_data()[0] == 0 ? 0 : (1/factor_b->cpu_data()[0]);
-    caffe_gpu_scale(localInf_Mean->count(),scale_factor,globalMean,localInf_Mean);
-    caffe_gpu_scale(localInf_Var->count(),scale_factor,globalVar,localInf_Var);
+    caffe_cpu_scale(localInf_Mean->count(),scale_factor,globalMean->cpu_data(),localInf_Mean->mutable_cpu_data());
+    caffe_cpu_scale(localInf_Var->count(),scale_factor,globalVar->cpu_data(),localInf_Var->mutable_cpu_data());
     //Reshape output
     int outputShape[] = {N,C,h_img,w_img};
     vector<int> outputShapeVec(outputShape,outputShape+4);
