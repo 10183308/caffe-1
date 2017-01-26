@@ -122,9 +122,10 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
         log_gpuPtr<Dtype>(this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data(),numChannel_moreWide,localDir+"globalVariance_gpu_transition"+itos_cu(transitionIdx));
       	log_gpuPtr<Dtype>(this->ResultSaveMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveMean_gpu_transition"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
-        //Filter_grad_gpu
+        //Filter_data/grad_gpu
         int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
-        log_gpuPtr<Dtype>(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
+        log_gpuPtr<Dtype>(this->blobs_[transitionIdx]->mutable_gpu_data(),filterSize,localDir+"Filter_data_gpu_"+itos_cu(transitionIdx));
+	log_gpuPtr<Dtype>(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
         //Scaler_grad_gpu
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannel_moreWide,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_data(),numChannel_moreWide,localDir+"Scaler_data_gpu_"+itos_cu(transitionIdx));
