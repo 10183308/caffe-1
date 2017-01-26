@@ -468,6 +468,9 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwd){
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* dbLayer = new DenseBlockLayer<Dtype>(this->layer_param);
+  global_id += 100;
+  dbLayer->setLodId(global_id);
+  global_id += 1;
   
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->filter_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
