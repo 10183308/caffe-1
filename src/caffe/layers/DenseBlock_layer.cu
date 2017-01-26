@@ -118,8 +118,8 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
       for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
 	int numChannel_moreWide = this->initChannel + this->growthRate * transitionIdx;
         //global/batch Mean/Variance
-        log_gpuPtr<Dtype>(this->blobs_[3*this->numTransition+transitionIdx]->gpu_data(),numChannel_moreWide,localDir+"globalMean_gpu_transition"+itos_cu(transitionIdx));
-        log_gpuPtr<Dtype>(this->blobs_[4*this->numTransition+transitionIdx]->gpu_data(),numChannel_moreWide,localDir+"globalVariance_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr<Dtype>(this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data(),numChannel_moreWide,localDir+"globalMean_gpu_transition"+itos_cu(transitionIdx));
+        log_gpuPtr<Dtype>(this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data(),numChannel_moreWide,localDir+"globalVariance_gpu_transition"+itos_cu(transitionIdx));
       	log_gpuPtr<Dtype>(this->ResultSaveMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveMean_gpu_transition"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
         //Filter_grad_gpu
