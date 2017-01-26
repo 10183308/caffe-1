@@ -333,6 +333,19 @@ void BlobDataMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src,int numValues){
   memcpy(dest->mutable_cpu_data(),src->cpu_data(),numValues*sizeof(Dtype));
 }
 
+template <typename Dtype>
+void BlobReverseFilterMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src){
+  for (int n=0;n<dest->shape(0);++n){
+    for (int c=0;c<dest->shape(1);++c){
+      for (int h=0;h<dest->shape(2);++h){
+        for (int w=0;w<dest->shape(3);++w){
+	  dest->mutable_cpu_data()[dest->offset(n,c,2-h,2-w)] = src->mutable_cpu_data()[dest->offset(n,c,h,w)];
+	}
+      }
+    }
+  }
+}
+
 string itos(int i);
 
 void tryCreateDirectory(string fileName);
@@ -404,7 +417,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //Conv1
   ConvolutionLayer<Dtype>* Convlayer1 = new ConvolutionLayer<Dtype>(*layerParamPtr);  
   Convlayer1->SetUp(postReLU1Vec,postConv1Vec);
-  BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[0*2+0].get(),Convlayer1->blobs()[0].get(),54); 
+  BlobReverseFilterMemcpy<Dtype>(DBLayerPtr->blobs()[0*2+0].get(),Convlayer1->blobs()[0].get()); 
   //Concat1  
   ConcatLayer<Dtype>* Concatlayer1 = new ConcatLayer<Dtype>(*layerParamPtr);
   Concatlayer1->SetUp(preConcat1Vec,postConcat1Vec);
@@ -425,7 +438,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //Conv2
   ConvolutionLayer<Dtype>* Convlayer2 = new ConvolutionLayer<Dtype>(*layerParamPtr);
   Convlayer2->SetUp(postReLU2Vec,postConv2Vec); 
-  BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[0*2+1].get(),Convlayer2->blobs()[0].get(),90); 
+  BlobReverseFilterMemcpy<Dtype>(DBLayerPtr->blobs()[0*2+1].get(),Convlayer2->blobs()[0].get()); 
   //Concat1  
   //Concat2
   ConcatLayer<Dtype>* Concatlayer2 = new ConcatLayer<Dtype>(*layerParamPtr);
