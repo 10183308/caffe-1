@@ -432,6 +432,8 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //Forward
   string dir_root = "TC_TrueFwdlog";
   BNlayer1->Forward(bottom,postBN1Vec);
+  string init_dir = dir_root+"/"+globalFormalStr+"/init1"
+  logBlob(bottom[0],init_dir);
   string postBN1_dir = dir_root+"/"+globalFormalStr+"/postBN1";
   logBlob(postBN1Vec[0],postBN1_dir);
   Scalelayer1->Forward(postBN1Vec,postScale1Vec);
