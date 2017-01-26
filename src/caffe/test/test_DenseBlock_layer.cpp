@@ -367,7 +367,6 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   vector<Blob<Dtype>*> postConv2Vec;
   postConv2Vec.push_back(postConv2);  
   
-  Blob<Dtype>* postConcat2 = new Blob<Dtype>(2,7,5,5);
   vector<Blob<Dtype>*> preConcat2Vec;
   preConcat2Vec.push_back(postReLU2);
   preConcat2Vec.push_back(postConv2);
@@ -409,7 +408,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //Conv2
   ConvolutionLayer<Dtype>* Convlayer2 = new ConvolutionLayer<Dtype>(*layerParamPtr);
   Convlayer2->SetUp(postReLU2Vec,postConv2Vec); 
-  DBLayerPtr->blobs()[0*2+1]->CopyFrom(*(ConvLayer1->blobs()[1]));
+  DBLayerPtr->blobs()[0*2+1]->CopyFrom(*(Convlayer1->blobs()[1]));
   //Concat1  
   //Concat2
   ConcatLayer<Dtype>* Concatlayer2 = new ConcatLayer<Dtype>(*layerParamPtr);
