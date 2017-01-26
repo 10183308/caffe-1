@@ -119,8 +119,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
       conv_param->set_dilation(0,1);
     }
     conv_param->mutable_weight_filler()->set_type("gaussian");
-    conv_param->set_engine(CUDNN);
-
+        
     ConcatParameter* concat_param = this->layer_param.mutable_concat_param();
     concat_param->set_axis(1);
     
