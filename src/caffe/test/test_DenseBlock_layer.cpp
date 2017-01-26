@@ -333,6 +333,9 @@ void BlobDataMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src,int numValues){
 
 void tryCreateDirectory(string fileName);
 
+template <typename Dtype>
+void logBlob(Blob<Dtype>* B,string filename);
+
 //Fwd propagate in the orthodox way, also synchronize parameters to DenseBlock layer
 template <typename Dtype>
 void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
