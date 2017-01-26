@@ -332,7 +332,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   vector<Blob<Dtype>*> postBN1Vec;
   postBN1Vec.push_back(postBN1);
 
-  Blob<Dtype> postScale1 = new Blob<Dtype>(2,3,5,5);
+  Blob<Dtype>* postScale1 = new Blob<Dtype>(2,3,5,5);
   vector<Blob<Dtype>*> postScale1Vec;
   postScale1Vec.push_back(postScale1);
   
@@ -386,11 +386,11 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ReLULayer<Dtype>* ReLUlayer1 = new ReLULayer<Dtype>(layerParamPtr);
   ReLUlayer1->SetUp(postScale1Vec,postReLU1Vec);
   //Conv1
-  ConvolutionLayer<Dtype>* ConvLayer1 = new ConvolutionLayer<Dtype>(layerParamPtr);  
-  ConvLayer1->SetUp(postReLU1Vec,postConv1Vec);
+  ConvolutionLayer<Dtype>* Convlayer1 = new ConvolutionLayer<Dtype>(layerParamPtr);  
+  Convlayer1->SetUp(postReLU1Vec,postConv1Vec);
   DBLayerPtr->blobs()[0*2+0]->CopyFrom(*(ConvLayer1->blobs()[0]));
   //Concat1  
-  ConcatLayer<Dtype>* ConcatLayer1 = new ConcatLayer<Dtype>(layerParamPtr);
+  ConcatLayer<Dtype>* Concatlayer1 = new ConcatLayer<Dtype>(layerParamPtr);
   Concatlayer1->SetUp(preConcat1Vec,postConcat1Vec);
   //BN2
   BatchNormLayer<Dtype>* BNlayer2 = new BatchNormLayer<Dtype>(layerParamPtr);
@@ -407,24 +407,24 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ReLULayer<Dtype>* ReLUlayer2 = new ReLULayer<Dtype>(layerParamPtr); 
   ReLUlayer2->SetUp(postScale2Vec,postReLU2Vec);
   //Conv2
-  ConvolutionLayer<Dtype>* ConvLayer2 = new ConvolutionLayer<Dtype>(layerParamPtr);
-  ConvLayer2->SetUp(postReLU2Vec,postConv2Vec); 
+  ConvolutionLayer<Dtype>* Convlayer2 = new ConvolutionLayer<Dtype>(layerParamPtr);
+  Convlayer2->SetUp(postReLU2Vec,postConv2Vec); 
   DBLayerPtr->blobs()[0*2+1]->CopyFrom(*(ConvLayer1->blobs()[1]));
   //Concat1  
   //Concat2
-  ConcatLayer<Dtype>* ConcatLayer2 = new ConcatLayer<Dtype>(layerParamPtr);
-  ConcatLayer2->SetUp(preConcat2Vec,postConcat2Vec); 
+  ConcatLayer<Dtype>* Concatlayer2 = new ConcatLayer<Dtype>(layerParamPtr);
+  Concatlayer2->SetUp(preConcat2Vec,postConcat2Vec); 
   //Forward
   BNlayer1->Forward(bottom,postBN1Vec);
   Scalelayer1->Forward(postBN1Vec,postScale1Vec);
-  ReLU1->Forward(postScale1Vec,postReLU1Vec);
-  ConvLayer1->Forward(postReLU1Vec,postConv1Vec); 
+  ReLUlayer1->Forward(postScale1Vec,postReLU1Vec);
+  Convlayer1->Forward(postReLU1Vec,postConv1Vec); 
   Concatlayer1->Forward(preConcat1Vec,postConcat1Vec);
   BNlayer2->Forward(postConcat1Vec,postBN2Vec);
   Scalelayer2->Forward(postBN2Vec,postScale2Vec); 
   ReLUlayer2->Forward(postScale2Vec,postReLU2Vec);
-  ConvLayer2->Forward(postReLU2Vec,postConv2Vec);
-  ConcatLayer2->Forward(preConcat2Vec,top);  
+  Convlayer2->Forward(postReLU2Vec,postConv2Vec);
+  Concatlayer2->Forward(preConcat2Vec,top);  
 }
 
 template <typename Dtype>
