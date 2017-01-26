@@ -66,23 +66,56 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     db_param->set_filter_h(3);
     db_param->set_filter_w(3);
     db_param->mutable_filter_filler()->set_type("gaussian");
-    db_param->mutable_bn_scaler_filler()->set_type("gaussian");
-    db_param->mutable_bn_bias_filler()->set_type("gaussian");
-    //For comparison with existing Caffe layer
-    /*
+    db_param->mutable_bn_scaler_filler()->set_type("constant");
+    db_param->mutable_bn_scaler_filler()->set_value(1);
+    db_param->mutable_bn_bias_filler()->set_type("constant");
+    db_param->mutable_bn_bias_filler()->set_value(0);
+    //For comparison with existing Caffe layer    
     BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
     bn_param->set_moving_average_fraction(0.999);
     bn_param->set_eps(1e-5);
+
+    ScaleParameter* scale_param = this->layer_param.mutable_scale_param();
+    scale_param->mutable_filler()->set_type("constant");
+    scale_param->mutable_filler()->set_value(1);
+    scale_param->set_bias_term(true);
+    scale_param->mutable_bias_filler()->set_type("constant");
+    scale_param->mutable_bias_filler()->set_value(0);
 
     ReLUParameter* relu_param = this->layer_param.mutable_relu_param();
     relu_param->set_negative_slope(0.5);
     
     ConvolutionParameter* conv_param = this->layer_param.mutable_convolution_param();
-
-
+    conv_param->set_bias_term(false);
+    if (conv_param->pad_size()<1){
+      conv_param->add_pad(1);
+    }
+    else {
+      conv_param->set_pad(0,1);
+    }
+    if (conv_param->kernel_size_size()<1){
+      conv_param->add_kernel_size(3);
+    }
+    else {
+      conv_param->set_kernel_size(0,3);
+    }
+    if (conv_param->stride_size()<1){
+      conv_param->add_stride(1);
+    }
+    else {
+      conv_param->set_stride(0,1);
+    }
+    if (conv_param->dilation_size()<1){
+      conv_param->add_dilation(1);
+    }
+    else {
+      conv_param->set_dilation(0,1);
+    }
+    conv_param->mutable_weight_filler()->set_type("gaussian");
+    
     ConcatParameter* concat_param = this->layer_param.mutable_concat_param();
-
-    */
+    concat_param->set_axis(1);
+    
     //big for speed test
     DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
     bigDB_param->set_numtransition(big_numTransition);
@@ -95,8 +128,10 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     bigDB_param->set_filter_h(3);
     bigDB_param->set_filter_w(3);
     bigDB_param->mutable_filter_filler()->set_type("gaussian");
-    bigDB_param->mutable_bn_scaler_filler()->set_type("gaussian");
-    bigDB_param->mutable_bn_bias_filler()->set_type("gaussian");
+    bigDB_param->mutable_bn_scaler_filler()->set_type("constant");
+    bigDB_param->mutable_bn_scaler_filler()->set_value(1);
+    bigDB_param->mutable_bn_bias_filler()->set_type("constant");
+    bigDB_param->mutable_bn_bias_filler()->set_value(0);
    
     this->bottomVec_gpu.push_back(this->blob_bottom_gpu);
     this->bottomVec_cpu.push_back(this->blob_bottom_cpu);
@@ -148,7 +183,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   //this->layer_param.set_phase(TEST);
   DenseBlockLayer<Dtype>* layer2=new DenseBlockLayer<Dtype>(this->layer_param);
   
-  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->filter_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
  
@@ -186,7 +221,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* layer3=new DenseBlockLayer<Dtype>(this->layer_param);
   DenseBlockLayer<Dtype>* layer4=new DenseBlockLayer<Dtype>(this->layer_param);
-  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->bn_scaler_filler()));
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->filter_filler()));
   //bottom fill
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
@@ -285,24 +320,137 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
 
 }
 
+//Fwd propagate in the orthodox way, also synchronize parameters to DenseBlock layer
 template <typename Dtype>
-void Simulate_Fwd(vector<Blob<Dtype>*> bottom,vector<Blob<Dtype>*> top){
-  //BN1
+void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
+  Blob<Dtype>* postBN1 = new Blob<Dtype>(2,3,5,5);
+  vector<Blob<Dtype>*> postBN1Vec;
+  postBN1Vec.push_back(postBN1);
+
+  Blob<Dtype> postScale1 = new Blob<Dtype>(2,3,5,5);
+  vector<Blob<Dtype>*> postScale1Vec;
+  postScale1Vec.push_back(postScale1);
   
+  Blob<Dtype>* postReLU1 = new Blob<Dtype>(2,3,5,5);
+  vector<Blob<Dtype>*> postReLU1Vec;
+  postReLU1Vec.push_back(postReLU1); 
+  
+  Blob<Dtype>* postConv1 = new Blob<Dtype>(2,2,5,5);
+  vector<Blob<Dtype>*> postConv1Vec;
+  postConv1Vec.push_back(postConv1); 
+  
+  Blob<Dtype>* postConcat1 = new Blob<Dtype>(2,5,5,5);
+  vector<Blob<Dtype>*> preConcat1Vec;
+  preConcat1Vec.push_back(postReLU1);
+  preConcat1Vec.push_back(postConv1);
+  vector<Blob<Dtype>*> postConcat1Vec;
+  postConcat1Vec.push_back(postConcat1); 
+  
+  Blob<Dtype>* postBN2 = new Blob<Dtype>(2,5,5,5);
+  vector<Blob<Dtype>*> postBN2Vec;
+  postBN2Vec.push_back(postBN2);
+
+  Blob<Dtype>* postScale2 = new Blob<Dtype>(2,3,5,5);
+  vector<Blob<Dtype>*> postScale2vec;
+  postScale2Vec.push_back(postScale2);
+  
+  Blob<Dtype>* postReLU2 = new Blob<Dtype>(2,5,5,5);
+  vector<Blob<Dtype>*> postReLU2Vec;
+  postReLU2Vec.push_back(postReLU2);  
+  
+  Blob<Dtype>* postConv2 = new Blob<Dtype>(2,2,5,5);
+  vector<Blob<Dtype>*> postConv2Vec;
+  postConv2Vec.push_back(postConv2);  
+  
+  Blob<Dtype>* postConcat2 = new Blob<Dtype>(2,7,5,5);
+  vector<Blob<Dtype>*> preConcat2Vec;
+  preConcat2Vec.push_back(postReLU2);
+  preConcat2Vec.push_back(postConv2);
+  //BN1
+  BatchNormLayer<Dtype> BNlayer1 = new BatchNormLayer<Dtype>(layerParamPtr);
+  BNlayer1->SetUp(bottom,postBN1Vec);
+  DBLayerPtr->blobs()[3*2+0]->CopyFrom(*(BNlayer1->blobs()[0]));
+  DBLayerPtr->blobs()[4*2+0]->CopyFrom(*(BNlayer1->blobs()[1]));
+  DBLayerPtr->blobs()[5*2]->CopyFrom(*(BNlayer1->blobs()[2]));
+  //Scale1
+  ScaleLayer<Dtype> Scalelayer1 = new ScaleLayer<Dtype>(layerParamPtr);
+  Scalelayer1->SetUp(postBN1Vec,postScale1Vec);
+  DBLayerPtr->blobs()[1*2+0]->CopyFrom(*(Scalelayer1->blobs()[0]));
+  DBLayerPtr->blobs()[2*2+0]->CopyFrom(*(Scalelayer1->blobs()[1]));
   //ReLU1
-  //
+  ReLULayer<Dtype> ReLUlayer1 = new ReLULayer<Dtype>(layerParamPtr);
+  ReLUlayer1->SetUp(postScale1Vec,postReLU1Vec);
   //Conv1
-  //
+  ConvolutionLayer<Dtype> ConvLayer1 = new ConvolutionLayer<Dtype>(layerParamPtr);  
+  ConvLayer1->SetUp(postReLU1Vec,postConv1Vec);
+  DBLayerPtr->blobs()[0*2+0]->CopyFrom(*ConvLayer1->blobs()[0]);
+  //Concat1  
+  ConcatLayer<Dtype> ConcatLayer1 = new ConcatLayer<Dtype>(layerParamPtr);
+  Concatlayer1->SetUp(preConcat1Vec,postConcat1Vec);
   //BN2
-  //
+  BatchNormLayer<Dtype> BNlayer2 = new BatchNormLayer<Dtype>(layerParamPtr);
+  BNlayer2->SetUp(postConcat1Vec,postBN2Vec);
+  DBLayerPtr->blobs()[3*2+1]->CopyFrom(*(BNlayer2->blobs()[0]));
+  DBLayerPtr->blobs()[4*2+1]->CopyFrom(*(BNlayer2->blobs()[1]));
+  DBLayerPtr->blobs()[5*2]->CopyFrom(*(BNlayer2->blobs()[2]));
+  //Scale2
+  ScaleLayer<Dtype> Scalelayer2 = new ScaleLayer<Dtype>(layerParamPtr);
+  ScaleLayer2->SetUp(postBN2Vec,postScale2Vec);
+  DBLayerPtr->blobs()[1*2+1]->CopyFrom(*(Scalelayer2->blobs()[0]));
+  DBLayerPtr->blobs()[2*2+1]->CopyFrom(*(Scalelayer2->blobs()[1])); 
   //ReLU2
-  //
+  ReLULayer<Dtype> ReLUlayer2 = new ReLULayer<Dtype>(layerParamPtr); 
+  ReLUlayer2->SetUp(postScale2Vec,postReLU2Vec);
   //Conv2
+  ConvolutionLayer<Dtype> ConvLayer2 = new ConvolutionLayer<Dtype>(layerParamPtr);
+  ConvLayer2->SetUp(postReLU2Vec,postConv2Vec); 
+  DBLayerPtr->blobs()[0*2+1]->CopyFrom(*ConvLayer1->blobs()[1]);
+  //Concat1  
+  //Concat2
+  ConcatLayer<Dtype> ConcatLayer2 = new ConcatLayer<Dtype>(layerParamPtr);
+  ConcatLayer2->SetUp(preConcat2Vec,postConcat2Vec); 
+  //Forward
+  BNlayer1->Forward(bottom,postBN1Vec);
+  Scalelayer1->Forward(postBN1Vec,postScale1Vec);
+  ReLU1->Forward(postScale1Vec,postReLU1Vec);
+  ConvLayer1->Forward(postReLU1Vec,postConv1Vec); 
+  Concatlayer1->Forward(preConcat1Vec,postConcat1Vec);
+  BNlayer2->Forward(postConcat1Vec,postBN2Vec);
+  Scalelayer2->Forward(postBN2Vec,postScale2Vec); 
+  ReLUlayer2->Forward(postScale2Vec,postReLU2Vec);
+  ConvLayer2->Forward(postReLU2Vec,postConv2Vec);
+  ConcatLayer2->Forward(preConcat2Vec,top);  
 }
 
 template <typename Dtype>
 void Simulate_Bwd(vector<Blob<Dtype>*> top,vector<Blob<Dtype>*> bottom){
+ 
+}
+
+TYPED_TEST(DenseBlockLayerTest, TestTrueFwd){
+  typedef typename TypeParam::Dtype Dtype;
+  DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
+  DenseBlockLayer<Dtype>* dbLayer = new DenseBlockLayer<Dtype>(this->layer_param);
   
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(dbParam->filter_filler()));
+  gaussianFiller->Fill(this->blob_bottom_cpu);
+  this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
+  dbLayer->SetUp(this->bottomVec_gpu,this->topVec_gpu);
+  
+  Simulate_Fwd<Dtype>(this->bottomVec_cpu,this->topVec_cpu,dbLayer,&(this->layer_param));
+  dbLayer->Forward(this->bottomVec_gpu,this->topVec_gpu);
+
+  for (int n=0;n<2;++n){
+    for (int c=0;c<7;++c){
+      for (int h=0;h<5;++h){
+        for (int w=0;w<5;++w){
+          EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),0.2);	
+	}
+      }
+    }
+  }
+
+  delete dbLayer;
 }
 
 /*
@@ -310,7 +458,7 @@ TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* bigDB_param = this->bigLayer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* layer5=new DenseBlockLayer<Dtype>(this->bigLayer_param);
-  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(bigDB_param->bn_scaler_filler()));
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(bigDB_param->filter_filler()));
   //bottom fill
   gaussianFiller->Fill(this->bigBlob_bottom_cpu);
   this->bigBlob_bottom_gpu->CopyFrom(*this->bigBlob_bottom_cpu);
