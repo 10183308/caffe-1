@@ -91,6 +91,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     relu_param->set_negative_slope(0.5);
     
     ConvolutionParameter* conv_param = this->layer_param.mutable_convolution_param();
+    conv_param->set_num_output(2);
     conv_param->set_bias_term(false);
     if (conv_param->pad_size()<1){
       conv_param->add_pad(1);
