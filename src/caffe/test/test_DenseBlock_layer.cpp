@@ -440,7 +440,11 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ReLUlayer1->Forward(postScale1Vec,postReLU1Vec);
   string postReLU1_dir = dir_root+"/"+globalFormalStr+"/postReLU1";
   logBlob(postReLU1Vec[0],postReLU1_dir);
-  Convlayer1->Forward(postReLU1Vec,postConv1Vec); 
+
+  Convlayer1->Forward(postReLU1Vec,postConv1Vec);
+  string conv1Blob_dir = dir_root+"/"+globalFormalStr+"/conv1Blob";
+  logBlob(Convlayer1->blobs()[0].get(),conv1Blob_dir);
+
   string postConv1_dir = dir_root+"/"+globalFormalStr+"/postConv1";
   logBlob(postConv1Vec[0],postConv1_dir);
   Concatlayer1->Forward(preConcat1Vec,postConcat1Vec);

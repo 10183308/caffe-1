@@ -512,7 +512,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //clock_t end_fwd = std::clock();
   //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
   //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
-  //this->logInternal_gpu("TClog",-1,false,false);
+  this->logInternal_gpu("TClog",-1,false,false);
 }
 
 template <typename Dtype>
