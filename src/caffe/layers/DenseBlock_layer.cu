@@ -500,7 +500,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
       );
-      //this->logInternal_gpu("TClog",transitionIdx,true,false);
+      this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   if (this->phase_ == TRAIN){
     this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= this->EMA_decay;
@@ -513,7 +513,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
   //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
   //this->logInternal_gpu("TClog",-1,false,false);
-  //this->logInternal_gpu("TClog");
 }
 
 template <typename Dtype>
