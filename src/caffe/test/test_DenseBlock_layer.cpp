@@ -16,6 +16,10 @@
 #include "caffe/test/test_caffe_main.hpp"
 #include "caffe/test/test_gradient_check_util.hpp"
 #include "caffe/util/math_functions.hpp"
+#include "caffe/layers/batch_norm_layer.hpp"
+#include "caffe/layers/scale_layer.hpp"
+#include "caffe/layers/relu_layer.hpp"
+#include "caffe/layers/conv_layer.hpp"
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
@@ -351,7 +355,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   postBN2Vec.push_back(postBN2);
 
   Blob<Dtype>* postScale2 = new Blob<Dtype>(2,3,5,5);
-  vector<Blob<Dtype>*> postScale2vec;
+  vector<Blob<Dtype>*> postScale2Vec;
   postScale2Vec.push_back(postScale2);
   
   Blob<Dtype>* postReLU2 = new Blob<Dtype>(2,5,5,5);
