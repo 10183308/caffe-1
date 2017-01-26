@@ -20,6 +20,7 @@
 #include "caffe/layers/scale_layer.hpp"
 #include "caffe/layers/relu_layer.hpp"
 #include "caffe/layers/conv_layer.hpp"
+#include "caffe/layers/concat_layer.hpp"
 #include "caffe/layers/DenseBlock_layer.hpp"
 
 namespace caffe {
@@ -371,47 +372,47 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   preConcat2Vec.push_back(postReLU2);
   preConcat2Vec.push_back(postConv2);
   //BN1
-  BatchNormLayer<Dtype> BNlayer1 = new BatchNormLayer<Dtype>(layerParamPtr);
+  BatchNormLayer<Dtype>* BNlayer1 = new BatchNormLayer<Dtype>(layerParamPtr);
   BNlayer1->SetUp(bottom,postBN1Vec);
   DBLayerPtr->blobs()[3*2+0]->CopyFrom(*(BNlayer1->blobs()[0]));
   DBLayerPtr->blobs()[4*2+0]->CopyFrom(*(BNlayer1->blobs()[1]));
   DBLayerPtr->blobs()[5*2]->CopyFrom(*(BNlayer1->blobs()[2]));
   //Scale1
-  ScaleLayer<Dtype> Scalelayer1 = new ScaleLayer<Dtype>(layerParamPtr);
+  ScaleLayer<Dtype>* Scalelayer1 = new ScaleLayer<Dtype>(layerParamPtr);
   Scalelayer1->SetUp(postBN1Vec,postScale1Vec);
   DBLayerPtr->blobs()[1*2+0]->CopyFrom(*(Scalelayer1->blobs()[0]));
   DBLayerPtr->blobs()[2*2+0]->CopyFrom(*(Scalelayer1->blobs()[1]));
   //ReLU1
-  ReLULayer<Dtype> ReLUlayer1 = new ReLULayer<Dtype>(layerParamPtr);
+  ReLULayer<Dtype>* ReLUlayer1 = new ReLULayer<Dtype>(layerParamPtr);
   ReLUlayer1->SetUp(postScale1Vec,postReLU1Vec);
   //Conv1
-  ConvolutionLayer<Dtype> ConvLayer1 = new ConvolutionLayer<Dtype>(layerParamPtr);  
+  ConvolutionLayer<Dtype>* ConvLayer1 = new ConvolutionLayer<Dtype>(layerParamPtr);  
   ConvLayer1->SetUp(postReLU1Vec,postConv1Vec);
-  DBLayerPtr->blobs()[0*2+0]->CopyFrom(*ConvLayer1->blobs()[0]);
+  DBLayerPtr->blobs()[0*2+0]->CopyFrom(*(ConvLayer1->blobs()[0]));
   //Concat1  
-  ConcatLayer<Dtype> ConcatLayer1 = new ConcatLayer<Dtype>(layerParamPtr);
+  ConcatLayer<Dtype>* ConcatLayer1 = new ConcatLayer<Dtype>(layerParamPtr);
   Concatlayer1->SetUp(preConcat1Vec,postConcat1Vec);
   //BN2
-  BatchNormLayer<Dtype> BNlayer2 = new BatchNormLayer<Dtype>(layerParamPtr);
+  BatchNormLayer<Dtype>* BNlayer2 = new BatchNormLayer<Dtype>(layerParamPtr);
   BNlayer2->SetUp(postConcat1Vec,postBN2Vec);
   DBLayerPtr->blobs()[3*2+1]->CopyFrom(*(BNlayer2->blobs()[0]));
   DBLayerPtr->blobs()[4*2+1]->CopyFrom(*(BNlayer2->blobs()[1]));
   DBLayerPtr->blobs()[5*2]->CopyFrom(*(BNlayer2->blobs()[2]));
   //Scale2
-  ScaleLayer<Dtype> Scalelayer2 = new ScaleLayer<Dtype>(layerParamPtr);
-  ScaleLayer2->SetUp(postBN2Vec,postScale2Vec);
+  ScaleLayer<Dtype>* Scalelayer2 = new ScaleLayer<Dtype>(layerParamPtr);
+  Scalelayer2->SetUp(postBN2Vec,postScale2Vec);
   DBLayerPtr->blobs()[1*2+1]->CopyFrom(*(Scalelayer2->blobs()[0]));
   DBLayerPtr->blobs()[2*2+1]->CopyFrom(*(Scalelayer2->blobs()[1])); 
   //ReLU2
-  ReLULayer<Dtype> ReLUlayer2 = new ReLULayer<Dtype>(layerParamPtr); 
+  ReLULayer<Dtype>* ReLUlayer2 = new ReLULayer<Dtype>(layerParamPtr); 
   ReLUlayer2->SetUp(postScale2Vec,postReLU2Vec);
   //Conv2
-  ConvolutionLayer<Dtype> ConvLayer2 = new ConvolutionLayer<Dtype>(layerParamPtr);
+  ConvolutionLayer<Dtype>* ConvLayer2 = new ConvolutionLayer<Dtype>(layerParamPtr);
   ConvLayer2->SetUp(postReLU2Vec,postConv2Vec); 
-  DBLayerPtr->blobs()[0*2+1]->CopyFrom(*ConvLayer1->blobs()[1]);
+  DBLayerPtr->blobs()[0*2+1]->CopyFrom(*(ConvLayer1->blobs()[1]));
   //Concat1  
   //Concat2
-  ConcatLayer<Dtype> ConcatLayer2 = new ConcatLayer<Dtype>(layerParamPtr);
+  ConcatLayer<Dtype>* ConcatLayer2 = new ConcatLayer<Dtype>(layerParamPtr);
   ConcatLayer2->SetUp(preConcat2Vec,postConcat2Vec); 
   //Forward
   BNlayer1->Forward(bottom,postBN1Vec);
@@ -436,7 +437,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwd){
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* dbLayer = new DenseBlockLayer<Dtype>(this->layer_param);
   
-  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(dbParam->filter_filler()));
+  shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->filter_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
   dbLayer->SetUp(this->bottomVec_gpu,this->topVec_gpu);
