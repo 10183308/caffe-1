@@ -26,6 +26,7 @@
 namespace caffe {
 
 int global_id = 1;
+int global_formalId = 1;
 int big_initC = 160;
 int big_growthRate = 12;
 int big_numTransition = 12;
@@ -331,6 +332,8 @@ void BlobDataMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src,int numValues){
   memcpy(dest->mutable_cpu_data(),src->cpu_data(),numValues*sizeof(Dtype));
 }
 
+string itos(int i);
+
 void tryCreateDirectory(string fileName);
 
 template <typename Dtype>
@@ -339,6 +342,8 @@ void logBlob(Blob<Dtype>* B,string filename);
 //Fwd propagate in the orthodox way, also synchronize parameters to DenseBlock layer
 template <typename Dtype>
 void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
+  string globalFormalStr = itos(global_formalId);
+  
   Blob<Dtype>* postBN1 = new Blob<Dtype>(2,3,5,5);
   vector<Blob<Dtype>*> postBN1Vec;
   postBN1Vec.push_back(postBN1);
@@ -427,36 +432,37 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //Forward
   string dir_root = "TC_TrueFwdlog";
   BNlayer1->Forward(bottom,postBN1Vec);
-  string postBN1_dir = dir_root+"/postBN1";
+  string postBN1_dir = dir_root+"/"+globalFormalStr+"/postBN1";
   logBlob(postBN1Vec[0],postBN1_dir);
   Scalelayer1->Forward(postBN1Vec,postScale1Vec);
-  string postScale1_dir = dir_root+"/postScale1";
+  string postScale1_dir = dir_root+"/"+globalFormalStr+"/postScale1";
   logBlob(postScale1Vec[0],postScale1_dir);
   ReLUlayer1->Forward(postScale1Vec,postReLU1Vec);
-  string postReLU1_dir = dir_root+"/postReLU1";
+  string postReLU1_dir = dir_root+"/"+globalFormalStr+"/postReLU1";
   logBlob(postReLU1Vec[0],postReLU1_dir);
   Convlayer1->Forward(postReLU1Vec,postConv1Vec); 
-  string postConv1_dir = dir_root+"/postConv1";
+  string postConv1_dir = dir_root+"/"+globalFormalStr+"/postConv1";
   logBlob(postConv1Vec[0],postConv1_dir);
   Concatlayer1->Forward(preConcat1Vec,postConcat1Vec);
-  string postConcat1_dir = dir_root+"/postConcat1";
+  string postConcat1_dir = dir_root+"/"+globalFormalStr+"/postConcat1";
   logBlob(postConcat1Vec[0],postConcat1_dir);
 
   BNlayer2->Forward(postConcat1Vec,postBN2Vec);
-  string postBN2_dir = dir_root+"/postBN2";
+  string postBN2_dir = dir_root+"/"+globalFormalStr+"/postBN2";
   logBlob(postBN2Vec[0],postBN2_dir); 
   Scalelayer2->Forward(postBN2Vec,postScale2Vec); 
-  string postScale2_dir = dir_root+"/postScale2";
+  string postScale2_dir = dir_root+"/"+globalFormalStr+"/postScale2";
   logBlob(postScale2Vec[0],postScale2_dir); 
   ReLUlayer2->Forward(postScale2Vec,postReLU2Vec);
-  string postReLU2_dir = dir_root+"/postReLU2";
+  string postReLU2_dir = dir_root+"/"+globalFormalStr+"/postReLU2";
   logBlob(postReLU2Vec[0],postReLU2_dir); 
   Convlayer2->Forward(postReLU2Vec,postConv2Vec);
-  string postConv2_dir = dir_root+"/postConv2";
+  string postConv2_dir = dir_root+"/"+globalFormalStr+"/postConv2";
   logBlob(postConv2Vec[0],postConv2_dir); 
   Concatlayer2->Forward(preConcat2Vec,top); 
-  string postConcat2_dir = dir_root+"/postConcat2";
+  string postConcat2_dir = dir_root+"/"+globalFormalStr+"/postConcat2";
   logBlob(top[0],postConcat2_dir);
+  global_formalId += 1;
 }
 
 template <typename Dtype>
