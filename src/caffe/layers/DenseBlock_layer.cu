@@ -238,9 +238,6 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postBN_grad_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
-    int totalNumChannel = this->initChannel + this->growthRate * this->numTransition; 
-    cleanupBuffer(this->Mean_tmp,totalNumChannel);
-    cleanupBuffer(this->Var_tmp,totalNumChannel);
 }
 
 template <typename Dtype>
@@ -374,9 +371,17 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  if (transitionIdx==1){
 	    std::cout<<"narrow TEST"<<std::endl;
 	    std::cout<<"scale factor"<<scale_factor<<std::endl;
-	    print_gpuPtr(local_MeanInf,narrow_numChannels);
+	    std::cout<<"localScaler"<<std::endl;
+            print_gpuPtr(this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data()+channelsBefore_noself,narrow_numChannels);
+            std::cout<<std::endl;
+	    std::cout<<"localBias"<<std::endl;
+	    print_gpuPtr(this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data()+channelsBefore_noself,narrow_numChannels);
 	    std::cout<<std::endl;
-	    print_gpuPtr(local_VarInf,narrow_numChannels);
+	    std::cout<<"localMean"<<std::endl;
+            print_gpuPtr(local_MeanInf,narrow_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"localVar"<<std::endl;
+            print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
 	  }
 
@@ -400,8 +405,8 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    *(this->tensorDescriptorVec_narrow[transitionIdx]),BN_narrow_x_ptr,
 	    *(this->tensorDescriptorVec_narrow[transitionIdx]),BN_narrow_y_ptr,
 	    *narrowBN_paramDesc,
-	    this->blobs_[this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
-	    this->blobs_[2 * this->numTransition + transitionIdx]->gpu_data() + channelsBefore_noself,
+	    this->blobs_[this->numTransition+transitionIdx]->gpu_data()+channelsBefore_noself,
+	    this->blobs_[2*this->numTransition+transitionIdx]->gpu_data()+channelsBefore_noself,
 	    Dtype(1),local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON,
 	    batchMean,batchInvVar)
 	  );
@@ -413,8 +418,16 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 
           if (transitionIdx==1 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502) || (this->trainCycleIdx<=2))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
+	    std::cout<<"local_Scaler"<<std::endl;
+	    print_gpuPtr(this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data()+channelsBefore_noself,narrow_numChannels); 
+	    std::cout<<std::endl;
+	    std::cout<<"local_Bias"<<std::endl;
+            print_gpuPtr(this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data()+channelsBefore_noself,narrow_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"local_Mean"<<std::endl;
 	    print_gpuPtr(local_MeanInf,narrow_numChannels);
 	    std::cout<<std::endl;
+	    std::cout<<"local_Var"<<std::endl;
 	    print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
 	  }
@@ -438,8 +451,16 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  if (transitionIdx==1){
 	    std::cout<<"wide TEST"<<std::endl;
             std::cout<<"Scale Factor"<<scale_factor<<std::endl;
+	    std::cout<<"localScaler"<<std::endl;
+	    print_gpuPtr(this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data(),wide_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"localBias"<<std::endl;
+	    print_gpuPtr(this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data(),wide_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"localMean"<<std::endl;
 	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
+	    std::cout<<"localVar"<<std::endl;
 	    print_gpuPtr(local_VarInf,wide_numChannels);
 	    std::cout<<std::endl;
 	  }
@@ -476,8 +497,16 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,this->EMA_decay,BN_wide_globalVar);
           if (transitionIdx==1 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500) || (this->trainCycleIdx<=2))){
 	    std::cout<<"wide TRAIN"<<std::endl;
+	    std::cout<<"local_Scaler"<<std::endl;	    
+	    print_gpuPtr(this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data(),wide_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"local_Bias"<<std::endl;
+	    print_gpuPtr(this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data(),wide_numChannels);
+	    std::cout<<std::endl;
+	    std::cout<<"local_Mean"<<std::endl;
 	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
+	    std::cout<<"local_Var"<<std::endl;
 	    print_gpuPtr(local_VarInf,wide_numChannels);
 	    std::cout<<std::endl;
 	  }
@@ -505,6 +534,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	)		      
       );
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
+      int totalNumChannel = this->initChannel + this->growthRate * this->numTransition; 
+      cleanupBuffer(this->Mean_tmp,totalNumChannel);
+      cleanupBuffer(this->Var_tmp,totalNumChannel);
   } 
   if (this->phase_ == TRAIN){
     this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= this->EMA_decay;
