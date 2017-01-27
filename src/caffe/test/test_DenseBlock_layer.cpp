@@ -588,9 +588,9 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
     Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
     for (int n=0;n<localParam->shape(0);++n){
       for (int c=0;c<localParam->shape(1);++c){
-        for (int h=0;h<5;++h){
-	  for (int w=0;w<5;++w){
-	    EXPECT_NEAR(compositeParam->diff_at(n,c,h,w),localParam->diff_at(n,c,w,h),0.1);
+        for (int h=0;h<3;++h){
+	  for (int w=0;w<3;++w){
+	    EXPECT_NEAR(compositeParam->diff_at(n,c,h,w),localParam->diff_at(n,c,2-h,2-w),0.1);
 	  }
 	}
       }
