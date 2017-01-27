@@ -364,13 +364,13 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       Dtype* local_VarInf = this->Var_tmp + channelsBefore_noself;
 	      
       if (this->phase_ == TEST){
-          Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ?
-            0 : 1.0 / this->blobs_[5*this->numTransition]->cpu_data()[0];
+          Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ? 0 : 1.0 / this->blobs_[5*this->numTransition]->cpu_data()[0];
 	  caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalMean,local_MeanInf);
           caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalVar,local_VarInf);
 
 	  if (transitionIdx==1){
 	    std::cout<<"narrow TEST"<<std::endl;
+	    std::cout<<"scale factor"<<scale_factor<<std::endl;
 	    print_gpuPtr(local_MeanInf,narrow_numChannels);
 	    std::cout<<std::endl;
 	    print_gpuPtr(local_VarInf,narrow_numChannels);
@@ -408,7 +408,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           //Var:
 	  caffe_gpu_axpby(narrow_numChannels,Dtype(1),local_VarInf,this->EMA_decay,BN_narrow_globalVar);
 
-          if (transitionIdx==1 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
+          if (transitionIdx==1 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502) || (this->trainCycleIdx<=2))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
 	    print_gpuPtr(local_MeanInf,narrow_numChannels);
 	    std::cout<<std::endl;
@@ -428,13 +428,13 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	Dtype* local_VarInf = this->Var_tmp;
 	int wide_numChannels = transitionIdx==0?0:this->initChannel+this->growthRate*(transitionIdx-1);   
         if (this->phase_ == TEST){
-	  Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ?
-            0 : 1 / this->blobs_[5*this->numTransition]->cpu_data()[0];
+	  Dtype scale_factor = this->blobs_[5*this->numTransition]->cpu_data()[0] == 0 ? 0 : 1.0 / this->blobs_[5*this->numTransition]->cpu_data()[0];
 	  caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalMean,local_MeanInf);
           caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalVar,local_VarInf);
 	  
 	  if (transitionIdx==1){
 	    std::cout<<"wide TEST"<<std::endl;
+            std::cout<<"Scale Factor"<<scale_factor<<std::endl;
 	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
 	    print_gpuPtr(local_VarInf,wide_numChannels);
@@ -471,7 +471,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_MeanInf,this->EMA_decay,BN_wide_globalMean);
           //Var:
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,this->EMA_decay,BN_wide_globalVar);
-          if (transitionIdx==1 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
+          if (transitionIdx==1 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500) || (this->trainCycleIdx<=2))){
 	    std::cout<<"wide TRAIN"<<std::endl;
 	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
@@ -581,7 +581,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	    CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
-	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
+	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::one,
 	    *(this->tensorDescriptorVec_conv_x[transitionIdx-1]),BNwide_x_local,
 	    *(this->tensorDescriptorVec_conv_x[transitionIdx-1]),BNwide_dy_local,
 	    *(this->tensorDescriptorVec_conv_x[transitionIdx-1]),BNwide_dx_local,
@@ -603,7 +603,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         CUDNN_CHECK(cudnnBatchNormalizationBackward(*(this->cudnnHandlePtr),
 	  CUDNN_BATCHNORM_SPATIAL,
 	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
-	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
+	  cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::one,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BNnarrow_x_local,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BNnarrow_dy_local,
 	  *(this->tensorDescriptorVec_narrow[transitionIdx]),BNnarrow_dx_local,
