@@ -583,7 +583,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
     }
   }
 
-  for (int blobIdx=0;blobIdx<dbLayer->blobs().size();++blobIdx){
+  for (int blobIdx=0;blobIdx<2;++blobIdx){
     Blob<Dtype>* compositeParam = outParamVec[blobIdx];
     Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
     for (int i=0;i<localParam->count();++i){
