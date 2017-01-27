@@ -19,14 +19,7 @@ template <typename Dtype>
 void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (use_log_){
-      if (this->phase_ == TRAIN){
-        std::cout<<"Train with moving_average "<<moving_average_fraction_<<std::endl;
-      }
-      else {
-        std::cout<<"Test with moving_average "<<moving_average_fraction_<<std::endl;
-      }
-      std::cout<<std::endl;
-      //printBlob(&mean_);
+    printBlob(&mean_);
   }
 
   const Dtype* bottom_data = bottom[0]->gpu_data();

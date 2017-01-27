@@ -61,7 +61,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32))
   {
     Caffe::set_random_seed(1704);
-    this->layer_param.set_phase(TEST);
+    //this->layer_param.set_phase(TEST);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
     db_param->set_numtransition(2);
     db_param->set_initchannel(3);
@@ -347,9 +347,9 @@ void logBlob(Blob<Dtype>* B,string filename);
 
 //Fwd propagate in the orthodox way, also synchronize parameters to DenseBlock layer
 template <typename Dtype>
-void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
+void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr,vector<Blob<Dtype>*>* outV){
   string globalFormalStr = itos(global_formalId);
-  Dtype BNblob2val = 392.621055;
+  Dtype BNblob2val = 1;
 
   Blob<Dtype>* postBN1 = new Blob<Dtype>(2,3,5,5);
   vector<Blob<Dtype>*> postBN1Vec;
@@ -487,7 +487,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //logBlob(top[0],postConcat2_dir);
   
   //Backward
-  /* 
+   
   vector<bool> PropDown_2;
   for (int localIdx=0;localIdx<2;++localIdx){
     PropDown_2.push_back(true);
@@ -505,7 +505,19 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ReLUlayer1->Backward(postReLU1Vec,PropDown_1,postScale1Vec); 
   Scalelayer1->Backward(postScale1Vec,PropDown_1,postBN1Vec);
   BNlayer1->Backward(postBN1Vec,PropDown_1,bottom); 
-  */
+ 
+  outV->push_back(Convlayer1->blobs()[0].get());
+  outV->push_back(Convlayer2->blobs()[0].get());
+  outV->push_back(Scalelayer1->blobs()[0].get());
+  outV->push_back(Scalelayer2->blobs()[0].get());
+  outV->push_back(Scalelayer1->blobs()[1].get());
+  outV->push_back(Scalelayer2->blobs()[1].get());
+  outV->push_back(BNlayer1->blobs()[0].get());
+  outV->push_back(BNlayer2->blobs()[0].get());
+  outV->push_back(BNlayer1->blobs()[1].get());
+  outV->push_back(BNlayer2->blobs()[1].get());
+  outV->push_back(BNlayer1->blobs()[2].get());
+
   global_formalId += 1;
 }
 
@@ -520,10 +532,17 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
   shared_ptr<Filler<Dtype> > gaussianFiller(GetFiller<Dtype>(db_param->filter_filler()));
   gaussianFiller->Fill(this->blob_bottom_cpu);
   this->blob_bottom_gpu->CopyFrom(*this->blob_bottom_cpu);
+  this->FillDiff(this->blob_top_cpu);
+  this->blob_top_gpu->CopyFrom(*this->blob_top_cpu,true);
+
   dbLayer->SetUp(this->bottomVec_gpu,this->topVec_gpu);
-  
-  Simulate_Fwd<Dtype>(this->bottomVec_cpu,this->topVec_cpu,dbLayer,&(this->layer_param));
+ 
+  vector<Blob<Dtype>*> outParamVec;
+
+  Simulate_FwdBwd<Dtype>(this->bottomVec_cpu,this->topVec_cpu,dbLayer,&(this->layer_param),&(outParamVec));
   dbLayer->Forward(this->bottomVec_gpu,this->topVec_gpu);
+  vector<bool> propagate_down(1,true);
+  dbLayer->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<7;++c){
@@ -534,7 +553,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       }
     }
   }
-  /* 
+   
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
@@ -544,7 +563,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       }
     }
   }
-  */
+  
   delete dbLayer;
 }
 
