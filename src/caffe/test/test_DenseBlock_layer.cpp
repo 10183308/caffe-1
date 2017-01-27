@@ -61,7 +61,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32))
   {
     Caffe::set_random_seed(1704);
-    this->layer_param.set_phase(TEST);
+    //this->layer_param.set_phase(TEST);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
     db_param->set_numtransition(2);
     db_param->set_initchannel(3);
@@ -560,8 +560,8 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
 
   Simulate_FwdBwd<Dtype>(this->bottomVec_cpu,this->topVec_cpu,dbLayer,&(this->layer_param),&(outParamVec));
   dbLayer->Forward(this->bottomVec_gpu,this->topVec_gpu);
-  //vector<bool> propagate_down(1,true);
-  //dbLayer->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
+  vector<bool> propagate_down(1,true);
+  dbLayer->Backward(this->topVec_gpu,propagate_down,this->bottomVec_gpu);
 
   for (int n=0;n<2;++n){
     for (int c=0;c<7;++c){
@@ -573,7 +573,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
     }
   }
    
-  /*
+  
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
@@ -613,7 +613,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       EXPECT_NEAR(compositeParam->cpu_data()[i],localParam->cpu_data()[i],0.1);
     }
   }
-  */
+  
   delete dbLayer;
 }
 
