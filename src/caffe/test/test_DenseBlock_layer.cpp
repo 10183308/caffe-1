@@ -583,10 +583,10 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
     }
   }
 
-  for (int blobIdx=0;blobIdx<dbLayer->blobs()->size();++blobIdx){
+  for (int blobIdx=0;blobIdx<dbLayer->blobs().size();++blobIdx){
     Blob<Dtype>* compositeParam = outParamVec[blobIdx];
     Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
-    for (int i=0;i<localParam.count();++i){
+    for (int i=0;i<localParam->count();++i){
       EXPECT_NEAR(compositeParam->cpu_diff()[i],localParam->cpu_diff()[i],0.1);
     }
   }
