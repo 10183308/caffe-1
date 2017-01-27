@@ -394,8 +394,12 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   preConcat2Vec.push_back(postReLU2);
   preConcat2Vec.push_back(postConv2);
   //BN1
+  Dtype globalMean1[] = {1.0,2.0,3.0};
+  Dtype globalVar1[] = {2.0,4.0,6.0};
   BatchNormLayer<Dtype>* BNlayer1 = new BatchNormLayer<Dtype>(*layerParamPtr);
   BNlayer1->SetUp(bottom,postBN1Vec);
+  memcpy(BNlayer1->blobs()[0]->mutable_cpu_data(),globalMean1,3*sizeof(Dtype));
+  memcpy(BNlayer1->blobs()[1]->mutable_cpu_data(),globalVar1,3*sizeof(Dtype));
   BNlayer1->blobs()[2]->mutable_cpu_data()[0] = BNblob2val;
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[3*2+0].get(),BNlayer1->blobs()[0].get(),3); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[4*2+0].get(),BNlayer1->blobs()[1].get(),3); 
@@ -416,8 +420,12 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ConcatLayer<Dtype>* Concatlayer1 = new ConcatLayer<Dtype>(*layerParamPtr);
   Concatlayer1->SetUp(preConcat1Vec,postConcat1Vec);
   //BN2
+  Dtype globalMean2[] = {4.0,5.0,6.0,7.0,8.0};
+  Dtype globalVar2[] = {3.0,5.0,7.0,9.0,11.0};
   BatchNormLayer<Dtype>* BNlayer2 = new BatchNormLayer<Dtype>(*layerParamPtr);
   BNlayer2->SetUp(postConcat1Vec,postBN2Vec);
+  memcpy(BNlayer2->blobs()[0]->mutable_cpu_data(),globalMean2,5*sizeof(Dtype));
+  memcpy(BNlayer2->blobs()[1]->mutable_cpu_data(),globalVar2,5*sizeof(Dtype));
   BNlayer2->blobs()[2]->mutable_cpu_data()[0] = BNblob2val; 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[3*2+1].get(),BNlayer2->blobs()[0].get(),5); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[4*2+1].get(),BNlayer2->blobs()[1].get(),5); 
