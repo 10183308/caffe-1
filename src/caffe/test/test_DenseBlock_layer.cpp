@@ -356,7 +356,7 @@ void logBlob(Blob<Dtype>* B,string filename);
 template <typename Dtype>
 void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
   string globalFormalStr = itos(global_formalId);
-  Dtype BNblob2val = 393.62106;
+  Dtype BNblob2val = 0;
 
   Blob<Dtype>* postBN1 = new Blob<Dtype>(2,3,5,5);
   vector<Blob<Dtype>*> postBN1Vec;
