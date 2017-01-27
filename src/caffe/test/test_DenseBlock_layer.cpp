@@ -498,7 +498,7 @@ void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,Dens
   Concatlayer2->Backward(top,PropDown_2,preConcat2Vec);
   Convlayer2->Backward(postConv2Vec,PropDown_1,postReLU2Vec);
   ReLUlayer2->Backward(postReLU2Vec,PropDown_1,postScale2Vec);
-  Scalelayer2->Backward(postScale2Vec,PropDown_1,postReLU2Vec);
+  Scalelayer2->Backward(postScale2Vec,PropDown_1,postBN2Vec);
   BNlayer2->Backward(postBN2Vec,PropDown_1,postConcat1Vec);
   Concatlayer1->Backward(postConcat1Vec,PropDown_2,preConcat1Vec);
   Convlayer1->Backward(postConv1Vec,PropDown_1,postReLU1Vec);
