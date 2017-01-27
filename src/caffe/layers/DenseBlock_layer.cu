@@ -620,10 +620,10 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	ReLUReverse<Dtype><<<CAFFE_GET_BLOCKS(work_n),CAFFE_CUDA_NUM_THREADS>>>(work_n,BNregion_reverse_y_local,BNregion_reverse_x_local,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
 	
 	//this->logInternal_gpu("TClog",transitionIdx,true,false);
-        this->logInternal_gpu("TClog",transitionIdx,true,true);
+        //this->logInternal_gpu("TClog",transitionIdx,true,true);
     }
     //deploy buffer to bottom diff
-    this->logInternal_gpu("TClog",-1,false,false);
+    //this->logInternal_gpu("TClog",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
