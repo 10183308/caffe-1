@@ -582,12 +582,18 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       }
     }
   }
-
+  //filter test
   for (int blobIdx=0;blobIdx<2;++blobIdx){
     Blob<Dtype>* compositeParam = outParamVec[blobIdx];
     Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
-    for (int i=0;i<localParam->count();++i){
-      EXPECT_NEAR(compositeParam->cpu_diff()[i],localParam->cpu_diff()[i],0.1);
+    for (int n=0;n<localParam->shape(0);++n){
+      for (int c=0;c<localParam->shape(1);++c){
+        for (int h=0;h<5;++h){
+	  for (int w=0;w<5;++w){
+	    EXPECT_NEAR(compositeParam->diff_at(n,c,h,w),localParam->diff_at(n,c,w,h),0.1);
+	  }
+	}
+      }
     }
   }
   
