@@ -182,7 +182,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 };
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
-
+/*
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -222,8 +222,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   delete layer;
   delete layer2;
 }
-
-
+*/
+/*
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -297,10 +297,6 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
       EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),1.2); 
-      /*std::cout<<"CPU scaler"<<std::endl;
-      std::cout<<layer3localScaler->diff_at(0,channelIdx,0,0)<<std::endl;
-      std::cout<<"GPU scaler"<<std::endl;
-      std::cout<<layer4localScaler->diff_at(0,channelIdx,0,0)<<std::endl;*/
     }
   } 
   //Bias Grad
@@ -310,10 +306,6 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
       EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4);
-      /*std::cout<<"CPU Bias"<<std::endl;
-      std::cout<<layer3localBias->diff_at(0,channelIdx,0,0)<<std::endl;
-      std::cout<<"GPU Bias"<<std::endl;
-      std::cout<<layer4localBias->diff_at(0,channelIdx,0,0)<<std::endl;*/
     }
   } 
   //GlobalMean/Var should have no Grad
@@ -327,7 +319,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
-
+*/
 template <typename Dtype>
 void BlobDataMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src,int numValues){
   memcpy(dest->mutable_cpu_data(),src->cpu_data(),numValues*sizeof(Dtype));
