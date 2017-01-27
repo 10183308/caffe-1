@@ -596,6 +596,22 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       }
     }
   }
+  //other blobs test
+  for (int blobIdx=2;blobIdx<6;++blobIdx){
+    Blob<Dtype>* compositeParam = outParamVec[blobIdx];
+    Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
+    for (int i=0;i<localParam->count();++i){
+      EXPECT_NEAR(compositeParam->cpu_diff()[i],localParam->cpu_diff()[i],0.1);
+    }
+  }
+  //other blobs final value
+  for (int blobIdx=6;blobIdx<=10;++blobIdx){
+    Blob<Dtype>* compositeParam = outParamVec[blobIdx];
+    Blob<Dtype>* localParam = dbLayer->blobs()[blobIdx].get();
+    for (int i=0;i<localParam->count();++i){
+      EXPECT_NEAR(compositeParam->cpu_data()[i],localParam->cpu_data()[i],0.1);
+    }
+  }
   
   delete dbLayer;
 }
