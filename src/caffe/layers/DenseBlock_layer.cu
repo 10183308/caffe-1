@@ -410,7 +410,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 
           if (transitionIdx==1 && (this->trainCycleIdx >=798 || (this->trainCycleIdx>=500 && this->trainCycleIdx<=502))){
 	    std::cout<<"narrow TRAIN"<<std::endl;
-	    print_gpuPtr(local_VarInf,narrow_numChannels);
+	    print_gpuPtr(local_MeanInf,narrow_numChannels);
 	    std::cout<<std::endl;
 	    print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
@@ -473,9 +473,9 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_axpby(wide_numChannels,Dtype(1),local_VarInf,this->EMA_decay,BN_wide_globalVar);
           if (transitionIdx==1 && ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500))){
 	    std::cout<<"wide TRAIN"<<std::endl;
-	    print_gpuPtr(batchMean,wide_numChannels);
+	    print_gpuPtr(local_MeanInf,wide_numChannels);
 	    std::cout<<std::endl;
-	    print_gpuPtr(batchInvVar,wide_numChannels);
+	    print_gpuPtr(local_VarInf,wide_numChannels);
 	    std::cout<<std::endl;
 	  }
         }
