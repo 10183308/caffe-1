@@ -545,7 +545,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
 	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_FILTER_ALGO_1,
 	  this->workspace,this->workspace_size_bytes,
-	  cudnn::dataType<Dtype>::zero,
+	  cudnn::dataType<Dtype>::one,
 	  *(this->filterDescriptorVec[transitionIdx]),filterGrad_local	  
 	  )		
 	);
@@ -556,7 +556,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
 	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_DATA_ALGO_1,
 	  this->workspace,this->workspace_size_bytes,
-	  cudnn::dataType<Dtype>::one,
+	  cudnn::dataType<Dtype>::zero,
 	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),postReLU_grad_gpu
 	  )		
 	);
