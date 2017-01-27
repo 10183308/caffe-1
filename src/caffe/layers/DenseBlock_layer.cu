@@ -238,6 +238,9 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postBN_grad_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
+    int totalNumChannel = this->initChannel + this->growthRate * this->numTransition; 
+    cleanupBuffer(this->Mean_tmp,totalNumChannel);
+    cleanupBuffer(this->Var_tmp,totalNumChannel);
 }
 
 template <typename Dtype>
