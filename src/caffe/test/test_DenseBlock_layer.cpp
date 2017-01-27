@@ -504,7 +504,7 @@ void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,Dens
   logBlob(preConcat2Vec[1],preConcat2_dir+"snd");
 
   Convlayer2->Backward(postConv2Vec,PropDown_1,postReLU2Vec);
-  string postReLU2_dir = dir_bwdRoot+"/"+gloalFormalStr+"/postReLU2";
+  string postReLU2_dir = dir_bwdRoot+"/"+globalFormalStr+"/postReLU2";
   logBlob(postReLU2Vec[0],postReLU2_dir);
 
   ReLUlayer2->Backward(postReLU2Vec,PropDown_1,postScale2Vec);
