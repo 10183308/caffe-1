@@ -356,7 +356,8 @@ void logBlob(Blob<Dtype>* B,string filename);
 template <typename Dtype>
 void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBlockLayer<Dtype>* DBLayerPtr,LayerParameter* layerParamPtr){
   string globalFormalStr = itos(global_formalId);
-  
+  Dtype BNblob2val = 393.62106;
+
   Blob<Dtype>* postBN1 = new Blob<Dtype>(2,3,5,5);
   vector<Blob<Dtype>*> postBN1Vec;
   postBN1Vec.push_back(postBN1);
@@ -402,6 +403,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //BN1
   BatchNormLayer<Dtype>* BNlayer1 = new BatchNormLayer<Dtype>(*layerParamPtr);
   BNlayer1->SetUp(bottom,postBN1Vec);
+  BNlayer1->blobs()[2]->mutable_cpu_data()[0] = BNblob2val;
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[3*2+0].get(),BNlayer1->blobs()[0].get(),3); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[4*2+0].get(),BNlayer1->blobs()[1].get(),3); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[5*2].get(),BNlayer1->blobs()[2].get(),1); 
@@ -423,6 +425,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //BN2
   BatchNormLayer<Dtype>* BNlayer2 = new BatchNormLayer<Dtype>(*layerParamPtr);
   BNlayer2->SetUp(postConcat1Vec,postBN2Vec);
+  BNlayer2->blobs()[2]->mutable_cpu_data()[0] = BNblob2val; 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[3*2+1].get(),BNlayer2->blobs()[0].get(),5); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[4*2+1].get(),BNlayer2->blobs()[1].get(),5); 
   BlobDataMemcpy<Dtype>(DBLayerPtr->blobs()[5*2].get(),BNlayer2->blobs()[2].get(),1); 
@@ -443,53 +446,69 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ConcatLayer<Dtype>* Concatlayer2 = new ConcatLayer<Dtype>(*layerParamPtr);
   Concatlayer2->SetUp(preConcat2Vec,top); 
   //Forward
-  string dir_root = "TC_TrueFwdlog";
+  //string dir_root = "TC_TrueFwdlog";
   BNlayer1->Forward(bottom,postBN1Vec);
-  string init_dir = dir_root+"/"+globalFormalStr+"/init1";
-  logBlob(bottom[0],init_dir);
-  string postBN1_dir = dir_root+"/"+globalFormalStr+"/postBN1";
-  logBlob(postBN1Vec[0],postBN1_dir);
+  //string init_dir = dir_root+"/"+globalFormalStr+"/init1";
+  //logBlob(bottom[0],init_dir);
+  //string postBN1_dir = dir_root+"/"+globalFormalStr+"/postBN1";
+  //logBlob(postBN1Vec[0],postBN1_dir);
   Scalelayer1->Forward(postBN1Vec,postScale1Vec);
-  string postScale1_dir = dir_root+"/"+globalFormalStr+"/postScale1";
-  logBlob(postScale1Vec[0],postScale1_dir);
+  //string postScale1_dir = dir_root+"/"+globalFormalStr+"/postScale1";
+  //logBlob(postScale1Vec[0],postScale1_dir);
   ReLUlayer1->Forward(postScale1Vec,postReLU1Vec);
-  string postReLU1_dir = dir_root+"/"+globalFormalStr+"/postReLU1";
-  logBlob(postReLU1Vec[0],postReLU1_dir);
+  //string postReLU1_dir = dir_root+"/"+globalFormalStr+"/postReLU1";
+  //logBlob(postReLU1Vec[0],postReLU1_dir);
 
   Convlayer1->Forward(postReLU1Vec,postConv1Vec);
-  string conv1Blob_dir = dir_root+"/"+globalFormalStr+"/conv1Blob";
-  logBlob(Convlayer1->blobs()[0].get(),conv1Blob_dir);
+  //string conv1Blob_dir = dir_root+"/"+globalFormalStr+"/conv1Blob";
+  //logBlob(Convlayer1->blobs()[0].get(),conv1Blob_dir);
 
-  string postConv1_dir = dir_root+"/"+globalFormalStr+"/postConv1";
-  logBlob(postConv1Vec[0],postConv1_dir);
+  //string postConv1_dir = dir_root+"/"+globalFormalStr+"/postConv1";
+  //logBlob(postConv1Vec[0],postConv1_dir);
   Concatlayer1->Forward(preConcat1Vec,postConcat1Vec);
-  string postConcat1_dir = dir_root+"/"+globalFormalStr+"/postConcat1";
-  logBlob(postConcat1Vec[0],postConcat1_dir);
+  //string postConcat1_dir = dir_root+"/"+globalFormalStr+"/postConcat1";
+  //logBlob(postConcat1Vec[0],postConcat1_dir);
 
   BNlayer2->Forward(postConcat1Vec,postBN2Vec);
-  string postBN2_dir = dir_root+"/"+globalFormalStr+"/postBN2";
-  logBlob(postBN2Vec[0],postBN2_dir); 
+  //string postBN2_dir = dir_root+"/"+globalFormalStr+"/postBN2";
+  //logBlob(postBN2Vec[0],postBN2_dir); 
   Scalelayer2->Forward(postBN2Vec,postScale2Vec); 
-  string postScale2_dir = dir_root+"/"+globalFormalStr+"/postScale2";
-  logBlob(postScale2Vec[0],postScale2_dir); 
+  //string postScale2_dir = dir_root+"/"+globalFormalStr+"/postScale2";
+  //logBlob(postScale2Vec[0],postScale2_dir); 
   ReLUlayer2->Forward(postScale2Vec,postReLU2Vec);
-  string postReLU2_dir = dir_root+"/"+globalFormalStr+"/postReLU2";
-  logBlob(postReLU2Vec[0],postReLU2_dir); 
+  //string postReLU2_dir = dir_root+"/"+globalFormalStr+"/postReLU2";
+  //logBlob(postReLU2Vec[0],postReLU2_dir); 
   Convlayer2->Forward(postReLU2Vec,postConv2Vec);
-  string postConv2_dir = dir_root+"/"+globalFormalStr+"/postConv2";
-  logBlob(postConv2Vec[0],postConv2_dir); 
+  //string postConv2_dir = dir_root+"/"+globalFormalStr+"/postConv2";
+  //logBlob(postConv2Vec[0],postConv2_dir); 
   Concatlayer2->Forward(preConcat2Vec,top); 
-  string postConcat2_dir = dir_root+"/"+globalFormalStr+"/postConcat2";
-  logBlob(top[0],postConcat2_dir);
+  //string postConcat2_dir = dir_root+"/"+globalFormalStr+"/postConcat2";
+  //logBlob(top[0],postConcat2_dir);
+  
+  //Backward
+  /*
+  vector<bool> PropDown_2;
+  for (int localIdx=0;localIdx<2;++localIdx){
+    PropDown_2.push_back(true);
+  }
+  vector<bool> PropDown_1;
+  PropDown_1.push_back(true);
+
+  Concatlayer2->Backward(top,PropDown_2,preConcat2Vec);
+  Convlayer2->Backward(postConv2Vec,PropDown_1,postReLU2Vec);
+  ReLUlayer2->Backward(postReLU2Vec,PropDown_1,postScale2Vec);
+  Scalelayer2->Backward(postScale2Vec,PropDown_1,postReLU2Vec);
+  BNlayer2->Backward(postBN2Vec,PropDown_1,postConcat1Vec);
+  Concatlayer1->Backward(postConcat1Vec,PropDown_2,preConcat1Vec);
+  Convlayer1->Backward(postConv1Vec,PropDown_1,postReLU1Vec);
+  ReLUlayer1->Backward(postReLU1Vec,PropDown_1,postScale1Vec); 
+  Scalelayer1->Backward(postScale1Vec,PropDown_1,postBN1Vec);
+  BNlayer1->Backward(postBN1Vec,PropDown_1,bottom); 
+  */
   global_formalId += 1;
 }
 
-template <typename Dtype>
-void Simulate_Bwd(vector<Blob<Dtype>*> top,vector<Blob<Dtype>*> bottom){
- 
-}
-
-TYPED_TEST(DenseBlockLayerTest, TestTrueFwd){
+TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
   DenseBlockLayer<Dtype>* dbLayer = new DenseBlockLayer<Dtype>(this->layer_param);
@@ -510,6 +529,16 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwd){
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
           EXPECT_NEAR(this->blob_top_cpu->data_at(n,c,h,w),this->blob_top_gpu->data_at(n,c,h,w),0.2);	
+	}
+      }
+    }
+  }
+
+  for (int n=0;n<2;++n){
+    for (int c=0;c<3;++c){
+      for (int h=0;h<5;++h){
+        for (int w=0;w<5;++w){
+          EXPECT_NEAR(this->lob);	
 	}
       }
     }

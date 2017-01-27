@@ -1,6 +1,6 @@
 import numpy as np
 
-fileNameA = "TClog/gpu_105/postConv_data_gpu_transition0"
+fileNameA = "TClog/gpu_101/postConv_data_gpu_transition0"
 fileNameB = "TC_TrueFwdlog/1/postConv1_data"
 A_offset = 75
 B_offset = 0
