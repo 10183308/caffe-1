@@ -486,7 +486,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   //logBlob(top[0],postConcat2_dir);
   
   //Backward
-  /*
+  
   vector<bool> PropDown_2;
   for (int localIdx=0;localIdx<2;++localIdx){
     PropDown_2.push_back(true);
@@ -504,7 +504,7 @@ void Simulate_Fwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,DenseBl
   ReLUlayer1->Backward(postReLU1Vec,PropDown_1,postScale1Vec); 
   Scalelayer1->Backward(postScale1Vec,PropDown_1,postBN1Vec);
   BNlayer1->Backward(postBN1Vec,PropDown_1,bottom); 
-  */
+  
   global_formalId += 1;
 }
 
@@ -533,17 +533,17 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       }
     }
   }
-  /*
+  
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
-          EXPECT_NEAR(this->lob);	
+          EXPECT_NEAR(this->blob_bottom_cpu->diff_at(n,c,h,w),this->blob_bottom_gpu->diff_at(n,c,h,w),0.1);	
 	}
       }
     }
   }
-  */
+  
   delete dbLayer;
 }
 
