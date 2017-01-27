@@ -494,12 +494,31 @@ void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,Dens
   }
   vector<bool> PropDown_1;
   PropDown_1.push_back(true);
+  string dir_bwdRoot = "TC_TrueBwdlog";
 
   Concatlayer2->Backward(top,PropDown_2,preConcat2Vec);
+  string init_dir = dir_bwdRoot+"/"+globalFormalStr+"/init";
+  logBlob(top[0],init_dir);
+  string preConcat2_dir = dir_bwdRoot+"/"+globalFormalStr+"/preConcat2";
+  logBlob(preConcat2Vec[0],preConcat2_dir+"fst");
+  logBlob(preConcat2Vec[1],preConcat2_dir+"snd");
+
   Convlayer2->Backward(postConv2Vec,PropDown_1,postReLU2Vec);
+  string postReLU2_dir = dir_bwdRoot+"/"+gloalFormalStr+"/postReLU2";
+  logBlob(postReLU2Vec[0],postReLU2_dir);
+
   ReLUlayer2->Backward(postReLU2Vec,PropDown_1,postScale2Vec);
+  string postScale2_dir = dir_bwdRoot+"/"+globalFormalStr+"/postScale2";
+  logBlob(postScale2Vec[0],postScale2_dir);
+
   Scalelayer2->Backward(postScale2Vec,PropDown_1,postBN2Vec);
+  string postBN2_dir = dir_bwdRoot+"/"+globalFormalStr+"/postBN2";
+  logBlob(postBN2Vec[0],postBN2_dir);
+
   BNlayer2->Backward(postBN2Vec,PropDown_1,postConcat1Vec);
+  string postConcat1_dir = dir_bwdRoot+"/"+globalFormalStr+"/postConcat1";
+  logBlob(postConcat1Vec[0],postConcat1_dir);
+
   Concatlayer1->Backward(postConcat1Vec,PropDown_2,preConcat1Vec);
   Convlayer1->Backward(postConv1Vec,PropDown_1,postReLU1Vec);
   ReLUlayer1->Backward(postReLU1Vec,PropDown_1,postScale1Vec); 
