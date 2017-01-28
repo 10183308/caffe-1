@@ -368,7 +368,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalMean,local_MeanInf);
           caffe_gpu_scale(narrow_numChannels,scale_factor,BN_narrow_globalVar,local_VarInf);
 
-	  //if (transitionIdx==1){
+	  if (transitionIdx==1){
 	    std::cout<<"narrow TEST"<<std::endl;
 	    std::cout<<"scale factor"<<scale_factor<<std::endl;
 	    std::cout<<"scalerGPUAddress"<<this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data()<<std::endl;
@@ -384,7 +384,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    std::cout<<"localVar"<<std::endl;
             print_gpuPtr(local_VarInf,narrow_numChannels);
 	    std::cout<<std::endl;
-	  //}
+	  }
 
 	  CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
@@ -449,7 +449,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalMean,local_MeanInf);
           caffe_gpu_scale(wide_numChannels,scale_factor,BN_wide_globalVar,local_VarInf);
 	  
-	  //if (transitionIdx==1){
+	  if (transitionIdx==1){
 	    std::cout<<"numTransition"<<this->numTransition<<std::endl;
             std::cout<<"wide TEST"<<std::endl;
             std::cout<<"Scale Factor"<<scale_factor<<std::endl;
@@ -465,7 +465,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	    std::cout<<"localVar"<<std::endl;
 	    print_gpuPtr(local_VarInf,wide_numChannels);
 	    std::cout<<std::endl;
-	  //}
+	  }
 
 	  CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,

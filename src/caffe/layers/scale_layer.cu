@@ -42,6 +42,7 @@ void ScaleLayer<Dtype>::Forward_gpu(
   const Dtype* scale_data =
       ((bottom.size() > 1) ? bottom[1] : this->blobs_[0].get())->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
+  
   if (bias_layer_) {
     const Dtype* bias_data = this->blobs_[bias_param_id_]->gpu_data();
     ScaleBiasForward<Dtype>  // NOLINT_NEXT_LINE(whitespace/operators)
