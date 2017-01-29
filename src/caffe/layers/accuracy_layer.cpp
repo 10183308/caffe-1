@@ -12,6 +12,8 @@ void AccuracyLayer<Dtype>::LayerSetUp(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   top_k_ = this->layer_param_.accuracy_param().top_k();
 
+  use_log_ = this->layer_param_.accuracy_param().use_log();
+
   has_ignore_label_ =
     this->layer_param_.accuracy_param().has_ignore_label();
   if (has_ignore_label_) {
@@ -89,7 +91,9 @@ void AccuracyLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       ++count;
     }
   }
-
+  if (use_log_){
+    std::cout<<accuracy<<std::endl;
+  }
   // LOG(INFO) << "Accuracy: " << accuracy;
   top[0]->mutable_cpu_data()[0] = accuracy / count;
   if (top.size() > 1) {

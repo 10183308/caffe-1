@@ -336,7 +336,7 @@ template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     const vector<Blob<Dtype>*>& top) {
   if (!this->gpuInited){
-      std::cout<<"Initializing GPU local"<<std::endl;
+      //std::cout<<"Initializing GPU local"<<std::endl;
       this->GPU_Initialization();
       this->gpuInited = true;
   }
@@ -561,11 +561,6 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	this->GPU_Initialization();
     	this->gpuInited = true;
     } 
-    if ((this->trainCycleIdx >= 798) || (this->trainCycleIdx<=502 && this->trainCycleIdx>=500) || (this->trainCycleIdx<=2)){
-      std::cout<<"Top grad"<<std::endl;
-      print_gpuPtr(top[0]->mutable_gpu_diff(),(initChannel+growthRate*numTransition)*H*W);
-      std::cout<<std::endl; 
-    }	
     //clock_t begin_bwd = std::clock();
     //assuming buffers store already computed value, always propagate down
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
