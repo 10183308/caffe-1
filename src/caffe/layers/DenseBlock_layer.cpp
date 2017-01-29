@@ -113,13 +113,17 @@ namespace caffe {
            << "Nope";
        }
        ParamSpec* fixed_param_spec = this->layer_param_.add_param();  
+       //global Mean/Var
        if (i>=3*this->numTransition){
          fixed_param_spec->set_lr_mult(0.f);
          fixed_param_spec->set_decay_mult(0.f);
        }
+       //BN Scaler and Bias
        else if (i>=this->numTransition){
-         //fixed_param_spec->set_lr_mult(1.f);
          fixed_param_spec->set_decay_mult(0.f);
+       }
+       else {
+	 fixed_param_spec->set_decay_mult(1.f);
        }
      }
 }
