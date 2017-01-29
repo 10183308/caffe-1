@@ -27,6 +27,14 @@ __global__ void ScaleBiasForward(const int n, const Dtype* in,
 }
 
 template <typename Dtype>
+void pBlob(Blob<Dtype>* B){
+  for (int i=0;i<B->count();++i){
+    std::cout<< B->mutable_cpu_data()[i] <<",";
+  }
+  std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void ScaleLayer<Dtype>::Forward_gpu(
     const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   const int count = top[0]->count();
@@ -41,6 +49,11 @@ void ScaleLayer<Dtype>::Forward_gpu(
   }
   const Dtype* scale_data =
       ((bottom.size() > 1) ? bottom[1] : this->blobs_[0].get())->gpu_data();
+  if (use_log_){
+    std::cout<<"Scale Blob Param"<<std::endl;
+    pBlob(this->blobs_[0].get());
+    std::cout<<std::endl;
+  }
   Dtype* top_data = top[0]->mutable_gpu_data();
   
   if (bias_layer_) {

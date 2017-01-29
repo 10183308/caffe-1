@@ -116,9 +116,9 @@ namespace caffe {
          fixed_param_spec->set_lr_mult(0.f);
          fixed_param_spec->set_decay_mult(0.f);
        }
-       else {
-         fixed_param_spec->set_lr_mult(1.f);
-         fixed_param_spec->set_decay_mult(1.f);
+       else if (i>=this->numTransition){
+         //fixed_param_spec->set_lr_mult(1.f);
+         fixed_param_spec->set_decay_mult(0.f);
        }
      }
 }

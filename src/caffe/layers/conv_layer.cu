@@ -23,8 +23,24 @@ void ConvolutionLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 }
 
 template <typename Dtype>
+void pGpuConv(Dtype* ptr,int numValues){
+  Dtype* cpuPtr = new Dtype[numValues]; 
+  cudaMemcpy(cpuPtr,ptr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
+  for (int i=0;i<numValues;++i){
+    std::cout<<cpuPtr[i]<<",";
+  }
+  std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void ConvolutionLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+  if (this->use_log_){
+    std::cout<<"Bwd Conv Top Grad"<<std::endl;
+    int printSize = top[0]->shape(1)*top[0]->shape(2)*top[0]->shape(3);
+    pGpuConv(top[0]->mutable_gpu_diff(),printSize); 
+    std::cout<<std::endl;
+  } 
   const Dtype* weight = this->blobs_[0]->gpu_data();
   Dtype* weight_diff = this->blobs_[0]->mutable_gpu_diff();
   for (int i = 0; i < top.size(); ++i) {

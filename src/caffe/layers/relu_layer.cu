@@ -41,9 +41,24 @@ __global__ void ReLUBackward(const int n, const Dtype* in_diff,
 }
 
 template <typename Dtype>
+void pBlob_ReLU(Dtype* gpuPtr,int numValues){
+  Dtype* cpuPtr = new Dtype[numValues];
+  cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
+  for (int i=0;i<numValues;++i){
+    std::cout<< cpuPtr[i] <<",";
+  }
+  std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void ReLULayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down,
     const vector<Blob<Dtype>*>& bottom) {
+  if (use_log_){
+    std::cout<< "ReLU top diff"<<std::endl;
+    pBlob_ReLU(top[0]->mutable_gpu_diff(),20 * top[0]->shape(1) * top[0]->shape(2) * top[0]->shape(3));
+    std::cout<< std::endl;
+  }
   if (propagate_down[0]) {
     const Dtype* bottom_data = bottom[0]->gpu_data();
     const Dtype* top_diff = top[0]->gpu_diff();

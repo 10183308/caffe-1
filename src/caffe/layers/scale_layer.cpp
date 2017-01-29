@@ -115,14 +115,6 @@ void ScaleLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
 }
 
 template <typename Dtype>
-void pBlob(Blob<Dtype>* B){
-  for (int i=0;i<B->count();++i){
-    std::cout<< B->mutable_cpu_data()[i] <<",";
-  }
-  std::cout<<std::endl;
-}
-
-template <typename Dtype>
 void ScaleLayer<Dtype>::Forward_cpu(
     const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   const Dtype* bottom_data = bottom[0]->cpu_data();
@@ -137,11 +129,6 @@ void ScaleLayer<Dtype>::Forward_cpu(
   const Dtype* scale_data =
       ((bottom.size() > 1) ? bottom[1] : this->blobs_[0].get())->cpu_data();
  
-  if (use_log_){
-    std::cout<<"Scale Blob Param"<<std::endl;
-    pBlob(this->blobs_[0]);
-    std::cout<<std::endl;
-  }
   Dtype* top_data = top[0]->mutable_cpu_data();
   for (int n = 0; n < outer_dim_; ++n) {
     for (int d = 0; d < scale_dim_; ++d) {

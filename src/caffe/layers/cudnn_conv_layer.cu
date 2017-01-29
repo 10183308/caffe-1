@@ -46,6 +46,16 @@ void CuDNNConvolutionLayer<Dtype>::Forward_gpu(
 }
 
 template <typename Dtype>
+void printGpuPtr(Dtype* gpuPtr,int numValues){
+  Dtype* cpuPtr = new Dtype[numValues];
+  cudaMemcpy(cpuPtr,gpuPtr,numValues*sizeof(Dtype),cudaMemcpyDeviceToHost);
+  for (int i=0;i<numValues;++i){
+    std::cout<<cpuPtr[i]<<",";
+  } 
+  std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void CuDNNConvolutionLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
   const Dtype* weight = NULL;
@@ -92,6 +102,11 @@ void CuDNNConvolutionLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
           weight = this->blobs_[0]->gpu_data();
         }
         Dtype* bottom_diff = bottom[i]->mutable_gpu_diff();
+        if (this->use_log_){
+	  std::cout<<"Before conv dx value"<<std::endl;
+          printGpuPtr(bottom_diff,20*bottom[i]->shape(2)*bottom[i]->shape(3));	
+	  std::cout<<std::endl;
+	}
         CUDNN_CHECK(cudnnConvolutionBackwardData(
               handle_[2*this->group_ + g],
               cudnn::dataType<Dtype>::one,
@@ -102,6 +117,14 @@ void CuDNNConvolutionLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
               workspace_bwd_data_sizes_[i],
               cudnn::dataType<Dtype>::zero,
               bottom_descs_[i], bottom_diff + bottom_offset_ * g));
+        if (this->use_log_){
+	  std::cout<<"Conv dy"<<std::endl;
+	  printGpuPtr(top[i]->mutable_gpu_diff(),20*top[i]->shape(2)*top[i]->shape(3)); 
+	  std::cout<<"Conv dx"<<std::endl;
+          printGpuPtr(bottom_diff,20*bottom[i]->shape(2)*bottom[i]->shape(3));
+	  std::cout<<std::endl;
+        }
+       
       }
     }
 
