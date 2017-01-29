@@ -424,6 +424,8 @@ message DenseBlockParameter {
   //BN related parameters
   optional FillerParameter BN_Scaler_Filler = 11;
   optional FillerParameter BN_Bias_Filler = 12;
+  //Performance Related parameters
+  optional int32 gpuIdx = 15 [default = 0];
 }
 
 // Message that stores parameters used to apply transformation

@@ -60,7 +60,8 @@ namespace caffe {
         this->filter_W = dbParam.filter_w();
         this->workspace_size_bytes = 10000000;
 	this->EMA_decay = 0.999;
-        //Parameter Blobs
+        this->gpu_idx_ = dbParam.gpuidx();
+	//Parameter Blobs
 	//for transition i, 
 	//blobs_[i] is its filter blob
 	//blobs_[numTransition + i] is its scaler blob

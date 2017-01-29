@@ -91,7 +91,7 @@ void AccuracyLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       ++count;
     }
   }
-  if (use_log_){
+  if (use_log_ && (this->phase_ == TEST)){
     std::cout<<accuracy<<std::endl;
   }
   // LOG(INFO) << "Accuracy: " << accuracy;

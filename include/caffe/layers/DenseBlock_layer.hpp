@@ -67,6 +67,9 @@ class DenseBlockLayer : public Layer<Dtype> {
   int logId;
   //end logging specific data
 
+  //performance related parameter
+  int gpu_idx_;
+
   //common Blobs for both CPU & GPU mode
   //in this->blobs_, containing all filters for Convolution, scalers and bias for BN
   
