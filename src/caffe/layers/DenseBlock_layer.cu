@@ -587,7 +587,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	);
 	//Conv w.r.t. x
 	CUDNN_CHECK(cudnnConvolutionBackwardData(*(this->cudnnHandlePtr),
-	  cudnn::dataType<Dtype>::one,
+	  cudnn::dataType<Dtype>::zero,
 	  *(this->filterDescriptorVec[transitionIdx]),filterData_local,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
 	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_DATA_ALGO_1,
