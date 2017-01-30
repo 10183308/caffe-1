@@ -350,7 +350,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   gpu_copy_one_to_many<Dtype>(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
-      //use scaler protector before forward
       int work_n = this->N * (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;         
       //BN::type1 normal narrow channels::postConv -> postBN 
       int channelsBefore_noself = (transitionIdx==0?0:(this->initChannel + (transitionIdx - 1)*this->growthRate));
