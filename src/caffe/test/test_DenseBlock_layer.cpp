@@ -61,7 +61,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32))
   {
     Caffe::set_random_seed(1704);
-    this->layer_param.set_phase(TEST);
+    //this->layer_param.set_phase(TEST);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
     db_param->set_numtransition(2);
     db_param->set_initchannel(3);
@@ -182,7 +182,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 };
 
 TYPED_TEST_CASE(DenseBlockLayerTest, TestDtypesAndDevices);
-/*
+
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -222,8 +222,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   delete layer;
   delete layer2;
 }
-*/
-/*
+
+
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -283,7 +283,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     for (int inCIdx=0;inCIdx<3;++inCIdx){
       for (int filterHIdx=0;filterHIdx<3;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<3;++filterWIdx){
-	  EXPECT_NEAR(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.6); //slightly relax
+	  EXPECT_NEAR(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.4); //slightly relax
           std::cout<<(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
 	}
       }
@@ -296,7 +296,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     Blob<Dtype>* layer4localScaler = layer4->blobs()[layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
-      EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),1.2); 
+      EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),1); 
     }
   } 
   //Bias Grad
@@ -305,7 +305,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     Blob<Dtype>* layer4localBias = layer4->blobs()[2*layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
-      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4);
+      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),1);
     }
   } 
   //GlobalMean/Var should have no Grad
@@ -319,7 +319,8 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
-*/
+
+/*
 template <typename Dtype>
 void BlobDataMemcpy(Blob<Dtype>* dest,Blob<Dtype>* src,int numValues){
   memcpy(dest->mutable_cpu_data(),src->cpu_data(),numValues*sizeof(Dtype));
@@ -495,7 +496,7 @@ void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,Dens
   //logBlob(top[0],postConcat2_dir);
   
   //Backward
-  /* 
+   
   vector<bool> PropDown_2;
   for (int localIdx=0;localIdx<2;++localIdx){
     PropDown_2.push_back(true);
@@ -544,7 +545,7 @@ void Simulate_FwdBwd(vector<Blob<Dtype>*>& bottom,vector<Blob<Dtype>*>& top,Dens
   outV->push_back(BNlayer1->blobs()[1].get());
   outV->push_back(BNlayer2->blobs()[1].get());
   outV->push_back(BNlayer1->blobs()[2].get());
-  */
+  
   global_formalId += 1;
 }
 
@@ -592,7 +593,7 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
     }
   }
    
-  /* 
+   
   for (int n=0;n<2;++n){
     for (int c=0;c<3;++c){
       for (int h=0;h<5;++h){
@@ -632,10 +633,10 @@ TYPED_TEST(DenseBlockLayerTest, TestTrueFwdBwd){
       EXPECT_NEAR(compositeParam->cpu_data()[i],localParam->cpu_data()[i],0.1);
     }
   }
-  */
+  
   delete dbLayer;
 }
-
+*/
 /*
 TYPED_TEST(DenseBlockLayerTest, TestSpeed){
   typedef typename TypeParam::Dtype Dtype;

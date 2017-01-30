@@ -118,6 +118,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN;//<channelwise>
   //filter descriptor for conv
   vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
+  //ReLU Activation Descriptor  
+  cudnnActivationDescriptor_t* ReLUDesc;
   //conv descriptor for conv
   cudnnConvolutionDescriptor_t* conv_Descriptor;
 

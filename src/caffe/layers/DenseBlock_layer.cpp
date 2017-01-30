@@ -330,7 +330,7 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 		}
 	      }
 	    }
-	    bottomDiffPtr[bottom->offset(n,cinIdx,i_img,j_img)] += localGradSum;
+	    bottomDiffPtr[bottom->offset(n,cinIdx,i_img,j_img)] = localGradSum;
 	  }
 	}
       }
@@ -350,7 +350,7 @@ void ReLU_Fwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
         for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
             Dtype bottomData = bottom->data_at(n,cIdx,hIdx,wIdx);
-	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = bottomData>=0?bottomData:0.5*bottomData;
+	    topPtr[top->offset(n,cIdx,hIdx,wIdx)] = bottomData>=0?bottomData:0;
 	  }
 	}
       } 
@@ -364,7 +364,7 @@ void ReLU_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,int N,int C,int h_img,int w_i
       for (int cIdx=0;cIdx<C;++cIdx){
         for (int hIdx=0;hIdx<h_img;++hIdx){
 	  for (int wIdx=0;wIdx<w_img;++wIdx){
-	    bottomDiffPtr[bottom->offset(n,cIdx,hIdx,wIdx)] = bottom->data_at(n,cIdx,hIdx,wIdx)>=0?top->diff_at(n,cIdx,hIdx,wIdx):0.5*top->diff_at(n,cIdx,hIdx,wIdx); 
+	    bottomDiffPtr[bottom->offset(n,cIdx,hIdx,wIdx)] = bottom->data_at(n,cIdx,hIdx,wIdx)>=0?top->diff_at(n,cIdx,hIdx,wIdx):0; 
 	  }
 	}
       }
@@ -563,7 +563,7 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term1=bottom_xhat->diff_at(n,c,h,w) / (sqrt(batchVar->data_at(0,c,0,0) + epsilon));
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
-	    bottomDataGrad[bottom->offset(n,c,h,w)] = term1 + term2 + term3;
+	    bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
 	    //std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
 	  }
 	}
@@ -723,7 +723,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       convolution_Fwd<Dtype>(conv_x,conv_y,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W);
       //post Conv merge
       Blob<Dtype>* mergeOutput = merged_conv[transitionIdx+1];
-      Blob<Dtype>* mergeInputA = postReLU_blobVec[transitionIdx];
+      Blob<Dtype>* mergeInputA = merged_conv[transitionIdx];
       Blob<Dtype>* mergeInputB = postConv_blobVec[transitionIdx];
       mergeChannelData(mergeOutput,mergeInputA,mergeInputB);
     }
@@ -750,7 +750,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     this->merged_conv[this->numTransition]->CopyFrom(*(top[0]),true);
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
       //distribute diff
-      distributeChannelDiff(this->merged_conv[transitionIdx+1],this->postReLU_blobVec[transitionIdx],this->postConv_blobVec[transitionIdx]);
+      distributeChannelDiff(this->merged_conv[transitionIdx+1],this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx]);
       //Conv Bwd
       Blob<Dtype>* conv_top=this->postConv_blobVec[transitionIdx];
       Blob<Dtype>* conv_bottom=this->postReLU_blobVec[transitionIdx];
