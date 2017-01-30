@@ -113,12 +113,9 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype EMA_decay;
   //gpu handles and descriptors
   cudnnHandle_t* cudnnHandlePtr;
-  vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_narrow;//for BN
   vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;//local Conv X
   cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
-  cudnnTensorDescriptor_t * tensorDescriptor_BN_initChannel;//<channelwise>
-  cudnnTensorDescriptor_t * tensorDescriptor_BN_growthRate;//<channelwise>
-  vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN_wide;//<channelwise>
+  vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN;//<channelwise>
   //filter descriptor for conv
   vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
   //conv descriptor for conv
