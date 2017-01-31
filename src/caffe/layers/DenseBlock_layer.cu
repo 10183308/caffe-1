@@ -159,7 +159,20 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //handles and descriptors
     //cudnn handle
     this->cudnnHandlePtr = new cudnnHandle_t;
+    cudaPrimalStream = new cudaStream_t;
     CUDNN_CHECK(cudnnCreate(this->cudnnHandlePtr));
+    CUDA_CHECK(cudaStreamCreate(cudaPrimalStream));
+    //CUDNN_CHECK(cudnnSetStream(*cudnnHandlePtr,*cudaPrimalStream));
+    int extraHandle_num = 3;
+    for (int i=0;i<extraHandle_num;++i){
+      cudnnHandle_t* localHandle = new cudnnHandle_t;
+      cudaStream_t* localStream = new cudaStream_t;
+      CUDNN_CHECK(cudnnCreate(localHandle));
+      CUDA_CHECK(cudaStreamCreate(localStream));
+      CUDNN_CHECK(cudnnSetStream(*localHandle,*localStream));
+      extraHandles.push_back(localHandle);
+      extraStreams.push_back(localStream); 
+    }
     //ReLU Activation Descriptor
     this->ReLUDesc = new cudnnActivationDescriptor_t;
     cudnn::createActivationDescriptor<Dtype>(ReLUDesc,CUDNN_ACTIVATION_RELU);
@@ -229,6 +242,8 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
 }
+
+__global__ void sync_streams(){}
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
@@ -373,17 +388,6 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON)
 	);
  
-        /*CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
-	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
-	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
-	    *(this->tensorDescriptorVec_conv_x[transitionIdx]),BN_x_ptr,
-	    *(this->tensorDescriptorVec_conv_x[transitionIdx]),BN_y_ptr,
-	    *BN_paramDesc,
-	    this->blobs_[this->numTransition+transitionIdx]->gpu_data(),
-	    this->blobs_[2*this->numTransition+transitionIdx]->gpu_data(),
-	    Dtype(1),local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON,
-	    batchMean,batchInvVar)
-	);*/
         //ReLU Fwd
         Dtype* ReLU_x_ptr = this->postBN_data_gpu;
         Dtype* ReLU_y_ptr = this->postReLU_data_gpu;
@@ -396,7 +400,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         //Now do Bwd
         //Conv
         Dtype* filterGrad_local = this->blobs_[transitionIdx]->mutable_gpu_diff();
-	const Dtype* filterData_local =this->blobs_[transitionIdx]->gpu_data();
+	Dtype* filterData_local =this->blobs_[transitionIdx]->mutable_gpu_data();
 	Dtype* conv_x_local = postReLU_data_gpu;
 	Dtype* conv_dy_local = postConv_grad_gpu + channelsBefore_self * this->H * this->W;
 	//Conv w.r.t. filter
@@ -411,7 +415,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  )		
 	);
 	//Conv w.r.t. x
-	CUDNN_CHECK(cudnnConvolutionBackwardData(*(this->cudnnHandlePtr),
+	CUDNN_CHECK(cudnnConvolutionBackwardData(*(this->extraHandles[0]),
 	  cudnn::dataType<Dtype>::one,
 	  *(this->filterDescriptorVec[transitionIdx]),filterData_local,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
@@ -421,6 +425,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),postReLU_grad_gpu
 	  )		
 	);
+        sync_streams<<<1, 1>>>();
 	//ReLU Bwd
 	Dtype* ReLU_y_local = postReLU_data_gpu;
         Dtype* ReLU_x_local = postBN_data_gpu;

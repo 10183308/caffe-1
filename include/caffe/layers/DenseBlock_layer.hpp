@@ -113,6 +113,9 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype EMA_decay;
   //gpu handles and descriptors
   cudnnHandle_t* cudnnHandlePtr;
+  cudaStream_t* cudaPrimalStream;
+  vector<cudnnHandle_t*> extraHandles;
+  vector<cudaStream_t*> extraStreams;
   vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;//local Conv X
   cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
   vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN;//<channelwise>
