@@ -61,7 +61,10 @@ namespace caffe {
         this->workspace_size_bytes = 10000000;
 	this->EMA_decay = 0.999;
         this->gpu_idx_ = dbParam.gpuidx();
-	//Parameter Blobs
+        this->useDropout = dbParam.use_dropout();
+	this->dropoutAmount = dbParam.dropout_amount();
+	this->DB_randomSeed = 124816;
+        //Parameter Blobs
 	//for transition i, 
 	//blobs_[i] is its filter blob
 	//blobs_[numTransition + i] is its scaler blob

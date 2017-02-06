@@ -77,6 +77,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     db_param->mutable_bn_scaler_filler()->set_value(1);
     db_param->mutable_bn_bias_filler()->set_type("constant");
     db_param->mutable_bn_bias_filler()->set_value(0);
+    db_param->set_use_dropout(true);
     //For comparison with existing Caffe layer    
     BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
     bn_param->set_moving_average_fraction(0.999);

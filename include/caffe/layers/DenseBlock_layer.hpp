@@ -40,6 +40,10 @@ class DenseBlockLayer : public Layer<Dtype> {
 
   int initChannel, growthRate, numTransition; 
   int N,H,W; //N,H,W of the input tensor, inited in reshape phase
+  
+  bool useDropout;
+  float dropoutAmount;
+  unsigned long long DB_randomSeed;
 
  protected:
   
@@ -50,6 +54,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   virtual void LoopEndCleanup_cpu();
 
   void LoopEndCleanup_gpu();
+
+  void resetDropoutDesc(); 
 
   virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top);
@@ -92,14 +98,19 @@ class DenseBlockLayer : public Layer<Dtype> {
   bool gpuInited;
   Dtype* postConv_data_gpu;
   Dtype* postConv_grad_gpu;
+  Dtype* postDropout_data_gpu;
+  Dtype* postDropout_grad_gpu;
   Dtype* postBN_data_gpu;
   Dtype* postBN_grad_gpu;
   Dtype* postReLU_data_gpu;
   Dtype* postReLU_grad_gpu;
   Dtype* workspace;
-  vector<Dtype*> postReLU_cache_cpu;
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
+  vector<void*> dropout_state_gpu;
+  vector<size_t> dropout_stateSize;
+  vector<void*> dropout_reserve_gpu;
+  vector<size_t> dropout_reserveSize;
   Dtype* Mean_tmp;//used in BN inf
   Dtype* Var_tmp;//used in BN inf
     
@@ -116,9 +127,12 @@ class DenseBlockLayer : public Layer<Dtype> {
   cudaStream_t* cudaPrimalStream;
   vector<cudnnHandle_t*> extraHandles;
   vector<cudaStream_t*> extraStreams;
+
   vector<cudnnTensorDescriptor_t *> tensorDescriptorVec_conv_x;//local Conv X
   cudnnTensorDescriptor_t * tensorDescriptor_conv_y;//local Conv Y
   vector<cudnnTensorDescriptor_t *> tensorDescriptor_BN;//<channelwise>
+  //Dropout descriptor 
+  vector<cudnnDropoutDescriptor_t *> dropoutDescriptorVec;
   //filter descriptor for conv
   vector<cudnnFilterDescriptor_t *> filterDescriptorVec;
   //ReLU Activation Descriptor  

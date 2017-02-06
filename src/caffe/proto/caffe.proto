@@ -426,6 +426,9 @@ message DenseBlockParameter {
   optional FillerParameter BN_Bias_Filler = 12;
   //Performance Related parameters
   optional int32 gpuIdx = 15 [default = 0];
+  //Dropout related parameter
+  optional bool use_dropout = 16 [default = false];
+  optional float dropout_amount = 17 [default = 0];
 }
 
 // Message that stores parameters used to apply transformation

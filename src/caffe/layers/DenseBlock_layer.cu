@@ -141,9 +141,15 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //GPU intermediate ptrs
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
     CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
+    if (useDropout){
+      CUDA_CHECK(cudaMalloc(&this->postDropout_data_gpu,bufferSize_byte));
+    }
     CUDA_CHECK(cudaMalloc(&this->postBN_data_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postReLU_data_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postConv_grad_gpu,bufferSize_byte));
+    if (useDropout){
+      CUDA_CHECK(cudaMalloc(&this->postDropout_grad_gpu,bufferSize_byte));
+    }
     CUDA_CHECK(cudaMalloc(&this->postBN_grad_gpu,bufferSize_byte));
     CUDA_CHECK(cudaMalloc(&this->postReLU_grad_gpu,bufferSize_byte));
 
@@ -182,10 +188,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     cudnn::setTensor4dDesc<Dtype>(this->tensorDescriptor_conv_y,this->N,this->growthRate,this->H,this->W,(this->numTransition*this->growthRate+this->initChannel)*this->H*this->W,this->H*this->W,this->W,1);	
     //per transition variables
     for (int i=0;i<this->numTransition;++i){
-        int cache_size = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-        Dtype* localCache_cpu = new Dtype[cache_size];
-        postReLU_cache_cpu.push_back(localCache_cpu);
-	//Result Running/Saving Mean/Variance/InvVariance
+        //Result Running/Saving Mean/Variance/InvVariance
     	int localChannel = this->initChannel + i * this->growthRate;
     	Dtype* local_SaveMean;
 	Dtype* local_SaveInvVar;
@@ -215,6 +218,26 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
 	cudnn::createTensor4dDesc<Dtype>(BNparam);
 	cudnn::setTensor4dDesc<Dtype>(BNparam,1,channelsBefore_self,1,1);
 	this->tensorDescriptor_BN.push_back(BNparam);
+        //Dropout Ptr and Descriptor
+        if (useDropout){
+          size_t * sizeState = new size_t[1];
+          size_t * sizeReserve = new size_t[1];
+          CUDNN_CHECK(cudnnDropoutGetStatesSize((*cudnnHandlePtr),sizeState));
+	  CUDNN_CHECK(cudnnDropoutGetReserveSpaceSize(*tensorDescriptor_conv_y,sizeReserve));	
+          dropout_reserveSize.push_back(sizeReserve[0]);
+          dropout_stateSize.push_back(sizeState[0]);
+	  void* localStatePtr;
+          void* localReservePtr;
+          CUDA_CHECK(cudaMalloc(&localStatePtr,sizeState[0]));
+          CUDA_CHECK(cudaMalloc(&localReservePtr,sizeReserve[0]));
+          dropout_state_gpu.push_back(localStatePtr);
+	  dropout_reserve_gpu.push_back(localReservePtr);
+          cudnnDropoutDescriptor_t* localDropoutDesc = new cudnnDropoutDescriptor_t;
+          cudnnCreateDropoutDescriptor(localDropoutDesc); 
+	  cudnnSetDropoutDescriptor(*localDropoutDesc,*cudnnHandlePtr,dropoutAmount,localStatePtr,sizeState[0],DB_randomSeed);
+	  dropoutDescriptorVec.push_back(localDropoutDesc);
+          DB_randomSeed += 1;
+        }
     }
     //Conv Descriptor
     this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
@@ -237,10 +260,30 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_gpu(){
     int valsBuffer = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
     cleanupBuffer(this->postConv_data_gpu,valsBuffer);
     cleanupBuffer(this->postConv_grad_gpu,valsBuffer);
+    if (useDropout){
+      cleanupBuffer(this->postDropout_data_gpu,valsBuffer);
+      cleanupBuffer(this->postDropout_grad_gpu,valsBuffer); 
+    }
     cleanupBuffer(this->postBN_data_gpu,valsBuffer);
     cleanupBuffer(this->postBN_grad_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_data_gpu,valsBuffer);
     cleanupBuffer(this->postReLU_grad_gpu,valsBuffer);
+}
+
+template <typename Dtype>
+void DenseBlockLayer<Dtype>::resetDropoutDesc(){
+  for (int transitionIdx=0;transitionIdx < numTransition;++transitionIdx){
+    std::cout<<&(dropout_state_gpu[transitionIdx])<<","<<dropout_stateSize[transitionIdx]<<std::endl;
+    CUDNN_CHECK(cudnnSetDropoutDescriptor(
+      *(dropoutDescriptorVec[transitionIdx]),
+      *(this->cudnnHandlePtr),
+      dropoutAmount,
+      dropout_state_gpu[transitionIdx],
+      dropout_stateSize[transitionIdx],
+      DB_randomSeed
+    ));
+    DB_randomSeed++;
+  }
 }
 
 __global__ void sync_streams(){}
@@ -253,19 +296,30 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
       this->GPU_Initialization();
       this->gpuInited = true;
   }
-  clock_t begin_fwd = std::clock();
+  clock_t begin_fwd = std::clock();//timer
   const Dtype* bottom_data = bottom[0]->gpu_data();
   Dtype* top_data = top[0]->mutable_gpu_data();
   const int count = bottom[0]->count();
   //copy to bottom_data to buffer with stride
   int chunkSize_copy_init = this->initChannel * this->H * this->W;
   int chunkStride_copy = (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
-  gpu_copy_one_to_many<Dtype>(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
+  if ((this->phase_ == TRAIN) && useDropout){
+    gpu_copy_one_to_many<Dtype>(bottom_data,this->postDropout_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
+  }
+  else {
+    gpu_copy_one_to_many<Dtype>(bottom_data,this->postConv_data_gpu,this->N,chunkSize_copy_init,chunkStride_copy);
+  }
   int work_n = this->N * (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;     
   //work in the buffer, transition by transition
   for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
       //BN Fwd 
-      Dtype* BN_x_ptr = this->postConv_data_gpu;  
+      Dtype* BN_x_ptr;
+      if (this->phase_ == TRAIN && useDropout){
+        BN_x_ptr = this->postDropout_data_gpu; 
+      }
+      else {
+        BN_x_ptr = this->postConv_data_gpu;
+      }
       Dtype* BN_y_ptr = this->postBN_data_gpu;
       Dtype* BN_globalMean= this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data();
       Dtype* BN_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();
@@ -320,7 +374,6 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         cudnn::dataType<Dtype>::zero,
 	*(this->tensorDescriptorVec_conv_x[transitionIdx]),ReLU_y_ptr)
       ); 
-      //ReLUForward<Dtype><<<CAFFE_GET_BLOCKS(work_n), CAFFE_CUDA_NUM_THREADS>>>(work_n,ReLU_x_ptr,ReLU_y_ptr,transitionIdx,this->numTransition,this->N,this->initChannel,this->growthRate,this->H,this->W);
       //Convolution
       int delayChannel = this->initChannel + this->growthRate * transitionIdx;
       Dtype* conv_x_local = this->postReLU_data_gpu;
@@ -335,6 +388,17 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*(this->tensorDescriptor_conv_y),conv_y_local	
 	)		      
       );
+      //Dropout
+      if ((this->phase_ == TRAIN) && useDropout){
+        Dtype* dropout_x_local = postConv_data_gpu + delayChannel*H*W;
+        Dtype* dropout_y_local = postDropout_data_gpu + delayChannel*H*W;
+        CUDNN_CHECK(cudnnDropoutForward(*(this->cudnnHandlePtr),
+	  *(dropoutDescriptorVec[transitionIdx]),
+	  *tensorDescriptor_conv_y, dropout_x_local,
+	  *tensorDescriptor_conv_y, dropout_y_local,
+          dropout_reserve_gpu[transitionIdx],dropout_reserveSize[transitionIdx] 
+        ));
+      }
       //this->logInternal_gpu("TClog",transitionIdx,true,false);
   } 
   if (this->phase_ == TRAIN){
@@ -343,12 +407,18 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     this->trainCycleIdx+=1;
   }
   //deploy top data
-  cudaMemcpy(top[0]->mutable_gpu_data(),postConv_data_gpu,work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice); 
+  if ((this->phase_ == TRAIN) && useDropout){
+    cudaMemcpy(top[0]->mutable_gpu_data(),postDropout_data_gpu,work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice); 
+  }
+  else {
+    cudaMemcpy(top[0]->mutable_gpu_data(),postConv_data_gpu,work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice); 
+  }
   //clock_t end_fwd = std::clock();
   //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
   //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
   //this->logInternal_gpu("TClog",-1,false,false);
 }
+
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
@@ -363,13 +433,24 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     Dtype* bottom_diff = bottom[0]->mutable_gpu_diff();
     int work_n = N * (initChannel+growthRate*numTransition) * H * W;
     //deploy top diff
-    cudaMemcpy(postConv_grad_gpu,top[0]->mutable_gpu_diff(),work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    if (useDropout){
+      cudaMemcpy(postDropout_grad_gpu,top[0]->mutable_gpu_diff(),work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    }
+    else {
+      cudaMemcpy(postConv_grad_gpu,top[0]->mutable_gpu_diff(),work_n*sizeof(Dtype),cudaMemcpyDeviceToDevice);
+    }
     //Backward, transition by transition
     for (int transitionIdx=this->numTransition-1;transitionIdx>=0;--transitionIdx){
         int channelsBefore_self = this->initChannel + transitionIdx * this->growthRate;
         //Using BN & ReLU Fwd to generate corresponding postBN,postReLU data for this transition 
         //BN Fwd
-        Dtype* BN_x_ptr = postConv_data_gpu;
+        Dtype* BN_x_ptr;
+        if (useDropout){
+          BN_x_ptr = postDropout_data_gpu;
+        }
+        else {
+          BN_x_ptr = postConv_data_gpu;   
+        }
         Dtype* BN_y_ptr = postBN_data_gpu; 
         Dtype* BN_globalMean = this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data();
         Dtype* BN_globalVar = this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data();  
@@ -398,6 +479,17 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  *(this->tensorDescriptorVec_conv_x[transitionIdx]),ReLU_y_ptr)
         ); 
         //Now do Bwd
+        //Dropout
+        if (useDropout){ 
+          Dtype* dropout_dy_ptr = postDropout_grad_gpu + channelsBefore_self*H*W;
+          Dtype* dropout_dx_ptr = postConv_grad_gpu + channelsBefore_self*H*W;
+          CUDNN_CHECK(cudnnDropoutBackward(*(this->cudnnHandlePtr),
+	    *(dropoutDescriptorVec[transitionIdx]),
+            *tensorDescriptor_conv_y,dropout_dy_ptr,
+            *tensorDescriptor_conv_y,dropout_dx_ptr,
+            dropout_reserve_gpu[transitionIdx],dropout_reserveSize[transitionIdx]
+          ));
+        } 
         //Conv
         Dtype* filterGrad_local = this->blobs_[transitionIdx]->mutable_gpu_diff();
 	Dtype* filterData_local =this->blobs_[transitionIdx]->mutable_gpu_data();
@@ -440,8 +532,16 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
           *(this->tensorDescriptorVec_conv_x[transitionIdx]),ReLU_dx_local)
         );
         //BN Bwd
-        Dtype* BN_x_local = this->postConv_data_gpu;
-	Dtype* BN_dx_local = this->postConv_grad_gpu;
+        Dtype* BN_x_local;
+        Dtype* BN_dx_local;
+	if (useDropout){
+          BN_x_local = this->postDropout_data_gpu;
+	  BN_dx_local = this->postDropout_grad_gpu;
+	}
+	else {
+	  BN_x_local = this->postConv_data_gpu;
+	  BN_dx_local = this->postConv_grad_gpu;
+	}
 	Dtype* BN_dy_local = this->postBN_grad_gpu;
 	Dtype* saveMean_local = this->ResultSaveMean_gpu[transitionIdx];
 	Dtype* saveInvVar_local = this->ResultSaveInvVariance_gpu[transitionIdx];
@@ -468,7 +568,13 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     //this->logInternal_gpu("TClog",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
-    gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
+    if (useDropout){
+      gpu_copy_many_to_one(postDropout_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
+      //this->resetDropoutDesc();
+    }
+    else {
+      gpu_copy_many_to_one(postConv_grad_gpu,bottom_diff,this->N,chunkSize_copy_init,chunkStride_copy);
+    }
     int numTotalChannels = initChannel+growthRate*numTransition;
     cleanupBuffer(this->Mean_tmp,numTotalChannels);
     cleanupBuffer(this->Var_tmp,numTotalChannels);   
