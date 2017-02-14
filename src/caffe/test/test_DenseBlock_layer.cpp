@@ -77,7 +77,9 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     db_param->mutable_bn_scaler_filler()->set_value(1);
     db_param->mutable_bn_bias_filler()->set_type("constant");
     db_param->mutable_bn_bias_filler()->set_value(0);
-    db_param->set_use_dropout(true);
+    db_param->set_use_dropout(false);
+    db_param->set_use_bc(true);
+    db_param->set_bc_ultra_space_efficient(true);
     //For comparison with existing Caffe layer    
     BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
     bn_param->set_moving_average_fraction(0.999);
@@ -259,6 +261,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
       for (int h=0;h<5;++h){
         for (int w=0;w<5;++w){
 	  EXPECT_NEAR(this->blob_bottom_cpu->diff_at(n,c,h,w),this->blob_bottom_gpu->diff_at(n,c,h,w),0.4);
+	  //std::cout<< this->blob_bottom_cpu->diff_at(n,c,h,w) <<",";
 	}
       }
     }
@@ -268,11 +271,12 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   Blob<Dtype>* filter1layer3 = layer3->blobs()[1].get();
   Blob<Dtype>* filter1layer4 = layer4->blobs()[1].get();
   for (int outCIdx=0;outCIdx<2;++outCIdx){
-    for (int inCIdx=0;inCIdx<5;++inCIdx){
+    for (int inCIdx=0;inCIdx<8;++inCIdx){
       for (int filterHIdx=0;filterHIdx<3;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<3;++filterWIdx){
 	  EXPECT_NEAR(filter1layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter1layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.4);
 	  //std::cout<<(filter1layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter1layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
+	  //std::cout<<filter1layer3->data_at(outCIdx,inCIdx,filterHIdx,filterWIdx)<<",";
 	}
       }
     }
@@ -281,14 +285,47 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   Blob<Dtype>* filter0layer3 = layer3->blobs()[0].get();
   Blob<Dtype>* filter0layer4 = layer4->blobs()[0].get();
   for (int outCIdx=0;outCIdx<2;++outCIdx){
-    for (int inCIdx=0;inCIdx<3;++inCIdx){
+    for (int inCIdx=0;inCIdx<8;++inCIdx){
       for (int filterHIdx=0;filterHIdx<3;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<3;++filterWIdx){
 	  EXPECT_NEAR(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.4); //slightly relax
-          std::cout<<(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
+          //std::cout<<(filter0layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx) - filter0layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx))<<",";
 	}
       }
     }
+  }
+   
+  //Filter_11
+  Blob<Dtype>* filter11layer3 = layer3->blobs()[11].get();
+  Blob<Dtype>* filter11layer4 = layer4->blobs()[11].get();
+  for (int outCIdx=0;outCIdx<8;++outCIdx){
+    for (int inCIdx=0;inCIdx<5;++inCIdx){
+      for (int filterHIdx=0;filterHIdx<1;++filterHIdx){
+        for (int filterWIdx=0;filterWIdx<1;++filterWIdx){
+	  EXPECT_NEAR(filter11layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter11layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.8); //slightly relax
+          
+	}
+      }
+    }
+  } 
+  //Filter_10
+  Blob<Dtype>* filter10layer3 = layer3->blobs()[10].get();
+  Blob<Dtype>* filter10layer4 = layer4->blobs()[10].get();
+  for (int outCIdx=0;outCIdx<8;++outCIdx){
+    for (int inCIdx=0;inCIdx<3;++inCIdx){
+      for (int filterHIdx=0;filterHIdx<1;++filterHIdx){
+        for (int filterWIdx=0;filterWIdx<1;++filterWIdx){
+	  EXPECT_NEAR(filter10layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter10layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.8); //slightly relax
+	}
+      }
+    }
+  }
+  
+  Blob<Dtype>* layer3_4GScaler = layer3->blobs()[15].get();
+  Blob<Dtype>* layer4_4GScaler = layer4->blobs()[15].get(); 
+  int num4GChannel = 4*2;
+  for (int c=0;c<num4GChannel;++c){
+    EXPECT_NEAR(layer3_4GScaler->data_at(0,c,0,0),layer4_4GScaler->data_at(0,c,0,0),1); 
   }
 
   //Scaler Grad

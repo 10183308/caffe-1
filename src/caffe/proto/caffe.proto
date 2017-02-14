@@ -410,6 +410,8 @@ message LayerParameter {
 }
 
 message DenseBlockParameter {
+  //if you don't use BC, BN-ReLU-Conv3 is one transition
+  //if you use BC, then BN-ReLU-Conv1-BN-ReLU-Conv3 is one transition
   optional int32 numTransition = 1 [default = 40];
   optional int32 initChannel = 2 [default = 16];
   optional int32 growthRate = 3 [default = 12];
@@ -429,6 +431,9 @@ message DenseBlockParameter {
   //Dropout related parameter
   optional bool use_dropout = 16 [default = false];
   optional float dropout_amount = 17 [default = 0];
+  optional bool use_BC = 18 [default = false];
+  //If it is not ultra space efficient, then it stores output data of conv1
+  optional bool BC_ultra_space_efficient = 19 [default = false];
 }
 
 // Message that stores parameters used to apply transformation

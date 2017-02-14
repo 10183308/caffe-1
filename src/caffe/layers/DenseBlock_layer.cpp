@@ -64,6 +64,8 @@ namespace caffe {
         this->useDropout = dbParam.use_dropout();
 	this->dropoutAmount = dbParam.dropout_amount();
 	this->DB_randomSeed = 124816;
+        this->useBC = dbParam.use_bc();
+        this->BC_ultra_spaceEfficient = dbParam.bc_ultra_space_efficient();
         //Parameter Blobs
 	//for transition i, 
 	//blobs_[i] is its filter blob
@@ -71,31 +73,79 @@ namespace caffe {
 	//blobs_[2*numTransition + i] is its bias blob
 	//blobs_[3*numTransition + i] is its globalMean
 	//blobs_[4*numTransition + i] is its globalVar
-        this->blobs_.resize(5*this->numTransition + 1);
+	if (useBC){
+          this->blobs_.resize(10*this->numTransition + 1);
+	}
+	else {
+          this->blobs_.resize(5*this->numTransition + 1);
+	}
 	for (int transitionIdx=0;transitionIdx < this->numTransition;++transitionIdx){
 	    //filter
-	    int inChannels = initChannel + transitionIdx * growthRate;
-	    int filterShape_Arr[] = {growthRate,inChannels,filter_H,filter_W};
-	    vector<int> filterShape (filterShape_Arr,filterShape_Arr+4);
-	    this->blobs_[transitionIdx].reset(new Blob<Dtype>(filterShape));
-	    shared_ptr<Filler<Dtype> > filter_Filler(GetFiller<Dtype>(dbParam.filter_filler()));
-	    filter_Filler->Fill(this->blobs_[transitionIdx].get());
-	    //scaler & bias 
+	    //No BC case
+	    if (!useBC){
+	      int inChannels = initChannel + transitionIdx * growthRate;
+	      int filterShape_Arr[] = {growthRate,inChannels,filter_H,filter_W};
+	      vector<int> filterShape (filterShape_Arr,filterShape_Arr+4);
+	      this->blobs_[transitionIdx].reset(new Blob<Dtype>(filterShape));
+	      shared_ptr<Filler<Dtype> > filter_Filler(GetFiller<Dtype>(dbParam.filter_filler()));
+	      filter_Filler->Fill(this->blobs_[transitionIdx].get()); 
+	    }
+	    else {
+	      //3*3 kernel
+	      int filter_33_shapeArr[] = {growthRate,4*growthRate,3,3};
+	      vector<int> filter33Shape (filter_33_shapeArr,filter_33_shapeArr+4);
+	      this->blobs_[transitionIdx].reset(new Blob<Dtype>(filter33Shape));
+	      shared_ptr<Filler<Dtype> > filter_Filler3(GetFiller<Dtype>(dbParam.filter_filler()));
+	      filter_Filler3->Fill(this->blobs_[transitionIdx].get());
+	     
+	      //1*1 kernel
+	      int inChannels = initChannel + transitionIdx * growthRate;
+	      int filter_11_shapeArr[] = {4*growthRate,inChannels,1,1};
+	      vector<int> filter11Shape (filter_11_shapeArr,filter_11_shapeArr+4);
+              this->blobs_[5*numTransition+transitionIdx].reset(new Blob<Dtype>(filter11Shape));
+	      shared_ptr<Filler<Dtype> > filter_Filler1(GetFiller<Dtype>(dbParam.filter_filler()));
+	      filter_Filler1->Fill(this->blobs_[5*numTransition+transitionIdx].get()); 
+	    }
+	    //scaler & bias
+	    int inChannels = initChannel + transitionIdx * growthRate; 
 	    int BNparamShape_Arr [] = {1,inChannels,1,1};
 	    vector<int> BNparamShape (BNparamShape_Arr,BNparamShape_Arr+4);
 	    //scaler
 	    this->blobs_[numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
 	    shared_ptr<Filler<Dtype> > weight_filler0(GetFiller<Dtype>(dbParam.bn_scaler_filler()));
 	    weight_filler0->Fill(this->blobs_[numTransition+transitionIdx].get());
+            
+	    int BN_4G_Shape[] = {1,4*growthRate,1,1};
+            vector<int> BN_4Gparam_ShapeVec (BN_4G_Shape,BN_4G_Shape+4);
+	    //scaler BC
+            if (useBC){
+              this->blobs_[6*numTransition + transitionIdx].reset(new Blob<Dtype>(BN_4Gparam_ShapeVec));
+	      shared_ptr<Filler<Dtype> > weight_filler0_4G(GetFiller<Dtype>(dbParam.bn_scaler_filler()));
+              weight_filler0_4G->Fill(this->blobs_[6*numTransition+transitionIdx].get());
+	    }
 	    //bias
 	    this->blobs_[2*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
 	    shared_ptr<Filler<Dtype> > weight_filler1(GetFiller<Dtype>(dbParam.bn_bias_filler()));
 	    weight_filler1->Fill(this->blobs_[2*numTransition+transitionIdx].get());
+	    //bias BC
+	    if (useBC){
+              this->blobs_[7*numTransition + transitionIdx].reset(new Blob<Dtype>(BN_4Gparam_ShapeVec));
+	      shared_ptr<Filler<Dtype> > weight_filler1_4G(GetFiller<Dtype>(dbParam.bn_bias_filler()));
+	      weight_filler1_4G->Fill(this->blobs_[7*numTransition+transitionIdx].get()); 
+	    }
 	    //globalMean
 	    this->blobs_[3*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
 	    for (int blobIdx=0;blobIdx<inChannels;++blobIdx){
 	      shared_ptr<Blob<Dtype> > localB = this->blobs_[3*numTransition+transitionIdx];
 	      localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 0;
+	    }
+	    //globalMean BC
+	    if (useBC){
+	      this->blobs_[8*numTransition + transitionIdx].reset(new Blob<Dtype>(BN_4Gparam_ShapeVec));
+	      shared_ptr<Blob<Dtype> > localB = this->blobs_[8*numTransition+transitionIdx]; 
+	      for (int blobIdx=0;blobIdx<4*growthRate;++blobIdx){
+		localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 0;
+	      }
 	    }
 	    //globalVar
 	    this->blobs_[4*numTransition + transitionIdx].reset(new Blob<Dtype>(BNparamShape));
@@ -103,34 +153,66 @@ namespace caffe {
 	      shared_ptr<Blob<Dtype> > localB = this->blobs_[4*numTransition+transitionIdx];
 	      localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 1;
 	    } 
+	    //globalVar BC
+	    if (useBC){
+              this->blobs_[9*numTransition + transitionIdx].reset(new Blob<Dtype>(BN_4Gparam_ShapeVec));
+	      shared_ptr<Blob<Dtype> > localB = this->blobs_[9*numTransition+transitionIdx]; 
+	      for (int blobIdx=0;blobIdx<4*growthRate;++blobIdx){
+		localB->mutable_cpu_data()[localB->offset(0,blobIdx,0,0)] = 1;
+	      }
+	    }
 	}
      //final parameter for the equivalent of blobs_[2] in Caffe-BN
      vector<int> singletonShapeVec;
      singletonShapeVec.push_back(1);
-     this->blobs_[5*this->numTransition].reset(new Blob<Dtype>(singletonShapeVec));
-     this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] = Dtype(0);
+     int singletonIdx = useBC?10*numTransition:5*numTransition;
+     this->blobs_[singletonIdx].reset(new Blob<Dtype>(singletonShapeVec));
+     this->blobs_[singletonIdx]->mutable_cpu_data()[0] = Dtype(0);
      //parameter specification: globalMean/Var weight decay and lr is 0
-     for (int i=0;i<this->blobs_.size();++i){
-       if (this->layer_param_.param_size()!=i){
-         CHECK_EQ(0, 1)
-           << "Nope";
+     if (!useBC){
+       for (int i=0;i<this->blobs_.size();++i){
+         if (this->layer_param_.param_size()!=i){
+           CHECK_EQ(0, 1)
+             << "Nope";
+         }
+         ParamSpec* fixed_param_spec = this->layer_param_.add_param();  
+         //global Mean/Var
+         if (i>=3*this->numTransition){
+           fixed_param_spec->set_lr_mult(0.f);
+           fixed_param_spec->set_decay_mult(0.f);
+         }
+         //BN Scaler and Bias
+         else if (i>=this->numTransition){
+           fixed_param_spec->set_lr_mult(1.f);
+           fixed_param_spec->set_decay_mult(1.f);
+         }
+         else {
+           fixed_param_spec->set_lr_mult(1.f);
+	   fixed_param_spec->set_decay_mult(1.f);
+         }
        }
-       ParamSpec* fixed_param_spec = this->layer_param_.add_param();  
-       //global Mean/Var
-       if (i>=3*this->numTransition){
-         fixed_param_spec->set_lr_mult(0.f);
-         fixed_param_spec->set_decay_mult(0.f);
-       }
-       //BN Scaler and Bias
-       else if (i>=this->numTransition){
-         fixed_param_spec->set_lr_mult(1.f);
-         fixed_param_spec->set_decay_mult(1.f);
-       }
-       else {
-         fixed_param_spec->set_lr_mult(1.f);
-	 fixed_param_spec->set_decay_mult(1.f);
-       }
-     }
+    }
+    else {
+      for (int i=0;i<this->blobs_.size();++i){
+         if (this->layer_param_.param_size()!=i){
+           CHECK_EQ(0, 1)
+             << "Nope";
+         }
+         ParamSpec* fixed_param_spec = this->layer_param_.add_param();  
+         if ((i>=3*numTransition)&&(i<5*numTransition)){
+           fixed_param_spec->set_lr_mult(0.f);
+           fixed_param_spec->set_decay_mult(0.f);
+	 }
+	 else if (i>=8*numTransition){
+	   fixed_param_spec->set_lr_mult(0.f);
+           fixed_param_spec->set_decay_mult(0.f);
+	 }
+	 else {
+           fixed_param_spec->set_lr_mult(1.f);
+           fixed_param_spec->set_decay_mult(1.f);
+	 } 
+      }
+    }
 }
 
 template <typename Dtype>
@@ -265,8 +347,6 @@ Dtype getZeroPaddedValue(bool isDiff,Blob<Dtype>* inputData,int n,int c,int h,in
 //input of size N*c_input*h_img*w_img
 template <typename Dtype>
 void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter){
-    CHECK_EQ(h_filter,3);
-    CHECK_EQ(w_filter,3);
     int outputShape[] = {N,c_output,h_img,w_img};
     vector<int> outputShapeVec (outputShape,outputShape + 4);
     output->Reshape(outputShapeVec);
@@ -279,8 +359,8 @@ void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filte
 	    for (int c_inIdx=0;c_inIdx<c_input;++c_inIdx){
 	      for (int filter_x=0;filter_x<h_filter;++filter_x){
 	        for (int filter_y=0;filter_y<w_filter;++filter_y){
-		  int localX = hIdx + 1 - filter_x;
-	          int localY = wIdx + 1 - filter_y;
+		  int localX = hIdx + (h_filter/2) - filter_x;
+	          int localY = wIdx + (w_filter/2) - filter_y;
 	          outputPtr[output->offset(n,c_outIdx,hIdx,wIdx)] += (filter->data_at(c_outIdx,c_inIdx,filter_x,filter_y) * getZeroPaddedValue(false,input,n,c_inIdx,localX,localY));
 		}
 	      } 
@@ -294,8 +374,6 @@ void convolution_Fwd(Blob<Dtype>* input, Blob<Dtype>* output, Blob<Dtype>* filte
 //beta = 1 Convolution for bottomDiff
 template <typename Dtype>
 void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,int N,int c_output,int c_input,int h_img,int w_img,int h_filter,int w_filter){
-    CHECK_EQ(h_filter,3);
-    CHECK_EQ(w_filter,3);
     Dtype * filterDiffPtr = filter->mutable_cpu_diff();
     Dtype * bottomDiffPtr = bottom->mutable_cpu_diff();
     //compute FilterGrad
@@ -307,8 +385,8 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 	    for (int n=0;n<N;++n){
 	      for (int i_img=0;i_img<h_img;++i_img){
 	        for (int j_img=0;j_img<w_img;++j_img){
-		  int localX = i_img + 1 - filter_x;
-		  int localY = j_img + 1 - filter_y;
+		  int localX = i_img + (h_filter/2)  - filter_x;
+		  int localY = j_img + (w_filter/2) - filter_y;
 		  localGradSum += top->diff_at(n,coutIdx,i_img,j_img) * getZeroPaddedValue(false,bottom,n,cinIdx,localX,localY);
 		}
 	      } 
@@ -327,8 +405,8 @@ void convolution_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* top,Blob<Dtype>* filter,in
 	    for (int coutIdx=0;coutIdx<c_output;++coutIdx){
 	      for (int x_img=0;x_img<h_img;++x_img){
 	        for (int y_img=0;y_img<w_img;++y_img){
-		  int localX = x_img-i_img+1;
-		  int localY = y_img-j_img+1;
+		  int localX = x_img-i_img+(h_filter/2);
+		  int localY = y_img-j_img+(w_filter/2);
 		  localGradSum += top->diff_at(n,coutIdx,x_img,y_img) * getZeroPaddedValue(false,filter,coutIdx,cinIdx,localX,localY); 
 		}
 	      }
@@ -492,7 +570,7 @@ bool decide_channelDiffAllZero(Blob<Dtype>* B,int channelIdx,int N,int C,int H,i
 }
 
 template <typename Dtype>
-void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int N,int C,int h_img,int w_img){
+void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,Blob<Dtype>* batchMean,Blob<Dtype>* batchVar,Blob<Dtype>* scaler,Blob<Dtype>* bias,int N,int C,int h_img,int w_img,bool betaOneData){
     double epsilon = 1e-5;
     //bias and scaler grad
     Dtype* biasGrad = bias->mutable_cpu_diff();
@@ -566,7 +644,12 @@ void BN_train_Bwd(Blob<Dtype>* bottom,Blob<Dtype>* bottom_xhat,Blob<Dtype>* top,
 	    Dtype term1=bottom_xhat->diff_at(n,c,h,w) / (sqrt(batchVar->data_at(0,c,0,0) + epsilon));
 	    Dtype term2=batchVar->diff_at(0,c,0,0)*2.0*(bottom->data_at(n,c,h,w) - batchMean->data_at(0,c,0,0)) / m;
 	    Dtype term3=batchMean->diff_at(0,c,0,0)/m;
-	    bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
+	    if (betaOneData){
+	      bottomDataGrad[bottom->offset(n,c,h,w)] += term1 + term2 + term3;
+	    }
+	    else {
+	      bottomDataGrad[bottom->offset(n,c,h,w)] = term1 + term2 + term3;
+	    }
 	    //std::cout<<term1<<","<<term2<<","<<term3<<std::endl;
 	  }
 	}
@@ -586,7 +669,14 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
     this->postBN_blobVec.resize(this->numTransition);
     this->postReLU_blobVec.resize(this->numTransition);
     this->postConv_blobVec.resize(this->numTransition);
-
+    if (useBC){
+        BC_BN_XhatVec.resize(this->numTransition);
+        postBN_BCVec.resize(this->numTransition);
+        postReLU_BCVec.resize(this->numTransition);
+        postConv_BCVec.resize(this->numTransition);
+	batch_Mean4G.resize(numTransition);
+	batch_Var4G.resize(numTransition);
+    }
     for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
       int conv_y_Channels = this->growthRate;
       int mergeChannels = this->initChannel + this->growthRate * transitionIdx;
@@ -605,6 +695,18 @@ void DenseBlockLayer<Dtype>::CPU_Initialization(){
       this->postBN_blobVec[transitionIdx] = new Blob<Dtype>(mergeShape);
       this->postReLU_blobVec[transitionIdx] = new Blob<Dtype>(mergeShape);
       this->postConv_blobVec[transitionIdx] = new Blob<Dtype>(conv_y_Shape);
+      if (useBC){
+        int quadGShapeArr[] = {N,4*growthRate,H,W};
+	int quadChannelArr[] = {1,4*growthRate,1,1};
+        vector<int> quadGShape(quadGShapeArr,quadGShapeArr+4);
+	vector<int> quadChannelShape(quadChannelArr,quadChannelArr+4);
+        this->BC_BN_XhatVec[transitionIdx] = new Blob<Dtype>(quadGShape);
+        this->postBN_BCVec[transitionIdx] = new Blob<Dtype>(quadGShape);        
+        this->postReLU_BCVec[transitionIdx] = new Blob<Dtype>(quadGShape);
+        this->postConv_BCVec[transitionIdx] = new Blob<Dtype>(quadGShape);
+	batch_Mean4G[transitionIdx] = new Blob<Dtype>(quadChannelShape);
+	batch_Var4G[transitionIdx] = new Blob<Dtype>(quadChannelShape);
+      }
     }
     //the last element of merged_conv serve as output of forward
     int extraMergeOutputShapeArr[] = {this->N,this->initChannel+this->growthRate*this->numTransition,this->H,this->W};
@@ -697,6 +799,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
         this->cpuInited = true;
 	//std::cout<<"fwd cpu init done"<<std::endl;
     }
+    int bnTimerIdx=useBC?10*numTransition:5*numTransition;
     //deploy init data
     this->merged_conv[0]->CopyFrom(*(bottom[0]));
     //init CPU finish
@@ -709,7 +812,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       int localChannels = this->initChannel+transitionIdx*this->growthRate;
       if (this->phase_ == TEST){
 	//std::cout<<"cpu BN test forward"<<std::endl;
-        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias,this->blobs_[5*this->numTransition].get());
+        BN_inf_Fwd<Dtype>(BN_bottom,BN_top,this->N,localChannels,this->H,this->W,this->blobs_[3*this->numTransition+transitionIdx].get(),this->blobs_[4*this->numTransition+transitionIdx].get(),Scaler,Bias,this->blobs_[bnTimerIdx].get());
       }
       else {
 	//std::cout<<"cpu BN train forward"<<std::endl;
@@ -718,12 +821,42 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       //ReLU
       Blob<Dtype>* ReLU_top = this->postReLU_blobVec[transitionIdx];
       ReLU_Fwd<Dtype>(BN_top,ReLU_top,this->N,localChannels,this->H,this->W);
+      //if useBC, Conv1*1-BN(BC)-ReLU(BC)
+      if (useBC){
+	//BC Conv 1*1
+	Blob<Dtype>* BC_filterBlob = this->blobs_[5*numTransition+transitionIdx].get();
+        Blob<Dtype>* BC_conv_x = postReLU_blobVec[transitionIdx];
+        Blob<Dtype>* BC_conv_y = postConv_BCVec[transitionIdx];
+	int BC_conv_inChannel = initChannel+growthRate*transitionIdx;
+	int BC_conv_outChannel = 4*growthRate;
+        convolution_Fwd<Dtype>(BC_conv_x,BC_conv_y,BC_filterBlob,N,BC_conv_outChannel,BC_conv_inChannel,H,W,1,1);	
+	//BC BN 
+	Blob<Dtype>* BC_BN_x = postConv_BCVec[transitionIdx];
+	Blob<Dtype>* BC_BN_y = postBN_BCVec[transitionIdx];
+        Blob<Dtype>* BC_Scaler = this->blobs_[6*numTransition+transitionIdx].get();
+	Blob<Dtype>* BC_Bias = this->blobs_[7*numTransition+transitionIdx].get(); 
+	Blob<Dtype>* BC_Mean = this->blobs_[8*numTransition+transitionIdx].get();
+	Blob<Dtype>* BC_Var = this->blobs_[9*numTransition+transitionIdx].get();
+	if (this->phase_ == TEST){
+	  BN_inf_Fwd<Dtype>(BC_BN_x,BC_BN_y,N,4*growthRate,H,W,BC_Mean,BC_Var,BC_Scaler,BC_Bias,this->blobs_[bnTimerIdx].get());
+	}
+	else {
+	  Blob<Dtype>* BC_xhat = BC_BN_XhatVec[transitionIdx];
+	  Blob<Dtype>* BC_batchMean = batch_Mean4G[transitionIdx];
+	  Blob<Dtype>* BC_batchVar = batch_Var4G[transitionIdx];
+	  BN_train_Fwd<Dtype>(BC_BN_x,BC_BN_y,BC_xhat,BC_Mean,BC_Var,BC_batchMean,BC_batchVar,BC_Scaler,BC_Bias,N,4*growthRate,H,W,EMA_decay);
+	}	
+	//BC ReLU 
+	Blob<Dtype>* ReLU_x = postBN_BCVec[transitionIdx];
+	Blob<Dtype>* ReLU_y = postReLU_BCVec[transitionIdx];
+	ReLU_Fwd<Dtype>(ReLU_x,ReLU_y,N,4*growthRate,H,W);	
+      }
       //Conv
       Blob<Dtype>* filterBlob = this->blobs_[transitionIdx].get();
-      Blob<Dtype>* conv_x = this->postReLU_blobVec[transitionIdx];
+      Blob<Dtype>* conv_x = useBC?postReLU_BCVec[transitionIdx]:postReLU_blobVec[transitionIdx];
       Blob<Dtype>* conv_y = this->postConv_blobVec[transitionIdx];
-      int inConvChannel = this->initChannel + this->growthRate * transitionIdx;
-      convolution_Fwd<Dtype>(conv_x,conv_y,filterBlob,this->N,this->growthRate,inConvChannel,this->H,this->W,this->filter_H,this->filter_W);
+      int inConvChannel = useBC?4*growthRate:initChannel+growthRate*transitionIdx;
+      convolution_Fwd<Dtype>(conv_x,conv_y,filterBlob,N,growthRate,inConvChannel,H,W,3,3);
       //post Conv merge
       Blob<Dtype>* mergeOutput = merged_conv[transitionIdx+1];
       Blob<Dtype>* mergeInputA = merged_conv[transitionIdx];
@@ -733,8 +866,8 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
     //deploy output data
     top[0]->CopyFrom(*(this->merged_conv[this->numTransition]));
     if (this->phase_ == TRAIN){
-      this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] *= this->EMA_decay;
-      this->blobs_[5*this->numTransition]->mutable_cpu_data()[0] += 1;
+      this->blobs_[bnTimerIdx]->mutable_cpu_data()[0] *= this->EMA_decay;
+      this->blobs_[bnTimerIdx]->mutable_cpu_data()[0] += 1;
       this->trainCycleIdx+=1;
     }    
   }
@@ -756,10 +889,33 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       distributeChannelDiff(this->merged_conv[transitionIdx+1],this->merged_conv[transitionIdx],this->postConv_blobVec[transitionIdx]);
       //Conv Bwd
       Blob<Dtype>* conv_top=this->postConv_blobVec[transitionIdx];
-      Blob<Dtype>* conv_bottom=this->postReLU_blobVec[transitionIdx];
+      Blob<Dtype>* conv_bottom=useBC?postReLU_BCVec[transitionIdx]:postReLU_blobVec[transitionIdx];
       Blob<Dtype>* filter = this->blobs_[transitionIdx].get();
-      int c_input = this->initChannel + this->growthRate * transitionIdx;
-      convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,this->filter_H,this->filter_W);
+      int c_input = useBC?4*growthRate:initChannel+growthRate*transitionIdx;
+      convolution_Bwd<Dtype>(conv_bottom,conv_top,filter,this->N,this->growthRate,c_input,this->H,this->W,3,3);
+      //BC ReLU_BC_Bwd - BN_BC_Bwd - Conv1*1_BC_Bwd
+      if (useBC){
+	//ReLU BC Bwd
+        Blob<Dtype>* BC_ReLU_y = postReLU_BCVec[transitionIdx];
+	Blob<Dtype>* BC_ReLU_x = postBN_BCVec[transitionIdx];	
+	ReLU_Bwd<Dtype>(BC_ReLU_x,BC_ReLU_y,N,4*growthRate,H,W);	
+	//BN BC Bwd
+	Blob<Dtype>* BC_BN_y = postBN_BCVec[transitionIdx];
+	Blob<Dtype>* BC_BN_x = postConv_BCVec[transitionIdx];
+	Blob<Dtype>* BC_BN_xhat = BC_BN_XhatVec[transitionIdx];
+	Blob<Dtype>* BC_Scaler = this->blobs_[6*numTransition+transitionIdx].get();
+	Blob<Dtype>* BC_Bias = this->blobs_[7*numTransition+transitionIdx].get();
+	Blob<Dtype>* BC_batchMean = batch_Mean4G[transitionIdx];
+	Blob<Dtype>* BC_batchVar = batch_Var4G[transitionIdx];
+	BN_train_Bwd<Dtype>(BC_BN_x,BC_BN_xhat,BC_BN_y,BC_batchMean,BC_batchVar,BC_Scaler,BC_Bias,N,4*growthRate,H,W,false);
+	//Conv1*1 BC Bwd
+	Blob<Dtype>* BC_conv_x = postReLU_blobVec[transitionIdx];
+	Blob<Dtype>* BC_conv_y = postConv_BCVec[transitionIdx];
+	Blob<Dtype>* BC_filter = this->blobs_[5*numTransition+transitionIdx].get();	
+	int BC_c_input = initChannel+growthRate*transitionIdx;
+	int BC_c_output = 4*growthRate;
+	convolution_Bwd<Dtype>(BC_conv_x,BC_conv_y,BC_filter,N,BC_c_output,BC_c_input,H,W,1,1);		
+      }
       //ReLU Bwd
       int localChannel = this->initChannel+this->growthRate*transitionIdx;
       ReLU_Bwd<Dtype>(postBN_blobVec[transitionIdx],postReLU_blobVec[transitionIdx],this->N,localChannel,this->H,this->W); 
@@ -767,7 +923,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       Blob<Dtype>* BN_bottom = this->merged_conv[transitionIdx];
       Blob<Dtype>* scaler = this->blobs_[this->numTransition+transitionIdx].get();
       Blob<Dtype>* bias = this->blobs_[2*this->numTransition+transitionIdx].get();
-      BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W);
+      BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W,true);
     }
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
     this->LoopEndCleanup_cpu();

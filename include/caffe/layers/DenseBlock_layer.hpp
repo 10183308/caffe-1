@@ -44,7 +44,9 @@ class DenseBlockLayer : public Layer<Dtype> {
   bool useDropout;
   float dropoutAmount;
   unsigned long long DB_randomSeed;
-
+  bool useBC;
+  bool BC_ultra_spaceEfficient;
+  
  protected:
   
   virtual void CPU_Initialization();
@@ -84,6 +86,8 @@ class DenseBlockLayer : public Layer<Dtype> {
   //at T has shape (1,initC+T*growth,1,1)
   vector<Blob<Dtype>*> batch_Mean; 
   vector<Blob<Dtype>*> batch_Var;
+  vector<Blob<Dtype>*> batch_Mean4G;
+  vector<Blob<Dtype>*> batch_Var4G;
 
   vector<Blob<Dtype>*> merged_conv;//at T has shape (N,initC+T*growth,H,W), but this vector has T+1 elements
 
@@ -91,6 +95,11 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Blob<Dtype>*> postBN_blobVec;
   vector<Blob<Dtype>*> postReLU_blobVec;
   vector<Blob<Dtype>*> postConv_blobVec;//at T has shape(N,growth,H,W)
+  //BC related CPU 
+  vector<Blob<Dtype>*> BC_BN_XhatVec;//at T has shape(N,4*growthRate,H,W)
+  vector<Blob<Dtype>*> postBN_BCVec;
+  vector<Blob<Dtype>*> postReLU_BCVec;
+  vector<Blob<Dtype>*> postConv_BCVec; 
   //end CPU specific data section
 
   //start GPU specific data section
@@ -113,7 +122,24 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<size_t> dropout_reserveSize;
   Dtype* Mean_tmp;//used in BN inf
   Dtype* Var_tmp;//used in BN inf
-    
+  
+  //BC related parameters 
+  vector<Dtype*> postConv_4GVec; //used if not ultra space efficient mode
+  Dtype* postConv_4G; //used if ultra space efficient mode
+  Dtype* postBN_4G;
+  Dtype* postReLU_4G;  
+  Dtype* postConv_4G_grad;
+  Dtype* postBN_4G_grad;
+  Dtype* postReLU_4G_grad;
+  cudnnTensorDescriptor_t * quadG_tensorDesc;
+  cudnnTensorDescriptor_t * quadG_paramDesc;
+  cudnnConvolutionDescriptor_t* convBC_Descriptor;
+  vector<Dtype*> BC_MeanInfVec;
+  vector<Dtype*> BC_VarInfVec;
+  vector<Dtype*> ResultSaveMean_BC;
+  vector<Dtype*> ResultSaveInvVariance_BC;
+  vector<cudnnFilterDescriptor_t *> BC_filterDescriptorVec;
+  
   int trainCycleIdx; //used in BN train phase for EMA Mean/Var estimation
   //convolution Related
   int pad_h, pad_w, conv_verticalStride, conv_horizentalStride; 
