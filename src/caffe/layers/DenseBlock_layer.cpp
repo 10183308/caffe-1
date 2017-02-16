@@ -59,7 +59,7 @@ namespace caffe {
         this->filter_H = dbParam.filter_h();
         this->filter_W = dbParam.filter_w();
         this->workspace_size_bytes = 10000000;
-	this->EMA_decay = 0.999;
+	this->EMA_decay = 0.1;
         this->gpu_idx_ = dbParam.gpuidx();
         this->useDropout = dbParam.use_dropout();
 	this->dropoutAmount = dbParam.dropout_amount();

@@ -139,6 +139,13 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Dtype*> ResultSaveMean_BC;
   vector<Dtype*> ResultSaveInvVariance_BC;
   vector<cudnnFilterDescriptor_t *> BC_filterDescriptorVec;
+  //BC_dropout
+  //vector<void*> BC_dropout_state;
+  //vector<void*> BC_dropout_reserve;
+  //vector<size_t> BC_dropout_stateSize;
+  //vector<size_t> BC_dropout_reserveSize;
+  //Dtype* postDropout_4G;
+  //Dtype* postDropout_4G_grad;
   
   int trainCycleIdx; //used in BN train phase for EMA Mean/Var estimation
   //convolution Related
