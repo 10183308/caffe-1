@@ -45,9 +45,22 @@ void ConcatLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   }
 }
 
+template<typename Dtype>
+void printCPUPtr(Dtype* cpuPtr,int numValues){
+  for (int i=0;i<numValues;++i){
+    std::cout<<cpuPtr[i]<<",";
+  }
+  std::cout<<std::endl;
+}
+
 template <typename Dtype>
 void ConcatLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+  if (use_log_){
+    std::cout<<"Bwd Concat dy"<<std::endl;
+    printCPUPtr(top[0]->mutable_cpu_diff(),20*top[0]->shape(2)*top[0]->shape(3));
+    std::cout<<std::endl;
+  }
   if (bottom.size() == 1) { return; }
   const Dtype* top_diff = top[0]->gpu_diff();
   int offset_concat_axis = 0;
@@ -55,6 +68,11 @@ void ConcatLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
   const bool kForward = false;
   for (int i = 0; i < bottom.size(); ++i) {
     const int bottom_concat_axis = bottom[i]->shape(concat_axis_);
+    if (use_log_){
+      std::cout<<"Bwd Concat old dx for bottom "<<i<<std::endl;	
+      printCPUPtr(bottom[i]->mutable_cpu_diff(),20*bottom[i]->shape(2)*bottom[i]->shape(3)); 
+      std::cout<<std::endl;
+    }
     if (propagate_down[i]) {
       Dtype* bottom_diff = bottom[i]->mutable_gpu_diff();
       const int bottom_concat_size = bottom_concat_axis * concat_input_size_;
@@ -65,6 +83,11 @@ void ConcatLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
           top_concat_axis, bottom_concat_axis, offset_concat_axis, bottom_diff);
     }
     offset_concat_axis += bottom_concat_axis;
+    if (use_log_){
+      std::cout<<"Bwd Concat new dx for bottom "<<i<<std::endl;
+      printCPUPtr(bottom[i]->mutable_cpu_diff(),20*bottom[i]->shape(2)*bottom[i]->shape(3));  
+      std::cout<<std::endl;
+    }
   }
 }
 

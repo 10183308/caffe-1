@@ -55,7 +55,7 @@ void ReLULayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down,
     const vector<Blob<Dtype>*>& bottom) {
   if (use_log_){
-    std::cout<< "ReLU top diff"<<std::endl;
+    std::cout<< "ReLU Bwd top diff"<<std::endl;
     pBlob_ReLU(top[0]->mutable_gpu_diff(),20 * top[0]->shape(1) * top[0]->shape(2) * top[0]->shape(3));
     std::cout<< std::endl;
   }

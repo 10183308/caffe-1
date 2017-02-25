@@ -39,10 +39,10 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
         this->blobs_[0]->gpu_data(), mean_.mutable_gpu_data());
     caffe_gpu_scale(variance_.count(), scale_factor,
         this->blobs_[1]->gpu_data(), variance_.mutable_gpu_data());
-    if (use_log_){
+    /*if (use_log_){
       std::cout<<"Mean"<<std::endl;
       printBlob(&mean_);
-    }
+    }*/
   } else {
     // compute mean
     caffe_gpu_gemv<Dtype>(CblasNoTrans, channels_ * num, spatial_dim,
@@ -52,10 +52,10 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
     caffe_gpu_gemv<Dtype>(CblasTrans, num, channels_, 1.,
         num_by_chans_.gpu_data(), batch_sum_multiplier_.gpu_data(), 0.,
         mean_.mutable_gpu_data());
-    if (use_log_){
+    /*if (use_log_){
       std::cout<<"Mean"<<std::endl;
       printBlob(&mean_);
-    }
+    }*/
   }
 
   // subtract mean
@@ -93,10 +93,10 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   caffe_gpu_add_scalar(variance_.count(), eps_, variance_.mutable_gpu_data());
   caffe_gpu_powx(variance_.count(), variance_.gpu_data(), Dtype(0.5),
       variance_.mutable_gpu_data());
-  if (use_log_){
+  /*if (use_log_){
     std::cout<<"Var"<<std::endl;  
     printBlob(&variance_);
-  } 
+  } */
 
   // replicate variance to input size
   caffe_gpu_gemm<Dtype>(CblasNoTrans, CblasNoTrans, num, channels_, 1, 1,
@@ -113,9 +113,25 @@ void BatchNormLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 }
 
 template <typename Dtype>
+void printDptr(Dtype* Ptr,int numValues){
+  for (int i=0;i<numValues;++i){
+    std::cout<<Ptr[i]<<",";
+  }
+  std::cout<<std::endl;
+}
+
+template <typename Dtype>
 void BatchNormLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
     const vector<bool>& propagate_down,
     const vector<Blob<Dtype>*>& bottom) {
+  if (use_log_){
+    std::cout<<"BN Bwd dy"<<std::endl;
+    printDptr(top[0]->mutable_cpu_diff(),20*top[0]->shape(2)*top[0]->shape(3));
+    std::cout<<std::endl;
+    std::cout<<"BN Bwd Original dx"<<std::endl;
+    printDptr(bottom[0]->mutable_cpu_diff(),20*bottom[0]->shape(2)*bottom[0]->shape(3)); 
+    std::cout<<std::endl;
+  }
   const Dtype* top_diff;
   if (bottom[0] != top[0]) {
     top_diff = top[0]->gpu_diff();
@@ -186,6 +202,11 @@ void BatchNormLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
   // note: temp_ still contains sqrt(var(X)+eps), computed during the forward
   // pass.
   caffe_gpu_div(temp_.count(), bottom_diff, temp_.gpu_data(), bottom_diff);
+  if (use_log_){
+    std::cout<<"BN bwd new dx"<<std::endl;
+    printDptr(bottom[0]->mutable_cpu_diff(),20*top[0]->shape(2)*top[0]->shape(3)); 
+    std::cout<<std::endl;
+  }
 }
 
 INSTANTIATE_LAYER_GPU_FUNCS(BatchNormLayer);

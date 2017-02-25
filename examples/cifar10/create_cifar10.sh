@@ -4,7 +4,7 @@ set -e
 
 EXAMPLE=examples/cifar10
 DATA=data/cifar10
-DBTYPE=lmdb
+DBTYPE=leveldb
 
 echo "Creating $DBTYPE..."
 

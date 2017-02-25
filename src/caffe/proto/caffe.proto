@@ -410,6 +410,8 @@ message LayerParameter {
 }
 
 message DenseBlockParameter {
+  //if you don't use BC, BN-ReLU-Conv3 is one transition
+  //if you use BC, then BN-ReLU-Conv1-BN-ReLU-Conv3 is one transition
   optional int32 numTransition = 1 [default = 40];
   optional int32 initChannel = 2 [default = 16];
   optional int32 growthRate = 3 [default = 12];
@@ -426,6 +428,12 @@ message DenseBlockParameter {
   optional FillerParameter BN_Bias_Filler = 12;
   //Performance Related parameters
   optional int32 gpuIdx = 15 [default = 0];
+  //Dropout related parameter
+  optional bool use_dropout = 16 [default = false];
+  optional float dropout_amount = 17 [default = 0];
+  optional bool use_BC = 18 [default = false];
+  //If it is not ultra space efficient, then it stores output data of conv1
+  optional bool BC_ultra_space_efficient = 19 [default = false];
 }
 
 // Message that stores parameters used to apply transformation
@@ -521,6 +529,7 @@ message ConcatParameter {
 
   // DEPRECATED: alias for "axis" -- does not support negative indexing.
   optional uint32 concat_dim = 1 [default = 1];
+  optional bool use_log = 3 [default = false];
 }
 
 message BatchNormParameter {
@@ -534,6 +543,14 @@ message BatchNormParameter {
   // zero.
   optional float eps = 3 [default = 1e-5];
   optional bool use_log = 4 [default = false];
+  optional FillerParameter scale_filler = 5;
+  optional FillerParameter bias_filler = 6;
+  enum Engine {
+    DEFAULT = 0;
+    CAFFE = 1;
+    CUDNN = 2;
+  }
+  optional Engine engine = 15 [default = DEFAULT];
 }
 
 message BiasParameter {

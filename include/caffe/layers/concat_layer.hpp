@@ -76,6 +76,7 @@ class ConcatLayer : public Layer<Dtype> {
   virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
       const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
 
+  bool use_log_;
   int count_;
   int num_concats_;
   int concat_input_size_;
