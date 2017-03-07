@@ -52,13 +52,7 @@ namespace caffe {
         this->initChannel = dbParam.initchannel();
         this->growthRate = dbParam.growthrate();
         this->trainCycleIdx = 0; //initially, trainCycleIdx = 0
-        this->pad_h = dbParam.pad_h();
-        this->pad_w = dbParam.pad_w();
-        this->conv_verticalStride = dbParam.conv_verticalstride();
-        this->conv_horizentalStride = dbParam.conv_horizentalstride();
-        this->filter_H = dbParam.filter_h();
-        this->filter_W = dbParam.filter_w();
-        this->workspace_size_bytes = 10000000;
+        this->workspace_size_bytes =  this->phase_==TEST?8:dbParam.workspace_mb()*1024*1024;
 	this->EMA_decay = 0.1;
         this->gpu_idx_ = dbParam.gpuidx();
         this->useDropout = dbParam.use_dropout();
@@ -84,7 +78,7 @@ namespace caffe {
 	    //No BC case
 	    if (!useBC){
 	      int inChannels = initChannel + transitionIdx * growthRate;
-	      int filterShape_Arr[] = {growthRate,inChannels,filter_H,filter_W};
+	      int filterShape_Arr[] = {growthRate,inChannels,3,3};
 	      vector<int> filterShape (filterShape_Arr,filterShape_Arr+4);
 	      this->blobs_[transitionIdx].reset(new Blob<Dtype>(filterShape));
 	      shared_ptr<Filler<Dtype> > filter_Filler(GetFiller<Dtype>(dbParam.filter_filler()));
@@ -285,6 +279,18 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
       string blobStr = localDir+"batch_Var_"+itos(i);
       logBlob(this->batch_Var[i],blobStr);
     }
+    if (useBC){
+      //batch_Mean
+      for (int i=0;i<this->batch_Mean4G.size();++i){
+        string blobStr = localDir+"batch_Mean_BC_"+itos(i);
+        logBlob(this->batch_Mean4G[i],blobStr);
+      }
+      //batch_Var
+      for (int i=0;i<this->batch_Var4G.size();++i){
+        string blobStr = localDir+"batch_Var_BC_"+itos(i);
+        logBlob(this->batch_Var4G[i],blobStr);
+      }
+    }
     //merged_conv
     for (int i=0;i<this->merged_conv.size();++i){
       string blobStr = localDir+"merged_conv_"+itos(i);
@@ -310,6 +316,28 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
       string blobStr = localDir+"postConv_blobVec_"+itos(i);
       logBlob(this->postConv_blobVec[i],blobStr);
     }
+    if (useBC){
+      //BC_BN_XhatVec
+      for (int i=0;i<this->BC_BN_XhatVec.size();++i){
+	string blobStr = localDir+"BC_BN_XhatVec_"+itos(i);
+	logBlob(this->BC_BN_XhatVec[i],blobStr);
+      }
+      //postBN_BCVec
+      for (int i=0;i<this->postBN_BCVec.size();++i){
+	string blobStr = localDir+"postBN_BCVec_"+itos(i);
+	logBlob(this->postBN_BCVec[i],blobStr);
+      }
+      //postReLU_BCVec
+      for (int i=0;i<this->postReLU_BCVec.size();++i){
+	string blobStr = localDir+"postReLU_BCVec_"+itos(i);
+        logBlob(this->postReLU_BCVec[i],blobStr);
+      }
+      //postConv_BCVec
+      for (int i=0;i<this->postConv_BCVec.size();++i){
+	string blobStr = localDir+"postConv_BCVec_"+itos(i);
+        logBlob(this->postConv_BCVec[i],blobStr);
+      }
+    }
     //filter
     for (int i=0;i<this->numTransition;++i){
       string blobStr = localDir+"filter_"+itos(i);
@@ -324,6 +352,33 @@ void DenseBlockLayer<Dtype>::logInternal_cpu(string dir){
     for (int i=0;i<this->numTransition;++i){
       string blobStr = localDir+"bias_"+itos(i);
       logBlob(this->blobs_[this->numTransition*2+i].get(),blobStr);
+    }
+    if (useBC){
+      //filter
+      for (int i=0;i<this->numTransition;++i){
+        string blobStr = localDir+"filter_BC_"+itos(i);
+        logBlob(this->blobs_[5*numTransition+i].get(),blobStr);
+      }
+      //scaler 
+      for (int i=0;i<this->numTransition;++i){
+        string blobStr = localDir+"scaler_BC_"+itos(i);
+        logBlob(this->blobs_[6*numTransition+i].get(),blobStr);
+      }
+      //bias
+      for (int i=0;i<this->numTransition;++i){
+        string blobStr = localDir+"bias_BC_"+itos(i);
+        logBlob(this->blobs_[7*numTransition+i].get(),blobStr);
+      }
+      //Mean
+      for (int i=0;i<this->numTransition;++i){
+        string blobStr = localDir+"Mean_BC_"+itos(i);
+        logBlob(this->blobs_[8*numTransition+i].get(),blobStr);
+      }
+      //Var
+      for (int i=0;i<this->numTransition;++i){
+        string blobStr = localDir+"Var_BC_"+itos(i);
+        logBlob(this->blobs_[9*numTransition+i].get(),blobStr);
+      }
     }
 }
 
@@ -870,6 +925,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       this->blobs_[bnTimerIdx]->mutable_cpu_data()[0] += 1;
       this->trainCycleIdx+=1;
     }    
+    logInternal_cpu("TC_TrueFwdlog");
   }
 
 
@@ -926,6 +982,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W,true);
     }
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
+    logInternal_cpu("TC_TrueBwdlog");
     this->LoopEndCleanup_cpu();
 }
 

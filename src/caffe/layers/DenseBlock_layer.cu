@@ -97,6 +97,7 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
     string localDir = dir+"/gpu_"+itos_cu(this->logId)+"/";
     if (logDynamic){
       int postBufferSize = this->N * (this->initChannel + this->growthRate * this->numTransition) * this->H * this->W;
+      int quadGBufferSize = N*4*growthRate*H*W;
       if (logDiff){
         //postConv_grad_gpu
         log_gpuPtr<Dtype>(this->postConv_grad_gpu,postBufferSize,localDir+"postConv_grad_gpu_transition"+itos_cu(TIdx));
@@ -104,6 +105,15 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
         log_gpuPtr<Dtype>(this->postBN_grad_gpu,postBufferSize,localDir+"postBN_grad_gpu_transition"+itos_cu(TIdx));
         //postReLU_grad_gpu
         log_gpuPtr<Dtype>(this->postReLU_grad_gpu,postBufferSize,localDir+"postReLU_grad_gpu_transition"+itos_cu(TIdx));
+        //BC 
+        if (useBC){
+          //postConv_4G_grad
+          log_gpuPtr<Dtype>(this->postConv_4G_grad,quadGBufferSize,localDir+"postConv_4G_grad_transition"+itos_cu(TIdx));          
+          //postBN_4G_grad
+          log_gpuPtr<Dtype>(this->postBN_4G_grad,quadGBufferSize,localDir+"postBN_4G_grad_transition"+itos_cu(TIdx));
+	  //postReLU_4G_grad
+	  log_gpuPtr<Dtype>(this->postReLU_4G_grad,quadGBufferSize,localDir+"postReLU_4G_grad_transition"+itos_cu(TIdx));
+        }
       }
       else {
         //postConv_data_gpu
@@ -112,32 +122,76 @@ void DenseBlockLayer<Dtype>::logInternal_gpu(string dir,int TIdx,bool logDynamic
         log_gpuPtr<Dtype>(this->postBN_data_gpu,postBufferSize,localDir+"postBN_data_gpu_transition"+itos_cu(TIdx));
         //postReLU_data_gpu
         log_gpuPtr<Dtype>(this->postReLU_data_gpu,postBufferSize,localDir+"postReLU_data_gpu_transition"+itos_cu(TIdx));
+        if (useBC){
+	  //postConv_4G
+	  if (BC_ultra_spaceEfficient){
+	    log_gpuPtr<Dtype>(this->postConv_4G,quadGBufferSize,localDir+"postConv_4G_data_transition"+itos_cu(TIdx));
+	  }
+	  else {
+            log_gpuPtr<Dtype>(this->postConv_4GVec[TIdx],quadGBufferSize,localDir+"postConv_4G_data_transition"+itos_cu(TIdx));
+	  }
+	  //postBN_4G
+          log_gpuPtr<Dtype>(this->postBN_4G,quadGBufferSize,localDir+"postBN_4G_data_transition"+itos_cu(TIdx));
+	  //postReLU_4G
+          log_gpuPtr<Dtype>(this->postReLU_4G,quadGBufferSize,localDir+"postReLU_4G_data_transition"+itos_cu(TIdx));
+	}
       }
     }
     else {
       for (int transitionIdx=0;transitionIdx<this->numTransition;++transitionIdx){
 	int numChannel_moreWide = this->initChannel + this->growthRate * transitionIdx;
-        //global/batch Mean/Variance
+        int numChannel_quadG = 4*growthRate;
+        //global Mean/Variance
         log_gpuPtr<Dtype>(this->blobs_[3*this->numTransition+transitionIdx]->mutable_gpu_data(),numChannel_moreWide,localDir+"globalMean_gpu_transition"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->blobs_[4*this->numTransition+transitionIdx]->mutable_gpu_data(),numChannel_moreWide,localDir+"globalVariance_gpu_transition"+itos_cu(transitionIdx));
+	//ResultSaveMean/InvVariance
       	log_gpuPtr<Dtype>(this->ResultSaveMean_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveMean_gpu_transition"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->ResultSaveInvVariance_gpu[transitionIdx],numChannel_moreWide,localDir+"ResultSaveInvVariance_gpu_transition"+itos_cu(transitionIdx));
+        if (useBC){
+          //global BC Mean/Variance
+	  log_gpuPtr<Dtype>(this->blobs_[8*numTransition+transitionIdx]->mutable_gpu_data(),numChannel_quadG,localDir+"globalMean_BC_transition"+itos_cu(transitionIdx));
+	  log_gpuPtr<Dtype>(this->blobs_[9*numTransition+transitionIdx]->mutable_gpu_data(),numChannel_quadG,localDir+"globalVar_BC_transition"+itos_cu(transitionIdx));
+          //ResultSave BC Mean/InvVariance
+	  log_gpuPtr<Dtype>(this->ResultSaveMean_BC[transitionIdx],numChannel_quadG,localDir+"ResultSaveMean_BC_transition"+itos_cu(transitionIdx));
+	  log_gpuPtr<Dtype>(this->ResultSaveInvVariance_BC[transitionIdx],numChannel_quadG,localDir+"ResultSaveInvVariance_BC_transition"+itos_cu(transitionIdx)); 
+	} 
         //Filter_data/grad_gpu
-        int filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * this->filter_H * this->filter_W;
+        int filterSize;
+        if (useBC){
+          filterSize = 4*growthRate*growthRate*3*3;
+        }
+        else {
+          filterSize = (this->initChannel+this->growthRate*transitionIdx) * this->growthRate * 3 * 3;
+        }
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx]->mutable_gpu_data(),filterSize,localDir+"Filter_data_gpu_"+itos_cu(transitionIdx));
 	log_gpuPtr<Dtype>(this->blobs_[transitionIdx]->mutable_gpu_diff(),filterSize,localDir+"Filter_grad_gpu_"+itos_cu(transitionIdx));
-        //Scaler_grad_gpu
+        //Scaler_data/grad_gpu
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_diff(),numChannel_moreWide,localDir+"Scaler_grad_gpu_"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+this->numTransition]->mutable_gpu_data(),numChannel_moreWide,localDir+"Scaler_data_gpu_"+itos_cu(transitionIdx));
-        //Bias_grad_gpu
+        //Bias_data/grad_gpu
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_diff(),numChannel_moreWide,localDir+"Bias_grad_gpu_"+itos_cu(transitionIdx));
         log_gpuPtr<Dtype>(this->blobs_[transitionIdx+2*this->numTransition]->mutable_gpu_data(),numChannel_moreWide,localDir+"Bias_data_gpu_"+itos_cu(transitionIdx));
+        if (useBC){
+	  //BC Filter
+          int filterBC_size = (initChannel+growthRate*transitionIdx)*4*growthRate*1*1;
+          log_gpuPtr<Dtype>(this->blobs_[5*numTransition+transitionIdx]->mutable_gpu_data(),filterBC_size,localDir+"Filter_data_BC_"+itos_cu(transitionIdx));
+          log_gpuPtr<Dtype>(this->blobs_[5*numTransition+transitionIdx]->mutable_gpu_diff(),filterBC_size,localDir+"Filter_grad_BC_"+itos_cu(transitionIdx));  
+	  //BC scaler
+          log_gpuPtr<Dtype>(this->blobs_[6*numTransition+transitionIdx]->mutable_gpu_diff(),numChannel_quadG,localDir+"Scaler_grad_BC_"+itos_cu(transitionIdx));
+          log_gpuPtr<Dtype>(this->blobs_[6*numTransition+transitionIdx]->mutable_gpu_data(),numChannel_quadG,localDir+"Scaler_data_BC_"+itos_cu(transitionIdx));
+	  //BC bias
+	  log_gpuPtr<Dtype>(this->blobs_[7*numTransition+transitionIdx]->mutable_gpu_diff(),numChannel_quadG,localDir+"Bias_grad_BC_"+itos_cu(transitionIdx));
+	  log_gpuPtr<Dtype>(this->blobs_[7*numTransition+transitionIdx]->mutable_gpu_data(),numChannel_quadG,localDir+"Bias_data_BC_"+itos_cu(transitionIdx));
+	}
       }
     }
 }
 
 template <typename Dtype>
 void DenseBlockLayer<Dtype>::GPU_Initialization(){
+    //std::cout<<"Pre DeviceSet"<<std::endl;
+    //CUDA_CHECK(cudaSetDevice(1));
+    //std::cout<<"Post DeviceSet"<<std::endl;
     //GPU intermediate ptrs
     int bufferSize_byte = this->N*(this->initChannel+this->growthRate*this->numTransition)*this->H*this->W*sizeof(Dtype);
     CUDA_CHECK(cudaMalloc(&this->postConv_data_gpu,bufferSize_byte));
@@ -162,6 +216,8 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //workspace
     CUDA_CHECK(cudaMalloc(&this->workspace,this->workspace_size_bytes));
     cudaMemset(this->workspace,0,this->workspace_size_bytes);
+    CUDA_CHECK(cudaMalloc(&this->workspace2,this->workspace_size_bytes));
+    cudaMemset(this->workspace2,0,this->workspace_size_bytes);
     //handles and descriptors
     //cudnn handle
     this->cudnnHandlePtr = new cudnnHandle_t;
@@ -239,7 +295,7 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
 	//filter Descriptor for Convolution
         if (!useBC){
 	  cudnnFilterDescriptor_t * localFilterDesc = new cudnnFilterDescriptor_t;
-	  cudnn::createFilterDesc<Dtype>(localFilterDesc,growthRate,conv_x_channels,this->filter_H,this->filter_W);
+	  cudnn::createFilterDesc<Dtype>(localFilterDesc,growthRate,conv_x_channels,3,3);
 	  this->filterDescriptorVec.push_back(localFilterDesc);
         }
         else {
@@ -309,12 +365,92 @@ void DenseBlockLayer<Dtype>::GPU_Initialization(){
     //Conv Descriptor
     this->conv_Descriptor = new cudnnConvolutionDescriptor_t;
     CUDNN_CHECK(cudnnCreateConvolutionDescriptor(this->conv_Descriptor));
-    CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,this->pad_h,this->pad_w,this->conv_verticalStride,this->conv_horizentalStride,1,1,CUDNN_CONVOLUTION));
+    CUDNN_CHECK(cudnnSetConvolution2dDescriptor(*this->conv_Descriptor,1,1,1,1,1,1,CUDNN_CONVOLUTION));
 
     //Mean and Var tmp
     int totalNumChannel = this->initChannel + this->growthRate * this->numTransition;
     CUDA_CHECK(cudaMalloc(&this->Mean_tmp, totalNumChannel*sizeof(Dtype)));
     CUDA_CHECK(cudaMalloc(&this->Var_tmp, totalNumChannel*sizeof(Dtype)));
+    
+    //Convolution Algorithms
+    for (int transitionIdx=0;transitionIdx < numTransition;++transitionIdx){
+      cudnnTensorDescriptor_t conv_x_desc;
+      cudnnTensorDescriptor_t conv_y_desc;
+      cudnnFilterDescriptor_t conv_w_desc;
+      cudnnTensorDescriptor_t BC_x_desc;
+      cudnnTensorDescriptor_t BC_y_desc;
+      cudnnFilterDescriptor_t BC_w_desc; 
+      if (useBC){
+        conv_x_desc = *(quadG_tensorDesc);
+        conv_y_desc = *(tensorDescriptor_conv_y);
+        conv_w_desc = *(filterDescriptorVec[transitionIdx]); 
+        BC_x_desc = *(tensorDescriptorVec_conv_x[transitionIdx]);
+	BC_y_desc = *(quadG_tensorDesc);
+        BC_w_desc = *(BC_filterDescriptorVec[transitionIdx]);
+      }
+      else {
+        conv_x_desc = *(tensorDescriptorVec_conv_x[transitionIdx]);
+        conv_y_desc = *(tensorDescriptor_conv_y);
+        conv_w_desc = *(filterDescriptorVec[transitionIdx]); 
+      }
+      //Conv Fwd Algo
+      cudnnConvolutionFwdAlgo_t* conv_FwdAlgo_local = new cudnnConvolutionFwdAlgo_t;
+      CUDNN_CHECK(cudnnGetConvolutionForwardAlgorithm(
+        *cudnnHandlePtr,
+        conv_x_desc,conv_w_desc,*conv_Descriptor,conv_y_desc,
+        CUDNN_CONVOLUTION_FWD_SPECIFY_WORKSPACE_LIMIT,
+        workspace_size_bytes,conv_FwdAlgo_local
+      ));
+      conv_FwdAlgoVec.push_back(conv_FwdAlgo_local);   
+      //Conv Bwd Filter Algo
+      cudnnConvolutionBwdFilterAlgo_t* conv_BwdFilter_local = new cudnnConvolutionBwdFilterAlgo_t;
+      CUDNN_CHECK(cudnnGetConvolutionBackwardFilterAlgorithm(
+        *cudnnHandlePtr,
+	conv_x_desc,conv_y_desc,*conv_Descriptor,conv_w_desc,
+        CUDNN_CONVOLUTION_BWD_FILTER_SPECIFY_WORKSPACE_LIMIT,
+        workspace_size_bytes,conv_BwdFilter_local
+      )); 
+      conv_BwdFilterAlgoVec.push_back(conv_BwdFilter_local);
+      //Conv Bwd Data Algo
+      cudnnConvolutionBwdDataAlgo_t* conv_BwdData_local = new cudnnConvolutionBwdDataAlgo_t;
+      CUDNN_CHECK(cudnnGetConvolutionBackwardDataAlgorithm(
+        *(this->extraHandles[0]),
+        conv_w_desc,conv_y_desc,*conv_Descriptor,conv_x_desc,
+	CUDNN_CONVOLUTION_BWD_DATA_SPECIFY_WORKSPACE_LIMIT,
+	workspace_size_bytes,conv_BwdData_local	
+      ));
+      conv_BwdDataAlgoVec.push_back(conv_BwdData_local);
+      //BC Convolution
+      if (useBC){
+        //BC Fwd Algo
+        cudnnConvolutionFwdAlgo_t* BC_FwdAlgo_local = new cudnnConvolutionFwdAlgo_t;
+        CUDNN_CHECK(cudnnGetConvolutionForwardAlgorithm(
+          *cudnnHandlePtr,
+          BC_x_desc,BC_w_desc,*convBC_Descriptor,BC_y_desc,
+	  CUDNN_CONVOLUTION_FWD_SPECIFY_WORKSPACE_LIMIT,
+	  workspace_size_bytes,BC_FwdAlgo_local
+        ));
+        BC_FwdAlgoVec.push_back(BC_FwdAlgo_local); 
+        //BC Bwd Filter Algo
+	cudnnConvolutionBwdFilterAlgo_t* BC_BwdFilter_local = new cudnnConvolutionBwdFilterAlgo_t;
+        CUDNN_CHECK(cudnnGetConvolutionBackwardFilterAlgorithm(
+          *cudnnHandlePtr,
+	  BC_x_desc,BC_y_desc,*convBC_Descriptor,BC_w_desc,
+          CUDNN_CONVOLUTION_BWD_FILTER_SPECIFY_WORKSPACE_LIMIT,
+          workspace_size_bytes,BC_BwdFilter_local
+        )); 
+	BC_BwdFilterAlgoVec.push_back(BC_BwdFilter_local);
+        //BC Bwd Data Algo
+        cudnnConvolutionBwdDataAlgo_t* BC_BwdData_local = new cudnnConvolutionBwdDataAlgo_t;
+        CUDNN_CHECK(cudnnGetConvolutionBackwardDataAlgorithm(
+          *(this->extraHandles[0]),
+          BC_w_desc,BC_y_desc,*convBC_Descriptor,BC_x_desc,
+	  CUDNN_CONVOLUTION_BWD_DATA_SPECIFY_WORKSPACE_LIMIT,
+	  workspace_size_bytes,BC_BwdData_local	
+        ));
+	BC_BwdDataAlgoVec.push_back(BC_BwdData_local);
+      }
+    }
 }
 
 template <typename Dtype>
@@ -458,7 +594,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	  *this->tensorDescriptorVec_conv_x[transitionIdx],conv_x_4G,
 	  *(BC_filterDescriptorVec[transitionIdx]), 
           this->blobs_[5*numTransition+transitionIdx]->gpu_data(),
-          *(convBC_Descriptor),CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM,
+          *(convBC_Descriptor),*BC_FwdAlgoVec[transitionIdx],
 	  workspace,workspace_size_bytes,cudnn::dataType<Dtype>::zero,
 	  *quadG_tensorDesc,conv_y_4G
         ));
@@ -530,7 +666,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	*conv_x_localDesc,conv_x_local,
 	*(filterDescriptorVec[transitionIdx]),
 	this->blobs_[transitionIdx]->gpu_data(),
-	*conv_Descriptor,CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM,
+	*conv_Descriptor,*conv_FwdAlgoVec[transitionIdx],
 	workspace,workspace_size_bytes,cudnn::dataType<Dtype>::zero,
 	*(tensorDescriptor_conv_y),conv_y_local	
 	)		      
@@ -546,7 +682,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           dropout_reserve_gpu[transitionIdx],dropout_reserveSize[transitionIdx] 
         ));
       }
-      //this->logInternal_gpu("TClog",transitionIdx,true,false);
+      this->logInternal_gpu("TClogFwd",transitionIdx,true,false);
   } 
   //deploy top data
   if ((this->phase_ == TRAIN) && useDropout){
@@ -558,7 +694,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //clock_t end_fwd = std::clock();
   //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
   //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
-  //this->logInternal_gpu("TClog",-1,false,false);
+  this->logInternal_gpu("TClogFwd",-1,false,false);
 }
 
 
@@ -630,7 +766,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	      *this->tensorDescriptorVec_conv_x[transitionIdx],conv_x_4G,
 	      *(BC_filterDescriptorVec[transitionIdx]),
 	      this->blobs_[5*numTransition+transitionIdx]->gpu_data(),
-	      *(convBC_Descriptor),CUDNN_CONVOLUTION_FWD_ALGO_IMPLICIT_GEMM,
+	      *(convBC_Descriptor),*BC_FwdAlgoVec[transitionIdx],
 	      workspace,workspace_size_bytes,cudnn::dataType<Dtype>::zero,
 	      *quadG_tensorDesc,conv_y_4G 
 	    ));
@@ -688,7 +824,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  cudnn::dataType<Dtype>::one, 
 	  *conv_x_localDesc,conv_x_local,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
-	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_FILTER_ALGO_1,
+	  *(this->conv_Descriptor),*conv_BwdFilterAlgoVec[transitionIdx],
 	  this->workspace,this->workspace_size_bytes,
 	  cudnn::dataType<Dtype>::one,
 	  *(this->filterDescriptorVec[transitionIdx]),filterGrad_local	  
@@ -699,8 +835,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  cudnn::dataType<Dtype>::one,
 	  *(this->filterDescriptorVec[transitionIdx]),filterData_local,
 	  *(this->tensorDescriptor_conv_y),conv_dy_local,
-	  *(this->conv_Descriptor),CUDNN_CONVOLUTION_BWD_DATA_ALGO_1,
-	  this->workspace,this->workspace_size_bytes,
+	  *(this->conv_Descriptor),*conv_BwdDataAlgoVec[transitionIdx],
+	  this->workspace2,this->workspace_size_bytes,
 	  cudnn::dataType<Dtype>::zero,
 	  *conv_x_localDesc,conv_dx_local
 	  )		
@@ -752,7 +888,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    cudnn::dataType<Dtype>::one,
 	    *tensorDescriptorVec_conv_x[transitionIdx],BC_conv_x_local,
 	    *quadG_tensorDesc,BC_conv_dy_local,
-	    *convBC_Descriptor,CUDNN_CONVOLUTION_BWD_FILTER_ALGO_1,
+	    *convBC_Descriptor,*BC_BwdFilterAlgoVec[transitionIdx],
 	    workspace,workspace_size_bytes,
 	    cudnn::dataType<Dtype>::one,
 	    *BC_filterDescriptorVec[transitionIdx],BC_filterGrad 
@@ -762,8 +898,8 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    cudnn::dataType<Dtype>::one,
 	    *BC_filterDescriptorVec[transitionIdx],BC_filterData,
 	    *quadG_tensorDesc,BC_conv_dy_local,
-	    *convBC_Descriptor,CUDNN_CONVOLUTION_BWD_DATA_ALGO_1,
-	    workspace,workspace_size_bytes,
+	    *convBC_Descriptor,*BC_BwdDataAlgoVec[transitionIdx],
+            workspace2,workspace_size_bytes,
 	    cudnn::dataType<Dtype>::zero,
 	    *tensorDescriptorVec_conv_x[transitionIdx],BC_conv_dx_local
 	  ));
@@ -812,11 +948,11 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  CUDNN_BN_MIN_EPSILON,saveMean_local,saveInvVar_local
 	  )		
 	);
-        //this->logInternal_gpu("TClog",transitionIdx,true,false);
-        //this->logInternal_gpu("TClog",transitionIdx,true,true);
+        this->logInternal_gpu("TClogBwd",transitionIdx,true,false);
+        this->logInternal_gpu("TClogBwd",transitionIdx,true,true);
     }
     //deploy buffer to bottom diff
-    //this->logInternal_gpu("TClog",-1,false,false);
+    this->logInternal_gpu("TClogBwd",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     if (useDropout){

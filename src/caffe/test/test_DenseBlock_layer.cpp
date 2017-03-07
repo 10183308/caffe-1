@@ -60,7 +60,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
 	bigBlob_bottom_gpu(new Blob<Dtype>(64,big_initC,32,32)),
 	bigBlob_top_gpu(new Blob<Dtype>(64,big_initC+big_growthRate*big_numTransition,32,32))
   {
-    Caffe::set_random_seed(1704);
+    Caffe::set_random_seed(1708);
     //this->layer_param.set_phase(TEST);
     DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
     db_param->set_numtransition(2);
@@ -79,7 +79,7 @@ class DenseBlockLayerTest : public GPUDeviceTest<TypeParam> {
     db_param->mutable_bn_bias_filler()->set_value(0);
     db_param->set_use_dropout(false);
     db_param->set_use_bc(true);
-    db_param->set_bc_ultra_space_efficient(true);
+    db_param->set_bc_ultra_space_efficient(false);
     //For comparison with existing Caffe layer    
     BatchNormParameter* bn_param = this->layer_param.mutable_batch_norm_param();
     bn_param->set_moving_average_fraction(0.999);
@@ -226,7 +226,6 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   delete layer2;
 }
 
-
 TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   typedef typename TypeParam::Dtype Dtype;
   DenseBlockParameter* db_param = this->layer_param.mutable_denseblock_param();
@@ -357,6 +356,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
   }
 
 }
+
 
 /*
 template <typename Dtype>

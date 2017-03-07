@@ -114,6 +114,10 @@ class DenseBlockLayer : public Layer<Dtype> {
   Dtype* postReLU_data_gpu;
   Dtype* postReLU_grad_gpu;
   Dtype* workspace;
+  Dtype* workspace2;
+  //gpu workspace size
+  int workspace_size_bytes;
+
   vector<Dtype*> ResultSaveMean_gpu;
   vector<Dtype*> ResultSaveInvVariance_gpu;
   vector<void*> dropout_state_gpu;
@@ -139,6 +143,14 @@ class DenseBlockLayer : public Layer<Dtype> {
   vector<Dtype*> ResultSaveMean_BC;
   vector<Dtype*> ResultSaveInvVariance_BC;
   vector<cudnnFilterDescriptor_t *> BC_filterDescriptorVec;
+  //chosen Fwd,BwdFilter,BwdData algos for BC-Conv/Normal-Conv
+  vector<cudnnConvolutionFwdAlgo_t *> conv_FwdAlgoVec;
+  vector<cudnnConvolutionFwdAlgo_t *> BC_FwdAlgoVec;
+  vector<cudnnConvolutionBwdFilterAlgo_t *> conv_BwdFilterAlgoVec;
+  vector<cudnnConvolutionBwdFilterAlgo_t *> BC_BwdFilterAlgoVec;
+  vector<cudnnConvolutionBwdDataAlgo_t *> conv_BwdDataAlgoVec;
+  vector<cudnnConvolutionBwdDataAlgo_t *> BC_BwdDataAlgoVec; 
+
   //BC_dropout
   //vector<void*> BC_dropout_state;
   //vector<void*> BC_dropout_reserve;
@@ -151,8 +163,6 @@ class DenseBlockLayer : public Layer<Dtype> {
   //convolution Related
   int pad_h, pad_w, conv_verticalStride, conv_horizentalStride; 
   int filter_H, filter_W;
-  //gpu workspace size
-  int workspace_size_bytes;
   //Decay value used in EMA of BN
   Dtype EMA_decay;
   //gpu handles and descriptors

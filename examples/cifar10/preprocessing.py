@@ -61,19 +61,17 @@ print mean
 print 'Normalizing'
 for i in range(3):
 	print i
-	data_train[:, i, :, :] = data_train[:, i, :, :] - mean[i]
-	data_train[:, i, :, :] = data_train[:, i, :, :]/std[i]
-	data_test[:, i, :, :] = data_test[:, i, :, :] - mean[i]
-	data_test[:, i, :, :] = data_test[:, i, :, :]/std[i]
+	data_train[:,i,:,:] = data_train[:, i, :, :]/256.0
+        data_test[:,i,:,:] = data_test[:,i,:,:]/256.0
 
 #Zero Padding
 print 'Padding...'
 npad = ((0,0), (0,0), (4,4), (4,4))
 data_train = np.pad(data_train, pad_width=npad, mode='constant', constant_values=0)
-data_test = np.pad(data_test, pad_width=npad, mode='constant', constant_values=0)
+#data_test = np.pad(data_test, pad_width=npad, mode='constant', constant_values=0)
 
 print 'Outputting training data'
-leveldb_file = direct + 'cifar10_train_leveldb_padding'
+leveldb_file = direct + 'cifar10_train_leveldb_256'
 batch_size = size_train
 
 # create the leveldb file
@@ -103,7 +101,7 @@ if (i+1) % batch_size != 0:
     print (i + 1)
 
 print 'Outputting test data'
-leveldb_file = direct + 'cifar10_test_leveldb_padding'
+leveldb_file = direct + 'cifar10_test_leveldb_256'
 batch_size = size_test
 
 # create the leveldb file
