@@ -212,7 +212,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockFwd) {
   
   layer2->syncBlobs(layer);
   layer2->Forward(this->bottomVec_gpu,this->topVec_gpu);
-
+  
   for (int n=0;n<2;++n){
     for (int c=0;c<7;++c){
       for (int h=0;h<5;++h){
@@ -301,7 +301,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     for (int inCIdx=0;inCIdx<5;++inCIdx){
       for (int filterHIdx=0;filterHIdx<1;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<1;++filterWIdx){
-	  EXPECT_NEAR(filter11layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter11layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.8); //slightly relax
+	  EXPECT_NEAR(filter11layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter11layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.4); //slightly relax
           
 	}
       }
@@ -314,7 +314,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     for (int inCIdx=0;inCIdx<3;++inCIdx){
       for (int filterHIdx=0;filterHIdx<1;++filterHIdx){
         for (int filterWIdx=0;filterWIdx<1;++filterWIdx){
-	  EXPECT_NEAR(filter10layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter10layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.8); //slightly relax
+	  EXPECT_NEAR(filter10layer3->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),filter10layer4->diff_at(outCIdx,inCIdx,filterHIdx,filterWIdx),0.4); //slightly relax
 	}
       }
     }
@@ -333,7 +333,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     Blob<Dtype>* layer4localScaler = layer4->blobs()[layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
-      EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),1); 
+      EXPECT_NEAR(layer3localScaler->diff_at(0,channelIdx,0,0),layer4localScaler->diff_at(0,channelIdx,0,0),0.4); 
     }
   } 
   //Bias Grad
@@ -342,7 +342,7 @@ TYPED_TEST(DenseBlockLayerTest, TestDenseBlockBwd) {
     Blob<Dtype>* layer4localBias = layer4->blobs()[2*layer4->numTransition+transitionIdx].get();
     int localNumChannel = transitionIdx==0?3:2;
     for (int channelIdx=0;channelIdx < localNumChannel;++channelIdx){
-      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),1);
+      EXPECT_NEAR(layer3localBias->diff_at(0,channelIdx,0,0),layer4localBias->diff_at(0,channelIdx,0,0),0.4);
     }
   } 
   //GlobalMean/Var should have no Grad

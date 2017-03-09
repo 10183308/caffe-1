@@ -589,6 +589,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	else {
 	  conv_y_4G = postConv_4GVec[transitionIdx];
 	}
+        //CONV_ALGO
         CUDNN_CHECK(cudnnConvolutionForward(*(cudnnHandlePtr),
           cudnn::dataType<Dtype>::one,
 	  *this->tensorDescriptorVec_conv_x[transitionIdx],conv_x_4G,
@@ -661,6 +662,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
 	conv_x_localDesc = tensorDescriptorVec_conv_x[transitionIdx];
       }
       Dtype* conv_y_local = this->postConv_data_gpu + delayChannel * this->H * this->W;
+      //CONV_ALGO
       CUDNN_CHECK(cudnnConvolutionForward(*(this->cudnnHandlePtr),
 	cudnn::dataType<Dtype>::one,
 	*conv_x_localDesc,conv_x_local,
@@ -682,7 +684,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
           dropout_reserve_gpu[transitionIdx],dropout_reserveSize[transitionIdx] 
         ));
       }
-      this->logInternal_gpu("TClogFwd",transitionIdx,true,false);
+      //this->logInternal_gpu("TClogFwd",transitionIdx,true,false);
   } 
   //deploy top data
   if ((this->phase_ == TRAIN) && useDropout){
@@ -694,7 +696,7 @@ void DenseBlockLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom,
   //clock_t end_fwd = std::clock();
   //double elapsed_fwd = double(end_fwd - begin_fwd) / CLOCKS_PER_SEC;
   //std::cout<<"elapsed fwd gpu:"<<elapsed_fwd<<std::endl;
-  this->logInternal_gpu("TClogFwd",-1,false,false);
+  //this->logInternal_gpu("TClogFwd",-1,false,false);
 }
 
 
@@ -735,8 +737,21 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         cudnnTensorDescriptor_t* BN_paramDesc = tensorDescriptor_BN[transitionIdx];
         Dtype* local_MeanInf = Mean_tmp;
 	Dtype* local_VarInf = Var_tmp;
+        Dtype* batchMean = this->ResultSaveMean_gpu[transitionIdx];
+        Dtype* batchInvVar =  this->ResultSaveInvVariance_gpu[transitionIdx];	  
+        CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
+            *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
+	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
+	    *(this->tensorDescriptorVec_conv_x[transitionIdx]),BN_x_ptr,
+	    *(this->tensorDescriptorVec_conv_x[transitionIdx]),BN_y_ptr,
+	    *BN_paramDesc,
+	    this->blobs_[this->numTransition+transitionIdx]->mutable_gpu_data(),
+	    this->blobs_[2*this->numTransition+transitionIdx]->mutable_gpu_data(),
+	    Dtype(1),local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON,
+	    batchMean,batchInvVar)
+        );
         
-        CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
+        /*CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *(this->cudnnHandlePtr),CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
 	    *(this->tensorDescriptorVec_conv_x[transitionIdx]),BN_x_ptr,
@@ -745,7 +760,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    this->blobs_[this->numTransition+transitionIdx]->gpu_data(),
             this->blobs_[2*this->numTransition+transitionIdx]->gpu_data(),
 	    local_MeanInf,local_VarInf,CUDNN_BN_MIN_EPSILON)
-	);
+	);*/
         //ReLU Fwd
         Dtype* ReLU_x_ptr = this->postBN_data_gpu;
         Dtype* ReLU_y_ptr = this->postReLU_data_gpu;
@@ -758,6 +773,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         if (useBC){
 	  //Fwd phase 
 	  //If BC Ultra SpaceEfficient, then need convolution Fwd 1*1
+          //CONV_ALGO
 	  if (BC_ultra_spaceEfficient){
 	    Dtype* conv_x_4G = postReLU_data_gpu;	
 	    Dtype* conv_y_4G = postConv_4G;
@@ -778,7 +794,20 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
           Dtype* BN_y_4G = postBN_4G;
 	  Dtype* localBC_MeanInf = BC_MeanInfVec[transitionIdx];
 	  Dtype* localBC_VarInf = BC_VarInfVec[transitionIdx];
-	  CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
+          Dtype* BC_batchMean = ResultSaveMean_BC[transitionIdx];
+          Dtype* BC_batchInvVar = ResultSaveInvVariance_BC[transitionIdx];
+          CUDNN_CHECK(cudnnBatchNormalizationForwardTraining(
+            *cudnnHandlePtr,CUDNN_BATCHNORM_SPATIAL,
+	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
+	    *quadG_tensorDesc,BN_x_4G,
+	    *quadG_tensorDesc,BN_y_4G,
+	    *quadG_paramDesc,
+	    this->blobs_[6*numTransition+transitionIdx]->mutable_gpu_data(),
+	    this->blobs_[7*numTransition+transitionIdx]->mutable_gpu_data(),
+	    Dtype(1),localBC_MeanInf,localBC_VarInf,CUDNN_BN_MIN_EPSILON,
+	    BC_batchMean,BC_batchInvVar	
+          ));
+	  /*CUDNN_CHECK(cudnnBatchNormalizationForwardInference(
 	    *localFwdHandle,CUDNN_BATCHNORM_SPATIAL,
 	    cudnn::dataType<Dtype>::one,cudnn::dataType<Dtype>::zero,
 	    *quadG_tensorDesc,BN_x_4G,
@@ -787,7 +816,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    this->blobs_[6*numTransition+transitionIdx]->gpu_data(),
 	    this->blobs_[7*numTransition+transitionIdx]->gpu_data(),
 	    localBC_MeanInf,localBC_VarInf,CUDNN_BN_MIN_EPSILON 
-	  ));
+	  ));*/
 	  //BC ReLU Fwd reconstruction
 	  Dtype* ReLU_BC_x = postBN_4G;
 	  Dtype* ReLU_BC_y = postReLU_4G;
@@ -820,6 +849,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
         Dtype* conv_dx_local = useBC?postReLU_4G_grad:postReLU_grad_gpu;
 	cudnnTensorDescriptor_t * conv_x_localDesc = useBC?quadG_tensorDesc:tensorDescriptorVec_conv_x[transitionIdx];
 	//Conv w.r.t. filter
+	//CONV_ALGO
 	CUDNN_CHECK(cudnnConvolutionBackwardFilter(*(this->cudnnHandlePtr),
 	  cudnn::dataType<Dtype>::one, 
 	  *conv_x_localDesc,conv_x_local,
@@ -831,6 +861,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  )		
 	);
 	//Conv w.r.t. x
+        //CONV_ALGO
 	CUDNN_CHECK(cudnnConvolutionBackwardData(*(this->extraHandles[0]),
 	  cudnn::dataType<Dtype>::one,
 	  *(this->filterDescriptorVec[transitionIdx]),filterData_local,
@@ -884,6 +915,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  Dtype* BC_conv_dy_local = postConv_4G_grad;
 	  Dtype* BC_conv_dx_local = postReLU_grad_gpu;
           //Conv Bwd w.r.t. filter
+          //CONV_ALGO
 	  CUDNN_CHECK(cudnnConvolutionBackwardFilter(*cudnnHandlePtr,
 	    cudnn::dataType<Dtype>::one,
 	    *tensorDescriptorVec_conv_x[transitionIdx],BC_conv_x_local,
@@ -894,6 +926,7 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	    *BC_filterDescriptorVec[transitionIdx],BC_filterGrad 
 	  ));
 	  //Conv Bwd w.r.t. data
+	  //CONV_ALGO
 	  CUDNN_CHECK(cudnnConvolutionBackwardData(*(extraHandles[0]),
 	    cudnn::dataType<Dtype>::one,
 	    *BC_filterDescriptorVec[transitionIdx],BC_filterData,
@@ -948,11 +981,11 @@ void DenseBlockLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top,
 	  CUDNN_BN_MIN_EPSILON,saveMean_local,saveInvVar_local
 	  )		
 	);
-        this->logInternal_gpu("TClogBwd",transitionIdx,true,false);
-        this->logInternal_gpu("TClogBwd",transitionIdx,true,true);
+        //this->logInternal_gpu("TClogBwd",transitionIdx,true,false);
+        //this->logInternal_gpu("TClogBwd",transitionIdx,true,true);
     }
     //deploy buffer to bottom diff
-    this->logInternal_gpu("TClogBwd",-1,false,false);
+    //this->logInternal_gpu("TClogBwd",-1,false,false);
     int chunkSize_copy_init = this->initChannel * this->H * this->W;
     int chunkStride_copy = (this->initChannel + this->numTransition * this->growthRate) * this->H * this->W;
     if (useDropout){

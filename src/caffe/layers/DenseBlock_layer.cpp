@@ -925,7 +925,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       this->blobs_[bnTimerIdx]->mutable_cpu_data()[0] += 1;
       this->trainCycleIdx+=1;
     }    
-    logInternal_cpu("TC_TrueFwdlog");
+    //logInternal_cpu("TC_TrueFwdlog");
   }
 
 
@@ -982,7 +982,7 @@ void DenseBlockLayer<Dtype>::LoopEndCleanup_cpu(){
       BN_train_Bwd<Dtype>(BN_bottom,this->BN_XhatVec[transitionIdx],this->postBN_blobVec[transitionIdx],this->batch_Mean[transitionIdx],this->batch_Var[transitionIdx],scaler,bias,this->N,localChannel,this->H,this->W,true);
     }
     bottom[0]->CopyFrom(*(this->merged_conv[0]),true);     
-    logInternal_cpu("TC_TrueBwdlog");
+    //logInternal_cpu("TC_TrueBwdlog");
     this->LoopEndCleanup_cpu();
 }
 
