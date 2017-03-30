@@ -19,24 +19,31 @@ void NesterovSolver<Dtype>::ComputeUpdateValue(int param_id, Dtype rate) {
   switch (Caffe::mode()) {
   case Caffe::CPU: {
     // save history momentum for stepping back
-    caffe_copy(net_params[param_id]->count(),
-        this->history_[param_id]->cpu_data(),
-        this->update_[param_id]->mutable_cpu_data());
+    //caffe_copy(net_params[param_id]->count(),
+    //    this->history_[param_id]->cpu_data(),
+    //    this->update_[param_id]->mutable_cpu_data());
 
     // update history
-    caffe_cpu_axpby(net_params[param_id]->count(), local_rate,
+    //caffe_cpu_axpby(net_params[param_id]->count(), local_rate,
+    //          net_params[param_id]->cpu_diff(), momentum,
+    //          this->history_[param_id]->mutable_cpu_data());
+    caffe_cpu_axpby(net_params[param_id]->count(), Dtype(1),
               net_params[param_id]->cpu_diff(), momentum,
               this->history_[param_id]->mutable_cpu_data());
 
     // compute update: step back then over step
-    caffe_cpu_axpby(net_params[param_id]->count(), Dtype(1) + momentum,
-        this->history_[param_id]->cpu_data(), -momentum,
-        this->update_[param_id]->mutable_cpu_data());
+    //caffe_cpu_axpby(net_params[param_id]->count(), Dtype(1) + momentum,
+    //    this->history_[param_id]->cpu_data(), -momentum,
+    //    this->update_[param_id]->mutable_cpu_data());
+    caffe_cpu_axpby(net_params[param_id]->count(), local_rate * momentum,
+        this->history_[param_id]->cpu_data(), local_rate,
+        net_params[param_id]->mutable_cpu_diff());
+
 
     // copy
-    caffe_copy(net_params[param_id]->count(),
-        this->update_[param_id]->cpu_data(),
-        net_params[param_id]->mutable_cpu_diff());
+    //caffe_copy(net_params[param_id]->count(),
+    //    this->update_[param_id]->cpu_data(),
+    //    net_params[param_id]->mutable_cpu_diff());
     break;
   }
   case Caffe::GPU: {
