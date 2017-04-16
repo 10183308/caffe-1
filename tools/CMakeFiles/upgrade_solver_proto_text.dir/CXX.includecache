@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/upgrade_solver_proto_text.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/upgrade_solver_proto_text.cpp
 cstring
 -
 fstream
@@ -16,11 +16,11 @@ iostream
 string
 -
 caffe/caffe.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/caffe.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/caffe.hpp
 caffe/util/io.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/io.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/io.hpp
 caffe/util/upgrade_proto.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/upgrade_proto.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/upgrade_proto.hpp
 
 /opt/OpenBLAS/include/cblas.h
 stddef.h

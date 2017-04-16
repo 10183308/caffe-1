@@ -19,9 +19,9 @@
 
 # OpenCV dependency (optional)
 
-if(ON)
+if(OFF)
   if(NOT OpenCV_FOUND)
-    set(Caffe_OpenCV_CONFIG_PATH "/usr/local/share/OpenCV")
+    set(Caffe_OpenCV_CONFIG_PATH "")
     if(Caffe_OpenCV_CONFIG_PATH)
       get_filename_component(Caffe_OpenCV_CONFIG_PATH ${Caffe_OpenCV_CONFIG_PATH} ABSOLUTE)
 
@@ -39,7 +39,7 @@ endif()
 
 # Compute paths
 get_filename_component(Caffe_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
-set(Caffe_INCLUDE_DIRS "/usr/include;/usr/local/include;/usr/local/cuda-8.0/include;/usr/local/include/opencv;/opt/OpenBLAS/include")
+set(Caffe_INCLUDE_DIRS "/usr/include;/usr/local/include;/usr/local/cuda-8.0/include;/opt/OpenBLAS/include")
 
 get_filename_component(__caffe_include "${Caffe_CMAKE_DIR}/../../include" ABSOLUTE)
 list(APPEND Caffe_INCLUDE_DIRS ${__caffe_include})
@@ -55,7 +55,7 @@ endif()
 set(Caffe_LIBRARIES caffe)
 
 # Definitions
-set(Caffe_DEFINITIONS "-DUSE_OPENCV;-DUSE_LMDB;-DUSE_LEVELDB")
+set(Caffe_DEFINITIONS "-DUSE_LMDB;-DUSE_LEVELDB")
 
 # Cuda support variables
 set(Caffe_CPU_ONLY OFF)

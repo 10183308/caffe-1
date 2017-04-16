@@ -56,18 +56,18 @@ endif()
 
 # Set these up as variables to make reading the generated file easier
 set(CMAKE_COMMAND "/usr/bin/cmake") # path
-set(source_file "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/layers/lrn_layer.cu") # path
-set(NVCC_generated_dependency_file "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/cuda_compile_generated_lrn_layer.cu.o.NVCC-depend") # path
-set(cmake_dependency_file "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/cuda_compile_generated_lrn_layer.cu.o.depend") # path
+set(source_file "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/layers/lrn_layer.cu") # path
+set(NVCC_generated_dependency_file "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/cuda_compile_generated_lrn_layer.cu.o.NVCC-depend") # path
+set(cmake_dependency_file "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/cuda_compile_generated_lrn_layer.cu.o.depend") # path
 set(CUDA_make2cmake "/usr/share/cmake/Modules/FindCUDA/make2cmake.cmake") # path
 set(CUDA_parse_cubin "/usr/share/cmake/Modules/FindCUDA/parse_cubin.cmake") # path
 set(build_cubin OFF) # bool
 set(CUDA_HOST_COMPILER "/usr/bin/cc") # bool
 # We won't actually use these variables for now, but we need to set this, in
 # order to force this file to be run again if it changes.
-set(generated_file_path "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/.") # path
-set(generated_file_internal "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/./cuda_compile_generated_lrn_layer.cu.o") # path
-set(generated_cubin_file_internal "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/./cuda_compile_generated_lrn_layer.cu.o.cubin.txt") # path
+set(generated_file_path "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/.") # path
+set(generated_file_internal "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/./cuda_compile_generated_lrn_layer.cu.o") # path
+set(generated_cubin_file_internal "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/cuda_compile.dir/layers/./cuda_compile_generated_lrn_layer.cu.o.cubin.txt") # path
 
 set(CUDA_NVCC_EXECUTABLE "/usr/local/cuda-8.0/bin/nvcc") # path
 set(CUDA_NVCC_FLAGS -gencode;arch=compute_52,code=sm_52;-Xcudafe;--diag_suppress=cc_clobber_ignored;-Xcudafe;--diag_suppress=integer_sign_change;-Xcudafe;--diag_suppress=useless_using_declaration;-Xcudafe;--diag_suppress=set_but_not_used;-Xcompiler;-fPIC ;; ) # list
@@ -76,8 +76,8 @@ set(CUDA_NVCC_FLAGS_DEBUG  ; )
 set(CUDA_NVCC_FLAGS_RELEASE  ; )
 set(CUDA_NVCC_FLAGS_MINSIZEREL  ; )
 set(CUDA_NVCC_FLAGS_RELWITHDEBINFO  ; )
-set(nvcc_flags -m64;-DCAFFE_VERSION=1.0.0-rc4;-DUSE_LMDB;-DUSE_LEVELDB;-DUSE_CUDNN;-DUSE_OPENCV;-DGTEST_USE_OWN_TR1_TUPLE) # list
-set(CUDA_NVCC_INCLUDE_ARGS "-I/usr/local/cuda-8.0/include;-I/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src;-I/usr/include;-I/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include;-I/usr/local/include;-I/usr/local/cuda-8.0/include;-I/usr/local/include/opencv;-I/opt/OpenBLAS/include;-I/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe") # list (needs to be in quotes to handle spaces properly).
+set(nvcc_flags -m64;-DCAFFE_VERSION=1.0.0-rc4;-DUSE_LMDB;-DUSE_LEVELDB;-DUSE_CUDNN;-DGTEST_USE_OWN_TR1_TUPLE) # list
+set(CUDA_NVCC_INCLUDE_ARGS "-I/usr/local/cuda-8.0/include;-I/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src;-I/usr/include;-I/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include;-I/usr/local/include;-I/usr/local/cuda-8.0/include;-I/opt/OpenBLAS/include;-I/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe") # list (needs to be in quotes to handle spaces properly).
 set(format_flag "-c") # string
 
 if(build_cubin AND NOT generated_cubin_file)

@@ -6,25 +6,25 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/convert_cifar_data.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/convert_cifar_data.cpp
 fstream
 -
 string
 -
 boost/scoped_ptr.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/boost/scoped_ptr.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/boost/scoped_ptr.hpp
 glog/logging.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/glog/logging.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/glog/logging.h
 google/protobuf/text_format.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/google/protobuf/text_format.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/google/protobuf/text_format.h
 stdint.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/stdint.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/stdint.h
 caffe/proto/caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/caffe/proto/caffe.pb.h
 caffe/util/db.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/caffe/util/db.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/caffe/util/db.hpp
 caffe/util/format.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cifar10/caffe/util/format.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cifar10/caffe/util/format.hpp
 
 /usr/local/cuda-8.0/include/builtin_types.h
 device_types.h

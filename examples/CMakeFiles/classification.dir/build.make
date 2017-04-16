@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Include any dependencies generated for this target.
 include examples/CMakeFiles/classification.dir/depend.make
@@ -54,17 +54,17 @@ include examples/CMakeFiles/classification.dir/flags.make
 
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: examples/CMakeFiles/classification.dir/flags.make
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: examples/cpp_classification/classification.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/classification.dir/cpp_classification/classification.cpp.o -c /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification.cpp
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/classification.dir/cpp_classification/classification.cpp.o -c /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification.cpp
 
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/classification.dir/cpp_classification/classification.cpp.i"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification.cpp > CMakeFiles/classification.dir/cpp_classification/classification.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification.cpp > CMakeFiles/classification.dir/cpp_classification/classification.cpp.i
 
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/classification.dir/cpp_classification/classification.cpp.s"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification.cpp -o CMakeFiles/classification.dir/cpp_classification/classification.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification.cpp -o CMakeFiles/classification.dir/cpp_classification/classification.cpp.s
 
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o.requires:
 .PHONY : examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o.requires
@@ -106,16 +106,11 @@ examples/cpp_classification/classification: /usr/local/cuda-8.0/lib64/libcudart.
 examples/cpp_classification/classification: /usr/local/cuda-8.0/lib64/libcurand.so
 examples/cpp_classification/classification: /usr/local/cuda-8.0/lib64/libcublas.so
 examples/cpp_classification/classification: /usr/local/cuda-8.0/lib64/libcudnn.so
-examples/cpp_classification/classification: /usr/local/lib/libopencv_highgui.so.3.2.0
-examples/cpp_classification/classification: /usr/local/lib/libopencv_imgcodecs.so.3.2.0
-examples/cpp_classification/classification: /usr/local/lib/libopencv_imgproc.so.3.2.0
-examples/cpp_classification/classification: /usr/local/lib/libopencv_core.so.3.2.0
-examples/cpp_classification/classification: /usr/local/lib/libopencv_cudev.so.3.2.0
 examples/cpp_classification/classification: /opt/OpenBLAS/lib/libopenblas.so
 examples/cpp_classification/classification: examples/CMakeFiles/classification.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable cpp_classification/classification"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/classification.dir/link.txt --verbose=$(VERBOSE)
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && ln -sf /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification.bin
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/classification.dir/link.txt --verbose=$(VERBOSE)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && ln -sf /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification.bin
 
 # Rule to build all files generated by this target.
 examples/CMakeFiles/classification.dir/build: examples/cpp_classification/classification
@@ -125,10 +120,10 @@ examples/CMakeFiles/classification.dir/requires: examples/CMakeFiles/classificat
 .PHONY : examples/CMakeFiles/classification.dir/requires
 
 examples/CMakeFiles/classification.dir/clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples && $(CMAKE_COMMAND) -P CMakeFiles/classification.dir/cmake_clean.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples && $(CMAKE_COMMAND) -P CMakeFiles/classification.dir/cmake_clean.cmake
 .PHONY : examples/CMakeFiles/classification.dir/clean
 
 examples/CMakeFiles/classification.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/CMakeFiles/classification.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/CMakeFiles/classification.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : examples/CMakeFiles/classification.dir/depend
 

@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,9 +113,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

@@ -1,8 +1,8 @@
-# Install script for directory: /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+# Install script for directory: /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,14 +33,14 @@ IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/cmake/CaffeConfig.cmake")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/cmake/CaffeConfig.cmake")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   IF(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/Caffe/CaffeTargets.cmake")
     FILE(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/Caffe/CaffeTargets.cmake"
-         "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets.cmake")
+         "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets.cmake")
     IF(EXPORT_FILE_CHANGED)
       FILE(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/share/Caffe/CaffeTargets-*.cmake")
       IF(OLD_CONFIG_FILES)
@@ -49,21 +49,21 @@ IF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
       ENDIF(OLD_CONFIG_FILES)
     ENDIF(EXPORT_FILE_CHANGED)
   ENDIF()
-  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets.cmake")
+  FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets.cmake")
   IF("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
-    FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets-release.cmake")
+    FILE(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/Caffe" TYPE FILE FILES "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/Export/share/Caffe/CaffeTargets-release.cmake")
   ENDIF("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Rr][Ee][Ll][Ee][Aa][Ss][Ee])$")
 ENDIF(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
 
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/gtest/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/python/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/matlab/cmake_install.cmake")
-  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/gtest/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/python/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/matlab/cmake_install.cmake")
+  INCLUDE("/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
@@ -73,7 +73,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

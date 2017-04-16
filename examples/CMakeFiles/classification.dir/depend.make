@@ -65,7 +65,6 @@ examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: 
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/include/nccl.h
-examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/include/opencv/cxcore.h
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 examples/CMakeFiles/classification.dir/cpp_classification/classification.cpp.o: /usr/local/include/opencv2/core.hpp

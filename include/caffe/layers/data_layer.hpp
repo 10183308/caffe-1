@@ -31,10 +31,16 @@ class DataLayer : public BasePrefetchingDataLayer<Dtype> {
   void Next();
   bool Skip();
   virtual void load_batch(Batch<Dtype>* batch);
+  void localShuffle();
 
   shared_ptr<db::DB> db_;
   shared_ptr<db::Cursor> cursor_;
   uint64_t offset_;
+  int localKey;
+  bool random_order;
+  unsigned int init_seed;
+  vector<Datum *> allDatum; //used if in random order
+  vector<int> indexVec;
 };
 
 }  // namespace caffe

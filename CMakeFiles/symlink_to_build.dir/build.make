@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Utility rule file for symlink_to_build.
 
@@ -49,9 +49,9 @@ CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
 include CMakeFiles/symlink_to_build.dir/progress.make
 
 CMakeFiles/symlink_to_build:
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Adding symlink: <caffe_root>/build -> /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe"
-	ln -sf /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Adding symlink: <caffe_root>/build -> /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe"
+	ln -sf /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/build
 
 symlink_to_build: CMakeFiles/symlink_to_build
 symlink_to_build: CMakeFiles/symlink_to_build.dir/build.make
@@ -66,6 +66,6 @@ CMakeFiles/symlink_to_build.dir/clean:
 .PHONY : CMakeFiles/symlink_to_build.dir/clean
 
 CMakeFiles/symlink_to_build.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/symlink_to_build.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/symlink_to_build.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/symlink_to_build.dir/depend
 

@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Utility rule file for pytest.
 
@@ -49,7 +49,7 @@ CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
 include CMakeFiles/pytest.dir/progress.make
 
 CMakeFiles/pytest:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/python && python2 -m unittest discover -s caffe/test
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/python && python2 -m unittest discover -s caffe/test
 
 pytest: CMakeFiles/pytest
 pytest: CMakeFiles/pytest.dir/build.make
@@ -64,6 +64,6 @@ CMakeFiles/pytest.dir/clean:
 .PHONY : CMakeFiles/pytest.dir/clean
 
 CMakeFiles/pytest.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/pytest.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/pytest.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/pytest.dir/depend
 

@@ -6,29 +6,29 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/extract_features.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/extract_features.cpp
 string
 -
 vector
 -
 boost/algorithm/string.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/boost/algorithm/string.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/boost/algorithm/string.hpp
 google/protobuf/text_format.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/google/protobuf/text_format.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/google/protobuf/text_format.h
 caffe/blob.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/blob.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/blob.hpp
 caffe/common.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/common.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/common.hpp
 caffe/net.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/net.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/net.hpp
 caffe/proto/caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/proto/caffe.pb.h
 caffe/util/db.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/db.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/db.hpp
 caffe/util/format.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/format.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/format.hpp
 caffe/util/io.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/io.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/io.hpp
 
 /opt/OpenBLAS/include/cblas.h
 stddef.h

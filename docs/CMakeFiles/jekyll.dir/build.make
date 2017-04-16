@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Utility rule file for jekyll.
 
@@ -49,9 +49,9 @@ CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
 include docs/CMakeFiles/jekyll.dir/progress.make
 
 docs/CMakeFiles/jekyll:
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Launching jekyll..."
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs && jekyll serve -w -s . -d _site --port=4000
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs && jekyll serve -w -s . -d _site --port=4000
 
 jekyll: docs/CMakeFiles/jekyll
 jekyll: docs/CMakeFiles/jekyll.dir/build.make
@@ -62,10 +62,10 @@ docs/CMakeFiles/jekyll.dir/build: jekyll
 .PHONY : docs/CMakeFiles/jekyll.dir/build
 
 docs/CMakeFiles/jekyll.dir/clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs && $(CMAKE_COMMAND) -P CMakeFiles/jekyll.dir/cmake_clean.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs && $(CMAKE_COMMAND) -P CMakeFiles/jekyll.dir/cmake_clean.cmake
 .PHONY : docs/CMakeFiles/jekyll.dir/clean
 
 docs/CMakeFiles/jekyll.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/docs/CMakeFiles/jekyll.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/docs/CMakeFiles/jekyll.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : docs/CMakeFiles/jekyll.dir/depend
 

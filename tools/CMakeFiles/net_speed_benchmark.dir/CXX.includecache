@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/net_speed_benchmark.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/net_speed_benchmark.cpp
 caffe/caffe.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/caffe.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/caffe.hpp
 
 /opt/OpenBLAS/include/cblas.h
 stddef.h

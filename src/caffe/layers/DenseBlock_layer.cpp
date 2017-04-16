@@ -52,7 +52,7 @@ namespace caffe {
         this->initChannel = dbParam.initchannel();
         this->growthRate = dbParam.growthrate();
         this->trainCycleIdx = 0; //initially, trainCycleIdx = 0
-        this->workspace_size_bytes =  this->phase_==TEST?8:dbParam.workspace_mb()*1024*1024;
+        this->workspace_size_bytes = dbParam.workspace_mb()*1024*1024;
 	this->EMA_decay = dbParam.moving_average_fraction();
         this->gpu_idx_ = dbParam.gpuidx();
         this->useDropout = dbParam.use_dropout();

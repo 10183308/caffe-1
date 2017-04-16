@@ -6,25 +6,25 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/convert_mnist_siamese_data.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/convert_mnist_siamese_data.cpp
 fstream
 -
 string
 -
 glog/logging.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/glog/logging.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/glog/logging.h
 google/protobuf/text_format.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/google/protobuf/text_format.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/google/protobuf/text_format.h
 stdint.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/stdint.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/stdint.h
 caffe/proto/caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/caffe/proto/caffe.pb.h
 caffe/util/format.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/caffe/util/format.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/caffe/util/format.hpp
 caffe/util/math_functions.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/caffe/util/math_functions.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/caffe/util/math_functions.hpp
 leveldb/db.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/siamese/leveldb/db.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/siamese/leveldb/db.h
 
 /opt/OpenBLAS/include/cblas.h
 stddef.h

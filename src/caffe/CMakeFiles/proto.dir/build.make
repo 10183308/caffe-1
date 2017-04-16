@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Include any dependencies generated for this target.
 include src/caffe/CMakeFiles/proto.dir/depend.make
@@ -53,11 +53,11 @@ include src/caffe/CMakeFiles/proto.dir/progress.make
 include src/caffe/CMakeFiles/proto.dir/flags.make
 
 include/caffe/proto/caffe.pb.cc: src/caffe/proto/caffe.proto
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Running C++/Python protocol buffer compiler on /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/proto/caffe.proto"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/cmake -E make_directory /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/protoc --cpp_out /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto -I /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/proto /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/proto/caffe.proto
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/protoc --python_out /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto -I /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/proto /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/proto/caffe.proto
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Running C++/Python protocol buffer compiler on /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/proto/caffe.proto"
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/cmake -E make_directory /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/protoc --cpp_out /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto -I /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/proto /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/proto/caffe.proto
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/protoc --python_out /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto -I /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/proto /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/proto/caffe.proto
 
 include/caffe/proto/caffe.pb.h: include/caffe/proto/caffe.pb.cc
 
@@ -65,17 +65,17 @@ include/caffe/proto/caffe_pb2.py: include/caffe/proto/caffe.pb.cc
 
 src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o: src/caffe/CMakeFiles/proto.dir/flags.make
 src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o: include/caffe/proto/caffe.pb.cc
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_2)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o -c /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.cc
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o -c /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.cc
 
 src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.i"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.cc > CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.cc > CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.i
 
 src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.s"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.cc -o CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.cc -o CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.s
 
 src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o.requires:
 .PHONY : src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.pb.cc.o.requires
@@ -97,8 +97,8 @@ lib/libproto.a: src/caffe/CMakeFiles/proto.dir/__/__/include/caffe/proto/caffe.p
 lib/libproto.a: src/caffe/CMakeFiles/proto.dir/build.make
 lib/libproto.a: src/caffe/CMakeFiles/proto.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX static library ../../lib/libproto.a"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && $(CMAKE_COMMAND) -P CMakeFiles/proto.dir/cmake_clean_target.cmake
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/proto.dir/link.txt --verbose=$(VERBOSE)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && $(CMAKE_COMMAND) -P CMakeFiles/proto.dir/cmake_clean_target.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/proto.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 src/caffe/CMakeFiles/proto.dir/build: lib/libproto.a
@@ -108,12 +108,12 @@ src/caffe/CMakeFiles/proto.dir/requires: src/caffe/CMakeFiles/proto.dir/__/__/in
 .PHONY : src/caffe/CMakeFiles/proto.dir/requires
 
 src/caffe/CMakeFiles/proto.dir/clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe && $(CMAKE_COMMAND) -P CMakeFiles/proto.dir/cmake_clean.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe && $(CMAKE_COMMAND) -P CMakeFiles/proto.dir/cmake_clean.cmake
 .PHONY : src/caffe/CMakeFiles/proto.dir/clean
 
 src/caffe/CMakeFiles/proto.dir/depend: include/caffe/proto/caffe.pb.cc
 src/caffe/CMakeFiles/proto.dir/depend: include/caffe/proto/caffe.pb.h
 src/caffe/CMakeFiles/proto.dir/depend: include/caffe/proto/caffe_pb2.py
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/CMakeFiles/proto.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/CMakeFiles/proto.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/caffe/CMakeFiles/proto.dir/depend
 

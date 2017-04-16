@@ -10,7 +10,6 @@ SET(CMAKE_TARGET_DEFINITIONS
   "USE_CUDNN"
   "USE_LEVELDB"
   "USE_LMDB"
-  "USE_OPENCV"
   )
 
 # Targets to which this target links.
@@ -23,7 +22,6 @@ SET(CMAKE_C_TARGET_INCLUDE_PATH
   "include"
   "/usr/local/include"
   "/usr/local/cuda-8.0/include"
-  "/usr/local/include/opencv"
   "/opt/OpenBLAS/include"
   "."
   )

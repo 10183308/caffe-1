@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Utility rule file for runtest.
 
@@ -49,7 +49,7 @@ CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
 include src/caffe/test/CMakeFiles/runtest.dir/progress.make
 
 src/caffe/test/CMakeFiles/runtest:
-	/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/test/test.testbin --gtest_shuffle
+	/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/test/test.testbin --gtest_shuffle
 
 runtest: src/caffe/test/CMakeFiles/runtest
 runtest: src/caffe/test/CMakeFiles/runtest.dir/build.make
@@ -60,10 +60,10 @@ src/caffe/test/CMakeFiles/runtest.dir/build: runtest
 .PHONY : src/caffe/test/CMakeFiles/runtest.dir/build
 
 src/caffe/test/CMakeFiles/runtest.dir/clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/test && $(CMAKE_COMMAND) -P CMakeFiles/runtest.dir/cmake_clean.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/test && $(CMAKE_COMMAND) -P CMakeFiles/runtest.dir/cmake_clean.cmake
 .PHONY : src/caffe/test/CMakeFiles/runtest.dir/clean
 
 src/caffe/test/CMakeFiles/runtest.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/test /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/test /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/test/CMakeFiles/runtest.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/test /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/test /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/test/CMakeFiles/runtest.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : src/caffe/test/CMakeFiles/runtest.dir/depend
 

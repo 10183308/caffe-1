@@ -4,7 +4,7 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/gtest/gtest-all.cpp" "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.o"
+  "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/gtest/gtest-all.cpp" "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -15,7 +15,6 @@ SET(CMAKE_TARGET_DEFINITIONS
   "USE_CUDNN"
   "USE_LEVELDB"
   "USE_LMDB"
-  "USE_OPENCV"
   )
 
 # Targets to which this target links.
@@ -28,7 +27,6 @@ SET(CMAKE_C_TARGET_INCLUDE_PATH
   "include"
   "/usr/local/include"
   "/usr/local/cuda-8.0/include"
-  "/usr/local/include/opencv"
   "/opt/OpenBLAS/include"
   "."
   )

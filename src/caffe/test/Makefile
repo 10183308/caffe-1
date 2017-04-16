@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,14 +113,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/caffe/test/CMakeFiles/progress.marks
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/caffe/test/CMakeFiles/progress.marks
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/clean
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/clean
 .PHONY : clean
 
 # The main clean target
@@ -129,22 +129,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/caffe/test/CMakeFiles/runtest.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/CMakeFiles/runtest.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/CMakeFiles/runtest.dir/rule
 .PHONY : src/caffe/test/CMakeFiles/runtest.dir/rule
 
 # Convenience name for target.
@@ -153,12 +153,12 @@ runtest: src/caffe/test/CMakeFiles/runtest.dir/rule
 
 # fast build rule for target.
 runtest/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/runtest.dir/build.make src/caffe/test/CMakeFiles/runtest.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/runtest.dir/build.make src/caffe/test/CMakeFiles/runtest.dir/build
 .PHONY : runtest/fast
 
 # Convenience name for target.
 src/caffe/test/CMakeFiles/test.testbin.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/CMakeFiles/test.testbin.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/caffe/test/CMakeFiles/test.testbin.dir/rule
 .PHONY : src/caffe/test/CMakeFiles/test.testbin.dir/rule
 
 # Convenience name for target.
@@ -167,7 +167,7 @@ test.testbin: src/caffe/test/CMakeFiles/test.testbin.dir/rule
 
 # fast build rule for target.
 test.testbin/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/build
 .PHONY : test.testbin/fast
 
 test_DenseBlock_layer.o: test_DenseBlock_layer.cpp.o
@@ -175,7 +175,7 @@ test_DenseBlock_layer.o: test_DenseBlock_layer.cpp.o
 
 # target to build an object file
 test_DenseBlock_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.o
 .PHONY : test_DenseBlock_layer.cpp.o
 
 test_DenseBlock_layer.i: test_DenseBlock_layer.cpp.i
@@ -183,7 +183,7 @@ test_DenseBlock_layer.i: test_DenseBlock_layer.cpp.i
 
 # target to preprocess a source file
 test_DenseBlock_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.i
 .PHONY : test_DenseBlock_layer.cpp.i
 
 test_DenseBlock_layer.s: test_DenseBlock_layer.cpp.s
@@ -191,7 +191,7 @@ test_DenseBlock_layer.s: test_DenseBlock_layer.cpp.s
 
 # target to generate assembly for a file
 test_DenseBlock_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_DenseBlock_layer.cpp.s
 .PHONY : test_DenseBlock_layer.cpp.s
 
 test_accuracy_layer.o: test_accuracy_layer.cpp.o
@@ -199,7 +199,7 @@ test_accuracy_layer.o: test_accuracy_layer.cpp.o
 
 # target to build an object file
 test_accuracy_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.o
 .PHONY : test_accuracy_layer.cpp.o
 
 test_accuracy_layer.i: test_accuracy_layer.cpp.i
@@ -207,7 +207,7 @@ test_accuracy_layer.i: test_accuracy_layer.cpp.i
 
 # target to preprocess a source file
 test_accuracy_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.i
 .PHONY : test_accuracy_layer.cpp.i
 
 test_accuracy_layer.s: test_accuracy_layer.cpp.s
@@ -215,7 +215,7 @@ test_accuracy_layer.s: test_accuracy_layer.cpp.s
 
 # target to generate assembly for a file
 test_accuracy_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_accuracy_layer.cpp.s
 .PHONY : test_accuracy_layer.cpp.s
 
 test_argmax_layer.o: test_argmax_layer.cpp.o
@@ -223,7 +223,7 @@ test_argmax_layer.o: test_argmax_layer.cpp.o
 
 # target to build an object file
 test_argmax_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.o
 .PHONY : test_argmax_layer.cpp.o
 
 test_argmax_layer.i: test_argmax_layer.cpp.i
@@ -231,7 +231,7 @@ test_argmax_layer.i: test_argmax_layer.cpp.i
 
 # target to preprocess a source file
 test_argmax_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.i
 .PHONY : test_argmax_layer.cpp.i
 
 test_argmax_layer.s: test_argmax_layer.cpp.s
@@ -239,7 +239,7 @@ test_argmax_layer.s: test_argmax_layer.cpp.s
 
 # target to generate assembly for a file
 test_argmax_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_argmax_layer.cpp.s
 .PHONY : test_argmax_layer.cpp.s
 
 test_batch_norm_layer.o: test_batch_norm_layer.cpp.o
@@ -247,7 +247,7 @@ test_batch_norm_layer.o: test_batch_norm_layer.cpp.o
 
 # target to build an object file
 test_batch_norm_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.o
 .PHONY : test_batch_norm_layer.cpp.o
 
 test_batch_norm_layer.i: test_batch_norm_layer.cpp.i
@@ -255,7 +255,7 @@ test_batch_norm_layer.i: test_batch_norm_layer.cpp.i
 
 # target to preprocess a source file
 test_batch_norm_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.i
 .PHONY : test_batch_norm_layer.cpp.i
 
 test_batch_norm_layer.s: test_batch_norm_layer.cpp.s
@@ -263,7 +263,7 @@ test_batch_norm_layer.s: test_batch_norm_layer.cpp.s
 
 # target to generate assembly for a file
 test_batch_norm_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_norm_layer.cpp.s
 .PHONY : test_batch_norm_layer.cpp.s
 
 test_batch_reindex_layer.o: test_batch_reindex_layer.cpp.o
@@ -271,7 +271,7 @@ test_batch_reindex_layer.o: test_batch_reindex_layer.cpp.o
 
 # target to build an object file
 test_batch_reindex_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.o
 .PHONY : test_batch_reindex_layer.cpp.o
 
 test_batch_reindex_layer.i: test_batch_reindex_layer.cpp.i
@@ -279,7 +279,7 @@ test_batch_reindex_layer.i: test_batch_reindex_layer.cpp.i
 
 # target to preprocess a source file
 test_batch_reindex_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.i
 .PHONY : test_batch_reindex_layer.cpp.i
 
 test_batch_reindex_layer.s: test_batch_reindex_layer.cpp.s
@@ -287,7 +287,7 @@ test_batch_reindex_layer.s: test_batch_reindex_layer.cpp.s
 
 # target to generate assembly for a file
 test_batch_reindex_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_batch_reindex_layer.cpp.s
 .PHONY : test_batch_reindex_layer.cpp.s
 
 test_benchmark.o: test_benchmark.cpp.o
@@ -295,7 +295,7 @@ test_benchmark.o: test_benchmark.cpp.o
 
 # target to build an object file
 test_benchmark.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.o
 .PHONY : test_benchmark.cpp.o
 
 test_benchmark.i: test_benchmark.cpp.i
@@ -303,7 +303,7 @@ test_benchmark.i: test_benchmark.cpp.i
 
 # target to preprocess a source file
 test_benchmark.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.i
 .PHONY : test_benchmark.cpp.i
 
 test_benchmark.s: test_benchmark.cpp.s
@@ -311,7 +311,7 @@ test_benchmark.s: test_benchmark.cpp.s
 
 # target to generate assembly for a file
 test_benchmark.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_benchmark.cpp.s
 .PHONY : test_benchmark.cpp.s
 
 test_bias_layer.o: test_bias_layer.cpp.o
@@ -319,7 +319,7 @@ test_bias_layer.o: test_bias_layer.cpp.o
 
 # target to build an object file
 test_bias_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.o
 .PHONY : test_bias_layer.cpp.o
 
 test_bias_layer.i: test_bias_layer.cpp.i
@@ -327,7 +327,7 @@ test_bias_layer.i: test_bias_layer.cpp.i
 
 # target to preprocess a source file
 test_bias_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.i
 .PHONY : test_bias_layer.cpp.i
 
 test_bias_layer.s: test_bias_layer.cpp.s
@@ -335,7 +335,7 @@ test_bias_layer.s: test_bias_layer.cpp.s
 
 # target to generate assembly for a file
 test_bias_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_bias_layer.cpp.s
 .PHONY : test_bias_layer.cpp.s
 
 test_blob.o: test_blob.cpp.o
@@ -343,7 +343,7 @@ test_blob.o: test_blob.cpp.o
 
 # target to build an object file
 test_blob.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.o
 .PHONY : test_blob.cpp.o
 
 test_blob.i: test_blob.cpp.i
@@ -351,7 +351,7 @@ test_blob.i: test_blob.cpp.i
 
 # target to preprocess a source file
 test_blob.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.i
 .PHONY : test_blob.cpp.i
 
 test_blob.s: test_blob.cpp.s
@@ -359,7 +359,7 @@ test_blob.s: test_blob.cpp.s
 
 # target to generate assembly for a file
 test_blob.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_blob.cpp.s
 .PHONY : test_blob.cpp.s
 
 test_caffe_main.o: test_caffe_main.cpp.o
@@ -367,7 +367,7 @@ test_caffe_main.o: test_caffe_main.cpp.o
 
 # target to build an object file
 test_caffe_main.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.o
 .PHONY : test_caffe_main.cpp.o
 
 test_caffe_main.i: test_caffe_main.cpp.i
@@ -375,7 +375,7 @@ test_caffe_main.i: test_caffe_main.cpp.i
 
 # target to preprocess a source file
 test_caffe_main.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.i
 .PHONY : test_caffe_main.cpp.i
 
 test_caffe_main.s: test_caffe_main.cpp.s
@@ -383,7 +383,7 @@ test_caffe_main.s: test_caffe_main.cpp.s
 
 # target to generate assembly for a file
 test_caffe_main.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_caffe_main.cpp.s
 .PHONY : test_caffe_main.cpp.s
 
 test_common.o: test_common.cpp.o
@@ -391,7 +391,7 @@ test_common.o: test_common.cpp.o
 
 # target to build an object file
 test_common.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.o
 .PHONY : test_common.cpp.o
 
 test_common.i: test_common.cpp.i
@@ -399,7 +399,7 @@ test_common.i: test_common.cpp.i
 
 # target to preprocess a source file
 test_common.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.i
 .PHONY : test_common.cpp.i
 
 test_common.s: test_common.cpp.s
@@ -407,7 +407,7 @@ test_common.s: test_common.cpp.s
 
 # target to generate assembly for a file
 test_common.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_common.cpp.s
 .PHONY : test_common.cpp.s
 
 test_concat_layer.o: test_concat_layer.cpp.o
@@ -415,7 +415,7 @@ test_concat_layer.o: test_concat_layer.cpp.o
 
 # target to build an object file
 test_concat_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.o
 .PHONY : test_concat_layer.cpp.o
 
 test_concat_layer.i: test_concat_layer.cpp.i
@@ -423,7 +423,7 @@ test_concat_layer.i: test_concat_layer.cpp.i
 
 # target to preprocess a source file
 test_concat_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.i
 .PHONY : test_concat_layer.cpp.i
 
 test_concat_layer.s: test_concat_layer.cpp.s
@@ -431,7 +431,7 @@ test_concat_layer.s: test_concat_layer.cpp.s
 
 # target to generate assembly for a file
 test_concat_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_concat_layer.cpp.s
 .PHONY : test_concat_layer.cpp.s
 
 test_contrastive_loss_layer.o: test_contrastive_loss_layer.cpp.o
@@ -439,7 +439,7 @@ test_contrastive_loss_layer.o: test_contrastive_loss_layer.cpp.o
 
 # target to build an object file
 test_contrastive_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.o
 .PHONY : test_contrastive_loss_layer.cpp.o
 
 test_contrastive_loss_layer.i: test_contrastive_loss_layer.cpp.i
@@ -447,7 +447,7 @@ test_contrastive_loss_layer.i: test_contrastive_loss_layer.cpp.i
 
 # target to preprocess a source file
 test_contrastive_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.i
 .PHONY : test_contrastive_loss_layer.cpp.i
 
 test_contrastive_loss_layer.s: test_contrastive_loss_layer.cpp.s
@@ -455,7 +455,7 @@ test_contrastive_loss_layer.s: test_contrastive_loss_layer.cpp.s
 
 # target to generate assembly for a file
 test_contrastive_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_contrastive_loss_layer.cpp.s
 .PHONY : test_contrastive_loss_layer.cpp.s
 
 test_convolution_layer.o: test_convolution_layer.cpp.o
@@ -463,7 +463,7 @@ test_convolution_layer.o: test_convolution_layer.cpp.o
 
 # target to build an object file
 test_convolution_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.o
 .PHONY : test_convolution_layer.cpp.o
 
 test_convolution_layer.i: test_convolution_layer.cpp.i
@@ -471,7 +471,7 @@ test_convolution_layer.i: test_convolution_layer.cpp.i
 
 # target to preprocess a source file
 test_convolution_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.i
 .PHONY : test_convolution_layer.cpp.i
 
 test_convolution_layer.s: test_convolution_layer.cpp.s
@@ -479,7 +479,7 @@ test_convolution_layer.s: test_convolution_layer.cpp.s
 
 # target to generate assembly for a file
 test_convolution_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_convolution_layer.cpp.s
 .PHONY : test_convolution_layer.cpp.s
 
 test_crop_layer.o: test_crop_layer.cpp.o
@@ -487,7 +487,7 @@ test_crop_layer.o: test_crop_layer.cpp.o
 
 # target to build an object file
 test_crop_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.o
 .PHONY : test_crop_layer.cpp.o
 
 test_crop_layer.i: test_crop_layer.cpp.i
@@ -495,7 +495,7 @@ test_crop_layer.i: test_crop_layer.cpp.i
 
 # target to preprocess a source file
 test_crop_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.i
 .PHONY : test_crop_layer.cpp.i
 
 test_crop_layer.s: test_crop_layer.cpp.s
@@ -503,7 +503,7 @@ test_crop_layer.s: test_crop_layer.cpp.s
 
 # target to generate assembly for a file
 test_crop_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_crop_layer.cpp.s
 .PHONY : test_crop_layer.cpp.s
 
 test_data_layer.o: test_data_layer.cpp.o
@@ -511,7 +511,7 @@ test_data_layer.o: test_data_layer.cpp.o
 
 # target to build an object file
 test_data_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.o
 .PHONY : test_data_layer.cpp.o
 
 test_data_layer.i: test_data_layer.cpp.i
@@ -519,7 +519,7 @@ test_data_layer.i: test_data_layer.cpp.i
 
 # target to preprocess a source file
 test_data_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.i
 .PHONY : test_data_layer.cpp.i
 
 test_data_layer.s: test_data_layer.cpp.s
@@ -527,7 +527,7 @@ test_data_layer.s: test_data_layer.cpp.s
 
 # target to generate assembly for a file
 test_data_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_layer.cpp.s
 .PHONY : test_data_layer.cpp.s
 
 test_data_transformer.o: test_data_transformer.cpp.o
@@ -535,7 +535,7 @@ test_data_transformer.o: test_data_transformer.cpp.o
 
 # target to build an object file
 test_data_transformer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.o
 .PHONY : test_data_transformer.cpp.o
 
 test_data_transformer.i: test_data_transformer.cpp.i
@@ -543,7 +543,7 @@ test_data_transformer.i: test_data_transformer.cpp.i
 
 # target to preprocess a source file
 test_data_transformer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.i
 .PHONY : test_data_transformer.cpp.i
 
 test_data_transformer.s: test_data_transformer.cpp.s
@@ -551,7 +551,7 @@ test_data_transformer.s: test_data_transformer.cpp.s
 
 # target to generate assembly for a file
 test_data_transformer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_data_transformer.cpp.s
 .PHONY : test_data_transformer.cpp.s
 
 test_db.o: test_db.cpp.o
@@ -559,7 +559,7 @@ test_db.o: test_db.cpp.o
 
 # target to build an object file
 test_db.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.o
 .PHONY : test_db.cpp.o
 
 test_db.i: test_db.cpp.i
@@ -567,7 +567,7 @@ test_db.i: test_db.cpp.i
 
 # target to preprocess a source file
 test_db.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.i
 .PHONY : test_db.cpp.i
 
 test_db.s: test_db.cpp.s
@@ -575,7 +575,7 @@ test_db.s: test_db.cpp.s
 
 # target to generate assembly for a file
 test_db.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_db.cpp.s
 .PHONY : test_db.cpp.s
 
 test_deconvolution_layer.o: test_deconvolution_layer.cpp.o
@@ -583,7 +583,7 @@ test_deconvolution_layer.o: test_deconvolution_layer.cpp.o
 
 # target to build an object file
 test_deconvolution_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.o
 .PHONY : test_deconvolution_layer.cpp.o
 
 test_deconvolution_layer.i: test_deconvolution_layer.cpp.i
@@ -591,7 +591,7 @@ test_deconvolution_layer.i: test_deconvolution_layer.cpp.i
 
 # target to preprocess a source file
 test_deconvolution_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.i
 .PHONY : test_deconvolution_layer.cpp.i
 
 test_deconvolution_layer.s: test_deconvolution_layer.cpp.s
@@ -599,7 +599,7 @@ test_deconvolution_layer.s: test_deconvolution_layer.cpp.s
 
 # target to generate assembly for a file
 test_deconvolution_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_deconvolution_layer.cpp.s
 .PHONY : test_deconvolution_layer.cpp.s
 
 test_dummy_data_layer.o: test_dummy_data_layer.cpp.o
@@ -607,7 +607,7 @@ test_dummy_data_layer.o: test_dummy_data_layer.cpp.o
 
 # target to build an object file
 test_dummy_data_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.o
 .PHONY : test_dummy_data_layer.cpp.o
 
 test_dummy_data_layer.i: test_dummy_data_layer.cpp.i
@@ -615,7 +615,7 @@ test_dummy_data_layer.i: test_dummy_data_layer.cpp.i
 
 # target to preprocess a source file
 test_dummy_data_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.i
 .PHONY : test_dummy_data_layer.cpp.i
 
 test_dummy_data_layer.s: test_dummy_data_layer.cpp.s
@@ -623,7 +623,7 @@ test_dummy_data_layer.s: test_dummy_data_layer.cpp.s
 
 # target to generate assembly for a file
 test_dummy_data_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_dummy_data_layer.cpp.s
 .PHONY : test_dummy_data_layer.cpp.s
 
 test_eltwise_layer.o: test_eltwise_layer.cpp.o
@@ -631,7 +631,7 @@ test_eltwise_layer.o: test_eltwise_layer.cpp.o
 
 # target to build an object file
 test_eltwise_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.o
 .PHONY : test_eltwise_layer.cpp.o
 
 test_eltwise_layer.i: test_eltwise_layer.cpp.i
@@ -639,7 +639,7 @@ test_eltwise_layer.i: test_eltwise_layer.cpp.i
 
 # target to preprocess a source file
 test_eltwise_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.i
 .PHONY : test_eltwise_layer.cpp.i
 
 test_eltwise_layer.s: test_eltwise_layer.cpp.s
@@ -647,7 +647,7 @@ test_eltwise_layer.s: test_eltwise_layer.cpp.s
 
 # target to generate assembly for a file
 test_eltwise_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_eltwise_layer.cpp.s
 .PHONY : test_eltwise_layer.cpp.s
 
 test_embed_layer.o: test_embed_layer.cpp.o
@@ -655,7 +655,7 @@ test_embed_layer.o: test_embed_layer.cpp.o
 
 # target to build an object file
 test_embed_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.o
 .PHONY : test_embed_layer.cpp.o
 
 test_embed_layer.i: test_embed_layer.cpp.i
@@ -663,7 +663,7 @@ test_embed_layer.i: test_embed_layer.cpp.i
 
 # target to preprocess a source file
 test_embed_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.i
 .PHONY : test_embed_layer.cpp.i
 
 test_embed_layer.s: test_embed_layer.cpp.s
@@ -671,7 +671,7 @@ test_embed_layer.s: test_embed_layer.cpp.s
 
 # target to generate assembly for a file
 test_embed_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_embed_layer.cpp.s
 .PHONY : test_embed_layer.cpp.s
 
 test_euclidean_loss_layer.o: test_euclidean_loss_layer.cpp.o
@@ -679,7 +679,7 @@ test_euclidean_loss_layer.o: test_euclidean_loss_layer.cpp.o
 
 # target to build an object file
 test_euclidean_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.o
 .PHONY : test_euclidean_loss_layer.cpp.o
 
 test_euclidean_loss_layer.i: test_euclidean_loss_layer.cpp.i
@@ -687,7 +687,7 @@ test_euclidean_loss_layer.i: test_euclidean_loss_layer.cpp.i
 
 # target to preprocess a source file
 test_euclidean_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.i
 .PHONY : test_euclidean_loss_layer.cpp.i
 
 test_euclidean_loss_layer.s: test_euclidean_loss_layer.cpp.s
@@ -695,7 +695,7 @@ test_euclidean_loss_layer.s: test_euclidean_loss_layer.cpp.s
 
 # target to generate assembly for a file
 test_euclidean_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_euclidean_loss_layer.cpp.s
 .PHONY : test_euclidean_loss_layer.cpp.s
 
 test_filler.o: test_filler.cpp.o
@@ -703,7 +703,7 @@ test_filler.o: test_filler.cpp.o
 
 # target to build an object file
 test_filler.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.o
 .PHONY : test_filler.cpp.o
 
 test_filler.i: test_filler.cpp.i
@@ -711,7 +711,7 @@ test_filler.i: test_filler.cpp.i
 
 # target to preprocess a source file
 test_filler.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.i
 .PHONY : test_filler.cpp.i
 
 test_filler.s: test_filler.cpp.s
@@ -719,7 +719,7 @@ test_filler.s: test_filler.cpp.s
 
 # target to generate assembly for a file
 test_filler.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filler.cpp.s
 .PHONY : test_filler.cpp.s
 
 test_filter_layer.o: test_filter_layer.cpp.o
@@ -727,7 +727,7 @@ test_filter_layer.o: test_filter_layer.cpp.o
 
 # target to build an object file
 test_filter_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.o
 .PHONY : test_filter_layer.cpp.o
 
 test_filter_layer.i: test_filter_layer.cpp.i
@@ -735,7 +735,7 @@ test_filter_layer.i: test_filter_layer.cpp.i
 
 # target to preprocess a source file
 test_filter_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.i
 .PHONY : test_filter_layer.cpp.i
 
 test_filter_layer.s: test_filter_layer.cpp.s
@@ -743,7 +743,7 @@ test_filter_layer.s: test_filter_layer.cpp.s
 
 # target to generate assembly for a file
 test_filter_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_filter_layer.cpp.s
 .PHONY : test_filter_layer.cpp.s
 
 test_flatten_layer.o: test_flatten_layer.cpp.o
@@ -751,7 +751,7 @@ test_flatten_layer.o: test_flatten_layer.cpp.o
 
 # target to build an object file
 test_flatten_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.o
 .PHONY : test_flatten_layer.cpp.o
 
 test_flatten_layer.i: test_flatten_layer.cpp.i
@@ -759,7 +759,7 @@ test_flatten_layer.i: test_flatten_layer.cpp.i
 
 # target to preprocess a source file
 test_flatten_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.i
 .PHONY : test_flatten_layer.cpp.i
 
 test_flatten_layer.s: test_flatten_layer.cpp.s
@@ -767,7 +767,7 @@ test_flatten_layer.s: test_flatten_layer.cpp.s
 
 # target to generate assembly for a file
 test_flatten_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_flatten_layer.cpp.s
 .PHONY : test_flatten_layer.cpp.s
 
 test_gradient_based_solver.o: test_gradient_based_solver.cpp.o
@@ -775,7 +775,7 @@ test_gradient_based_solver.o: test_gradient_based_solver.cpp.o
 
 # target to build an object file
 test_gradient_based_solver.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.o
 .PHONY : test_gradient_based_solver.cpp.o
 
 test_gradient_based_solver.i: test_gradient_based_solver.cpp.i
@@ -783,7 +783,7 @@ test_gradient_based_solver.i: test_gradient_based_solver.cpp.i
 
 # target to preprocess a source file
 test_gradient_based_solver.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.i
 .PHONY : test_gradient_based_solver.cpp.i
 
 test_gradient_based_solver.s: test_gradient_based_solver.cpp.s
@@ -791,7 +791,7 @@ test_gradient_based_solver.s: test_gradient_based_solver.cpp.s
 
 # target to generate assembly for a file
 test_gradient_based_solver.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_gradient_based_solver.cpp.s
 .PHONY : test_gradient_based_solver.cpp.s
 
 test_hdf5_output_layer.o: test_hdf5_output_layer.cpp.o
@@ -799,7 +799,7 @@ test_hdf5_output_layer.o: test_hdf5_output_layer.cpp.o
 
 # target to build an object file
 test_hdf5_output_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.o
 .PHONY : test_hdf5_output_layer.cpp.o
 
 test_hdf5_output_layer.i: test_hdf5_output_layer.cpp.i
@@ -807,7 +807,7 @@ test_hdf5_output_layer.i: test_hdf5_output_layer.cpp.i
 
 # target to preprocess a source file
 test_hdf5_output_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.i
 .PHONY : test_hdf5_output_layer.cpp.i
 
 test_hdf5_output_layer.s: test_hdf5_output_layer.cpp.s
@@ -815,7 +815,7 @@ test_hdf5_output_layer.s: test_hdf5_output_layer.cpp.s
 
 # target to generate assembly for a file
 test_hdf5_output_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5_output_layer.cpp.s
 .PHONY : test_hdf5_output_layer.cpp.s
 
 test_hdf5data_layer.o: test_hdf5data_layer.cpp.o
@@ -823,7 +823,7 @@ test_hdf5data_layer.o: test_hdf5data_layer.cpp.o
 
 # target to build an object file
 test_hdf5data_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.o
 .PHONY : test_hdf5data_layer.cpp.o
 
 test_hdf5data_layer.i: test_hdf5data_layer.cpp.i
@@ -831,7 +831,7 @@ test_hdf5data_layer.i: test_hdf5data_layer.cpp.i
 
 # target to preprocess a source file
 test_hdf5data_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.i
 .PHONY : test_hdf5data_layer.cpp.i
 
 test_hdf5data_layer.s: test_hdf5data_layer.cpp.s
@@ -839,7 +839,7 @@ test_hdf5data_layer.s: test_hdf5data_layer.cpp.s
 
 # target to generate assembly for a file
 test_hdf5data_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hdf5data_layer.cpp.s
 .PHONY : test_hdf5data_layer.cpp.s
 
 test_hinge_loss_layer.o: test_hinge_loss_layer.cpp.o
@@ -847,7 +847,7 @@ test_hinge_loss_layer.o: test_hinge_loss_layer.cpp.o
 
 # target to build an object file
 test_hinge_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.o
 .PHONY : test_hinge_loss_layer.cpp.o
 
 test_hinge_loss_layer.i: test_hinge_loss_layer.cpp.i
@@ -855,7 +855,7 @@ test_hinge_loss_layer.i: test_hinge_loss_layer.cpp.i
 
 # target to preprocess a source file
 test_hinge_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.i
 .PHONY : test_hinge_loss_layer.cpp.i
 
 test_hinge_loss_layer.s: test_hinge_loss_layer.cpp.s
@@ -863,7 +863,7 @@ test_hinge_loss_layer.s: test_hinge_loss_layer.cpp.s
 
 # target to generate assembly for a file
 test_hinge_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_hinge_loss_layer.cpp.s
 .PHONY : test_hinge_loss_layer.cpp.s
 
 test_im2col_layer.o: test_im2col_layer.cpp.o
@@ -871,7 +871,7 @@ test_im2col_layer.o: test_im2col_layer.cpp.o
 
 # target to build an object file
 test_im2col_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.o
 .PHONY : test_im2col_layer.cpp.o
 
 test_im2col_layer.i: test_im2col_layer.cpp.i
@@ -879,7 +879,7 @@ test_im2col_layer.i: test_im2col_layer.cpp.i
 
 # target to preprocess a source file
 test_im2col_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.i
 .PHONY : test_im2col_layer.cpp.i
 
 test_im2col_layer.s: test_im2col_layer.cpp.s
@@ -887,7 +887,7 @@ test_im2col_layer.s: test_im2col_layer.cpp.s
 
 # target to generate assembly for a file
 test_im2col_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_im2col_layer.cpp.s
 .PHONY : test_im2col_layer.cpp.s
 
 test_image_data_layer.o: test_image_data_layer.cpp.o
@@ -895,7 +895,7 @@ test_image_data_layer.o: test_image_data_layer.cpp.o
 
 # target to build an object file
 test_image_data_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.o
 .PHONY : test_image_data_layer.cpp.o
 
 test_image_data_layer.i: test_image_data_layer.cpp.i
@@ -903,7 +903,7 @@ test_image_data_layer.i: test_image_data_layer.cpp.i
 
 # target to preprocess a source file
 test_image_data_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.i
 .PHONY : test_image_data_layer.cpp.i
 
 test_image_data_layer.s: test_image_data_layer.cpp.s
@@ -911,7 +911,7 @@ test_image_data_layer.s: test_image_data_layer.cpp.s
 
 # target to generate assembly for a file
 test_image_data_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_image_data_layer.cpp.s
 .PHONY : test_image_data_layer.cpp.s
 
 test_infogain_loss_layer.o: test_infogain_loss_layer.cpp.o
@@ -919,7 +919,7 @@ test_infogain_loss_layer.o: test_infogain_loss_layer.cpp.o
 
 # target to build an object file
 test_infogain_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.o
 .PHONY : test_infogain_loss_layer.cpp.o
 
 test_infogain_loss_layer.i: test_infogain_loss_layer.cpp.i
@@ -927,7 +927,7 @@ test_infogain_loss_layer.i: test_infogain_loss_layer.cpp.i
 
 # target to preprocess a source file
 test_infogain_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.i
 .PHONY : test_infogain_loss_layer.cpp.i
 
 test_infogain_loss_layer.s: test_infogain_loss_layer.cpp.s
@@ -935,7 +935,7 @@ test_infogain_loss_layer.s: test_infogain_loss_layer.cpp.s
 
 # target to generate assembly for a file
 test_infogain_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_infogain_loss_layer.cpp.s
 .PHONY : test_infogain_loss_layer.cpp.s
 
 test_inner_product_layer.o: test_inner_product_layer.cpp.o
@@ -943,7 +943,7 @@ test_inner_product_layer.o: test_inner_product_layer.cpp.o
 
 # target to build an object file
 test_inner_product_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.o
 .PHONY : test_inner_product_layer.cpp.o
 
 test_inner_product_layer.i: test_inner_product_layer.cpp.i
@@ -951,7 +951,7 @@ test_inner_product_layer.i: test_inner_product_layer.cpp.i
 
 # target to preprocess a source file
 test_inner_product_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.i
 .PHONY : test_inner_product_layer.cpp.i
 
 test_inner_product_layer.s: test_inner_product_layer.cpp.s
@@ -959,7 +959,7 @@ test_inner_product_layer.s: test_inner_product_layer.cpp.s
 
 # target to generate assembly for a file
 test_inner_product_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_inner_product_layer.cpp.s
 .PHONY : test_inner_product_layer.cpp.s
 
 test_internal_thread.o: test_internal_thread.cpp.o
@@ -967,7 +967,7 @@ test_internal_thread.o: test_internal_thread.cpp.o
 
 # target to build an object file
 test_internal_thread.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.o
 .PHONY : test_internal_thread.cpp.o
 
 test_internal_thread.i: test_internal_thread.cpp.i
@@ -975,7 +975,7 @@ test_internal_thread.i: test_internal_thread.cpp.i
 
 # target to preprocess a source file
 test_internal_thread.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.i
 .PHONY : test_internal_thread.cpp.i
 
 test_internal_thread.s: test_internal_thread.cpp.s
@@ -983,7 +983,7 @@ test_internal_thread.s: test_internal_thread.cpp.s
 
 # target to generate assembly for a file
 test_internal_thread.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_internal_thread.cpp.s
 .PHONY : test_internal_thread.cpp.s
 
 test_io.o: test_io.cpp.o
@@ -991,7 +991,7 @@ test_io.o: test_io.cpp.o
 
 # target to build an object file
 test_io.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.o
 .PHONY : test_io.cpp.o
 
 test_io.i: test_io.cpp.i
@@ -999,7 +999,7 @@ test_io.i: test_io.cpp.i
 
 # target to preprocess a source file
 test_io.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.i
 .PHONY : test_io.cpp.i
 
 test_io.s: test_io.cpp.s
@@ -1007,7 +1007,7 @@ test_io.s: test_io.cpp.s
 
 # target to generate assembly for a file
 test_io.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_io.cpp.s
 .PHONY : test_io.cpp.s
 
 test_layer_factory.o: test_layer_factory.cpp.o
@@ -1015,7 +1015,7 @@ test_layer_factory.o: test_layer_factory.cpp.o
 
 # target to build an object file
 test_layer_factory.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.o
 .PHONY : test_layer_factory.cpp.o
 
 test_layer_factory.i: test_layer_factory.cpp.i
@@ -1023,7 +1023,7 @@ test_layer_factory.i: test_layer_factory.cpp.i
 
 # target to preprocess a source file
 test_layer_factory.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.i
 .PHONY : test_layer_factory.cpp.i
 
 test_layer_factory.s: test_layer_factory.cpp.s
@@ -1031,7 +1031,7 @@ test_layer_factory.s: test_layer_factory.cpp.s
 
 # target to generate assembly for a file
 test_layer_factory.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_layer_factory.cpp.s
 .PHONY : test_layer_factory.cpp.s
 
 test_lrn_layer.o: test_lrn_layer.cpp.o
@@ -1039,7 +1039,7 @@ test_lrn_layer.o: test_lrn_layer.cpp.o
 
 # target to build an object file
 test_lrn_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.o
 .PHONY : test_lrn_layer.cpp.o
 
 test_lrn_layer.i: test_lrn_layer.cpp.i
@@ -1047,7 +1047,7 @@ test_lrn_layer.i: test_lrn_layer.cpp.i
 
 # target to preprocess a source file
 test_lrn_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.i
 .PHONY : test_lrn_layer.cpp.i
 
 test_lrn_layer.s: test_lrn_layer.cpp.s
@@ -1055,7 +1055,7 @@ test_lrn_layer.s: test_lrn_layer.cpp.s
 
 # target to generate assembly for a file
 test_lrn_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lrn_layer.cpp.s
 .PHONY : test_lrn_layer.cpp.s
 
 test_lstm_layer.o: test_lstm_layer.cpp.o
@@ -1063,7 +1063,7 @@ test_lstm_layer.o: test_lstm_layer.cpp.o
 
 # target to build an object file
 test_lstm_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.o
 .PHONY : test_lstm_layer.cpp.o
 
 test_lstm_layer.i: test_lstm_layer.cpp.i
@@ -1071,7 +1071,7 @@ test_lstm_layer.i: test_lstm_layer.cpp.i
 
 # target to preprocess a source file
 test_lstm_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.i
 .PHONY : test_lstm_layer.cpp.i
 
 test_lstm_layer.s: test_lstm_layer.cpp.s
@@ -1079,7 +1079,7 @@ test_lstm_layer.s: test_lstm_layer.cpp.s
 
 # target to generate assembly for a file
 test_lstm_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_lstm_layer.cpp.s
 .PHONY : test_lstm_layer.cpp.s
 
 test_math_functions.o: test_math_functions.cpp.o
@@ -1087,7 +1087,7 @@ test_math_functions.o: test_math_functions.cpp.o
 
 # target to build an object file
 test_math_functions.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.o
 .PHONY : test_math_functions.cpp.o
 
 test_math_functions.i: test_math_functions.cpp.i
@@ -1095,7 +1095,7 @@ test_math_functions.i: test_math_functions.cpp.i
 
 # target to preprocess a source file
 test_math_functions.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.i
 .PHONY : test_math_functions.cpp.i
 
 test_math_functions.s: test_math_functions.cpp.s
@@ -1103,7 +1103,7 @@ test_math_functions.s: test_math_functions.cpp.s
 
 # target to generate assembly for a file
 test_math_functions.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_math_functions.cpp.s
 .PHONY : test_math_functions.cpp.s
 
 test_maxpool_dropout_layers.o: test_maxpool_dropout_layers.cpp.o
@@ -1111,7 +1111,7 @@ test_maxpool_dropout_layers.o: test_maxpool_dropout_layers.cpp.o
 
 # target to build an object file
 test_maxpool_dropout_layers.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.o
 .PHONY : test_maxpool_dropout_layers.cpp.o
 
 test_maxpool_dropout_layers.i: test_maxpool_dropout_layers.cpp.i
@@ -1119,7 +1119,7 @@ test_maxpool_dropout_layers.i: test_maxpool_dropout_layers.cpp.i
 
 # target to preprocess a source file
 test_maxpool_dropout_layers.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.i
 .PHONY : test_maxpool_dropout_layers.cpp.i
 
 test_maxpool_dropout_layers.s: test_maxpool_dropout_layers.cpp.s
@@ -1127,7 +1127,7 @@ test_maxpool_dropout_layers.s: test_maxpool_dropout_layers.cpp.s
 
 # target to generate assembly for a file
 test_maxpool_dropout_layers.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_maxpool_dropout_layers.cpp.s
 .PHONY : test_maxpool_dropout_layers.cpp.s
 
 test_memory_data_layer.o: test_memory_data_layer.cpp.o
@@ -1135,7 +1135,7 @@ test_memory_data_layer.o: test_memory_data_layer.cpp.o
 
 # target to build an object file
 test_memory_data_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.o
 .PHONY : test_memory_data_layer.cpp.o
 
 test_memory_data_layer.i: test_memory_data_layer.cpp.i
@@ -1143,7 +1143,7 @@ test_memory_data_layer.i: test_memory_data_layer.cpp.i
 
 # target to preprocess a source file
 test_memory_data_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.i
 .PHONY : test_memory_data_layer.cpp.i
 
 test_memory_data_layer.s: test_memory_data_layer.cpp.s
@@ -1151,7 +1151,7 @@ test_memory_data_layer.s: test_memory_data_layer.cpp.s
 
 # target to generate assembly for a file
 test_memory_data_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_memory_data_layer.cpp.s
 .PHONY : test_memory_data_layer.cpp.s
 
 test_multinomial_logistic_loss_layer.o: test_multinomial_logistic_loss_layer.cpp.o
@@ -1159,7 +1159,7 @@ test_multinomial_logistic_loss_layer.o: test_multinomial_logistic_loss_layer.cpp
 
 # target to build an object file
 test_multinomial_logistic_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.o
 .PHONY : test_multinomial_logistic_loss_layer.cpp.o
 
 test_multinomial_logistic_loss_layer.i: test_multinomial_logistic_loss_layer.cpp.i
@@ -1167,7 +1167,7 @@ test_multinomial_logistic_loss_layer.i: test_multinomial_logistic_loss_layer.cpp
 
 # target to preprocess a source file
 test_multinomial_logistic_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.i
 .PHONY : test_multinomial_logistic_loss_layer.cpp.i
 
 test_multinomial_logistic_loss_layer.s: test_multinomial_logistic_loss_layer.cpp.s
@@ -1175,7 +1175,7 @@ test_multinomial_logistic_loss_layer.s: test_multinomial_logistic_loss_layer.cpp
 
 # target to generate assembly for a file
 test_multinomial_logistic_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_multinomial_logistic_loss_layer.cpp.s
 .PHONY : test_multinomial_logistic_loss_layer.cpp.s
 
 test_mvn_layer.o: test_mvn_layer.cpp.o
@@ -1183,7 +1183,7 @@ test_mvn_layer.o: test_mvn_layer.cpp.o
 
 # target to build an object file
 test_mvn_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.o
 .PHONY : test_mvn_layer.cpp.o
 
 test_mvn_layer.i: test_mvn_layer.cpp.i
@@ -1191,7 +1191,7 @@ test_mvn_layer.i: test_mvn_layer.cpp.i
 
 # target to preprocess a source file
 test_mvn_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.i
 .PHONY : test_mvn_layer.cpp.i
 
 test_mvn_layer.s: test_mvn_layer.cpp.s
@@ -1199,7 +1199,7 @@ test_mvn_layer.s: test_mvn_layer.cpp.s
 
 # target to generate assembly for a file
 test_mvn_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_mvn_layer.cpp.s
 .PHONY : test_mvn_layer.cpp.s
 
 test_net.o: test_net.cpp.o
@@ -1207,7 +1207,7 @@ test_net.o: test_net.cpp.o
 
 # target to build an object file
 test_net.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.o
 .PHONY : test_net.cpp.o
 
 test_net.i: test_net.cpp.i
@@ -1215,7 +1215,7 @@ test_net.i: test_net.cpp.i
 
 # target to preprocess a source file
 test_net.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.i
 .PHONY : test_net.cpp.i
 
 test_net.s: test_net.cpp.s
@@ -1223,7 +1223,7 @@ test_net.s: test_net.cpp.s
 
 # target to generate assembly for a file
 test_net.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_net.cpp.s
 .PHONY : test_net.cpp.s
 
 test_neuron_layer.o: test_neuron_layer.cpp.o
@@ -1231,7 +1231,7 @@ test_neuron_layer.o: test_neuron_layer.cpp.o
 
 # target to build an object file
 test_neuron_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.o
 .PHONY : test_neuron_layer.cpp.o
 
 test_neuron_layer.i: test_neuron_layer.cpp.i
@@ -1239,7 +1239,7 @@ test_neuron_layer.i: test_neuron_layer.cpp.i
 
 # target to preprocess a source file
 test_neuron_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.i
 .PHONY : test_neuron_layer.cpp.i
 
 test_neuron_layer.s: test_neuron_layer.cpp.s
@@ -1247,7 +1247,7 @@ test_neuron_layer.s: test_neuron_layer.cpp.s
 
 # target to generate assembly for a file
 test_neuron_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_neuron_layer.cpp.s
 .PHONY : test_neuron_layer.cpp.s
 
 test_platform.o: test_platform.cpp.o
@@ -1255,7 +1255,7 @@ test_platform.o: test_platform.cpp.o
 
 # target to build an object file
 test_platform.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.o
 .PHONY : test_platform.cpp.o
 
 test_platform.i: test_platform.cpp.i
@@ -1263,7 +1263,7 @@ test_platform.i: test_platform.cpp.i
 
 # target to preprocess a source file
 test_platform.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.i
 .PHONY : test_platform.cpp.i
 
 test_platform.s: test_platform.cpp.s
@@ -1271,7 +1271,7 @@ test_platform.s: test_platform.cpp.s
 
 # target to generate assembly for a file
 test_platform.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_platform.cpp.s
 .PHONY : test_platform.cpp.s
 
 test_pooling_layer.o: test_pooling_layer.cpp.o
@@ -1279,7 +1279,7 @@ test_pooling_layer.o: test_pooling_layer.cpp.o
 
 # target to build an object file
 test_pooling_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.o
 .PHONY : test_pooling_layer.cpp.o
 
 test_pooling_layer.i: test_pooling_layer.cpp.i
@@ -1287,7 +1287,7 @@ test_pooling_layer.i: test_pooling_layer.cpp.i
 
 # target to preprocess a source file
 test_pooling_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.i
 .PHONY : test_pooling_layer.cpp.i
 
 test_pooling_layer.s: test_pooling_layer.cpp.s
@@ -1295,7 +1295,7 @@ test_pooling_layer.s: test_pooling_layer.cpp.s
 
 # target to generate assembly for a file
 test_pooling_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_pooling_layer.cpp.s
 .PHONY : test_pooling_layer.cpp.s
 
 test_power_layer.o: test_power_layer.cpp.o
@@ -1303,7 +1303,7 @@ test_power_layer.o: test_power_layer.cpp.o
 
 # target to build an object file
 test_power_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.o
 .PHONY : test_power_layer.cpp.o
 
 test_power_layer.i: test_power_layer.cpp.i
@@ -1311,7 +1311,7 @@ test_power_layer.i: test_power_layer.cpp.i
 
 # target to preprocess a source file
 test_power_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.i
 .PHONY : test_power_layer.cpp.i
 
 test_power_layer.s: test_power_layer.cpp.s
@@ -1319,7 +1319,7 @@ test_power_layer.s: test_power_layer.cpp.s
 
 # target to generate assembly for a file
 test_power_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_power_layer.cpp.s
 .PHONY : test_power_layer.cpp.s
 
 test_protobuf.o: test_protobuf.cpp.o
@@ -1327,7 +1327,7 @@ test_protobuf.o: test_protobuf.cpp.o
 
 # target to build an object file
 test_protobuf.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.o
 .PHONY : test_protobuf.cpp.o
 
 test_protobuf.i: test_protobuf.cpp.i
@@ -1335,7 +1335,7 @@ test_protobuf.i: test_protobuf.cpp.i
 
 # target to preprocess a source file
 test_protobuf.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.i
 .PHONY : test_protobuf.cpp.i
 
 test_protobuf.s: test_protobuf.cpp.s
@@ -1343,7 +1343,7 @@ test_protobuf.s: test_protobuf.cpp.s
 
 # target to generate assembly for a file
 test_protobuf.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_protobuf.cpp.s
 .PHONY : test_protobuf.cpp.s
 
 test_random_number_generator.o: test_random_number_generator.cpp.o
@@ -1351,7 +1351,7 @@ test_random_number_generator.o: test_random_number_generator.cpp.o
 
 # target to build an object file
 test_random_number_generator.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.o
 .PHONY : test_random_number_generator.cpp.o
 
 test_random_number_generator.i: test_random_number_generator.cpp.i
@@ -1359,7 +1359,7 @@ test_random_number_generator.i: test_random_number_generator.cpp.i
 
 # target to preprocess a source file
 test_random_number_generator.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.i
 .PHONY : test_random_number_generator.cpp.i
 
 test_random_number_generator.s: test_random_number_generator.cpp.s
@@ -1367,7 +1367,7 @@ test_random_number_generator.s: test_random_number_generator.cpp.s
 
 # target to generate assembly for a file
 test_random_number_generator.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_random_number_generator.cpp.s
 .PHONY : test_random_number_generator.cpp.s
 
 test_reduction_layer.o: test_reduction_layer.cpp.o
@@ -1375,7 +1375,7 @@ test_reduction_layer.o: test_reduction_layer.cpp.o
 
 # target to build an object file
 test_reduction_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.o
 .PHONY : test_reduction_layer.cpp.o
 
 test_reduction_layer.i: test_reduction_layer.cpp.i
@@ -1383,7 +1383,7 @@ test_reduction_layer.i: test_reduction_layer.cpp.i
 
 # target to preprocess a source file
 test_reduction_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.i
 .PHONY : test_reduction_layer.cpp.i
 
 test_reduction_layer.s: test_reduction_layer.cpp.s
@@ -1391,7 +1391,7 @@ test_reduction_layer.s: test_reduction_layer.cpp.s
 
 # target to generate assembly for a file
 test_reduction_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reduction_layer.cpp.s
 .PHONY : test_reduction_layer.cpp.s
 
 test_reshape_layer.o: test_reshape_layer.cpp.o
@@ -1399,7 +1399,7 @@ test_reshape_layer.o: test_reshape_layer.cpp.o
 
 # target to build an object file
 test_reshape_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.o
 .PHONY : test_reshape_layer.cpp.o
 
 test_reshape_layer.i: test_reshape_layer.cpp.i
@@ -1407,7 +1407,7 @@ test_reshape_layer.i: test_reshape_layer.cpp.i
 
 # target to preprocess a source file
 test_reshape_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.i
 .PHONY : test_reshape_layer.cpp.i
 
 test_reshape_layer.s: test_reshape_layer.cpp.s
@@ -1415,7 +1415,7 @@ test_reshape_layer.s: test_reshape_layer.cpp.s
 
 # target to generate assembly for a file
 test_reshape_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_reshape_layer.cpp.s
 .PHONY : test_reshape_layer.cpp.s
 
 test_rnn_layer.o: test_rnn_layer.cpp.o
@@ -1423,7 +1423,7 @@ test_rnn_layer.o: test_rnn_layer.cpp.o
 
 # target to build an object file
 test_rnn_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.o
 .PHONY : test_rnn_layer.cpp.o
 
 test_rnn_layer.i: test_rnn_layer.cpp.i
@@ -1431,7 +1431,7 @@ test_rnn_layer.i: test_rnn_layer.cpp.i
 
 # target to preprocess a source file
 test_rnn_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.i
 .PHONY : test_rnn_layer.cpp.i
 
 test_rnn_layer.s: test_rnn_layer.cpp.s
@@ -1439,7 +1439,7 @@ test_rnn_layer.s: test_rnn_layer.cpp.s
 
 # target to generate assembly for a file
 test_rnn_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_rnn_layer.cpp.s
 .PHONY : test_rnn_layer.cpp.s
 
 test_scale_layer.o: test_scale_layer.cpp.o
@@ -1447,7 +1447,7 @@ test_scale_layer.o: test_scale_layer.cpp.o
 
 # target to build an object file
 test_scale_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.o
 .PHONY : test_scale_layer.cpp.o
 
 test_scale_layer.i: test_scale_layer.cpp.i
@@ -1455,7 +1455,7 @@ test_scale_layer.i: test_scale_layer.cpp.i
 
 # target to preprocess a source file
 test_scale_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.i
 .PHONY : test_scale_layer.cpp.i
 
 test_scale_layer.s: test_scale_layer.cpp.s
@@ -1463,7 +1463,7 @@ test_scale_layer.s: test_scale_layer.cpp.s
 
 # target to generate assembly for a file
 test_scale_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_scale_layer.cpp.s
 .PHONY : test_scale_layer.cpp.s
 
 test_sigmoid_cross_entropy_loss_layer.o: test_sigmoid_cross_entropy_loss_layer.cpp.o
@@ -1471,7 +1471,7 @@ test_sigmoid_cross_entropy_loss_layer.o: test_sigmoid_cross_entropy_loss_layer.c
 
 # target to build an object file
 test_sigmoid_cross_entropy_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.o
 .PHONY : test_sigmoid_cross_entropy_loss_layer.cpp.o
 
 test_sigmoid_cross_entropy_loss_layer.i: test_sigmoid_cross_entropy_loss_layer.cpp.i
@@ -1479,7 +1479,7 @@ test_sigmoid_cross_entropy_loss_layer.i: test_sigmoid_cross_entropy_loss_layer.c
 
 # target to preprocess a source file
 test_sigmoid_cross_entropy_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.i
 .PHONY : test_sigmoid_cross_entropy_loss_layer.cpp.i
 
 test_sigmoid_cross_entropy_loss_layer.s: test_sigmoid_cross_entropy_loss_layer.cpp.s
@@ -1487,7 +1487,7 @@ test_sigmoid_cross_entropy_loss_layer.s: test_sigmoid_cross_entropy_loss_layer.c
 
 # target to generate assembly for a file
 test_sigmoid_cross_entropy_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_sigmoid_cross_entropy_loss_layer.cpp.s
 .PHONY : test_sigmoid_cross_entropy_loss_layer.cpp.s
 
 test_slice_layer.o: test_slice_layer.cpp.o
@@ -1495,7 +1495,7 @@ test_slice_layer.o: test_slice_layer.cpp.o
 
 # target to build an object file
 test_slice_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.o
 .PHONY : test_slice_layer.cpp.o
 
 test_slice_layer.i: test_slice_layer.cpp.i
@@ -1503,7 +1503,7 @@ test_slice_layer.i: test_slice_layer.cpp.i
 
 # target to preprocess a source file
 test_slice_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.i
 .PHONY : test_slice_layer.cpp.i
 
 test_slice_layer.s: test_slice_layer.cpp.s
@@ -1511,7 +1511,7 @@ test_slice_layer.s: test_slice_layer.cpp.s
 
 # target to generate assembly for a file
 test_slice_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_slice_layer.cpp.s
 .PHONY : test_slice_layer.cpp.s
 
 test_softmax_layer.o: test_softmax_layer.cpp.o
@@ -1519,7 +1519,7 @@ test_softmax_layer.o: test_softmax_layer.cpp.o
 
 # target to build an object file
 test_softmax_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.o
 .PHONY : test_softmax_layer.cpp.o
 
 test_softmax_layer.i: test_softmax_layer.cpp.i
@@ -1527,7 +1527,7 @@ test_softmax_layer.i: test_softmax_layer.cpp.i
 
 # target to preprocess a source file
 test_softmax_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.i
 .PHONY : test_softmax_layer.cpp.i
 
 test_softmax_layer.s: test_softmax_layer.cpp.s
@@ -1535,7 +1535,7 @@ test_softmax_layer.s: test_softmax_layer.cpp.s
 
 # target to generate assembly for a file
 test_softmax_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_layer.cpp.s
 .PHONY : test_softmax_layer.cpp.s
 
 test_softmax_with_loss_layer.o: test_softmax_with_loss_layer.cpp.o
@@ -1543,7 +1543,7 @@ test_softmax_with_loss_layer.o: test_softmax_with_loss_layer.cpp.o
 
 # target to build an object file
 test_softmax_with_loss_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.o
 .PHONY : test_softmax_with_loss_layer.cpp.o
 
 test_softmax_with_loss_layer.i: test_softmax_with_loss_layer.cpp.i
@@ -1551,7 +1551,7 @@ test_softmax_with_loss_layer.i: test_softmax_with_loss_layer.cpp.i
 
 # target to preprocess a source file
 test_softmax_with_loss_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.i
 .PHONY : test_softmax_with_loss_layer.cpp.i
 
 test_softmax_with_loss_layer.s: test_softmax_with_loss_layer.cpp.s
@@ -1559,7 +1559,7 @@ test_softmax_with_loss_layer.s: test_softmax_with_loss_layer.cpp.s
 
 # target to generate assembly for a file
 test_softmax_with_loss_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_softmax_with_loss_layer.cpp.s
 .PHONY : test_softmax_with_loss_layer.cpp.s
 
 test_solver.o: test_solver.cpp.o
@@ -1567,7 +1567,7 @@ test_solver.o: test_solver.cpp.o
 
 # target to build an object file
 test_solver.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.o
 .PHONY : test_solver.cpp.o
 
 test_solver.i: test_solver.cpp.i
@@ -1575,7 +1575,7 @@ test_solver.i: test_solver.cpp.i
 
 # target to preprocess a source file
 test_solver.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.i
 .PHONY : test_solver.cpp.i
 
 test_solver.s: test_solver.cpp.s
@@ -1583,7 +1583,7 @@ test_solver.s: test_solver.cpp.s
 
 # target to generate assembly for a file
 test_solver.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver.cpp.s
 .PHONY : test_solver.cpp.s
 
 test_solver_factory.o: test_solver_factory.cpp.o
@@ -1591,7 +1591,7 @@ test_solver_factory.o: test_solver_factory.cpp.o
 
 # target to build an object file
 test_solver_factory.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.o
 .PHONY : test_solver_factory.cpp.o
 
 test_solver_factory.i: test_solver_factory.cpp.i
@@ -1599,7 +1599,7 @@ test_solver_factory.i: test_solver_factory.cpp.i
 
 # target to preprocess a source file
 test_solver_factory.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.i
 .PHONY : test_solver_factory.cpp.i
 
 test_solver_factory.s: test_solver_factory.cpp.s
@@ -1607,7 +1607,7 @@ test_solver_factory.s: test_solver_factory.cpp.s
 
 # target to generate assembly for a file
 test_solver_factory.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_solver_factory.cpp.s
 .PHONY : test_solver_factory.cpp.s
 
 test_split_layer.o: test_split_layer.cpp.o
@@ -1615,7 +1615,7 @@ test_split_layer.o: test_split_layer.cpp.o
 
 # target to build an object file
 test_split_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.o
 .PHONY : test_split_layer.cpp.o
 
 test_split_layer.i: test_split_layer.cpp.i
@@ -1623,7 +1623,7 @@ test_split_layer.i: test_split_layer.cpp.i
 
 # target to preprocess a source file
 test_split_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.i
 .PHONY : test_split_layer.cpp.i
 
 test_split_layer.s: test_split_layer.cpp.s
@@ -1631,7 +1631,7 @@ test_split_layer.s: test_split_layer.cpp.s
 
 # target to generate assembly for a file
 test_split_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_split_layer.cpp.s
 .PHONY : test_split_layer.cpp.s
 
 test_spp_layer.o: test_spp_layer.cpp.o
@@ -1639,7 +1639,7 @@ test_spp_layer.o: test_spp_layer.cpp.o
 
 # target to build an object file
 test_spp_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.o
 .PHONY : test_spp_layer.cpp.o
 
 test_spp_layer.i: test_spp_layer.cpp.i
@@ -1647,7 +1647,7 @@ test_spp_layer.i: test_spp_layer.cpp.i
 
 # target to preprocess a source file
 test_spp_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.i
 .PHONY : test_spp_layer.cpp.i
 
 test_spp_layer.s: test_spp_layer.cpp.s
@@ -1655,7 +1655,7 @@ test_spp_layer.s: test_spp_layer.cpp.s
 
 # target to generate assembly for a file
 test_spp_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_spp_layer.cpp.s
 .PHONY : test_spp_layer.cpp.s
 
 test_stochastic_pooling.o: test_stochastic_pooling.cpp.o
@@ -1663,7 +1663,7 @@ test_stochastic_pooling.o: test_stochastic_pooling.cpp.o
 
 # target to build an object file
 test_stochastic_pooling.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.o
 .PHONY : test_stochastic_pooling.cpp.o
 
 test_stochastic_pooling.i: test_stochastic_pooling.cpp.i
@@ -1671,7 +1671,7 @@ test_stochastic_pooling.i: test_stochastic_pooling.cpp.i
 
 # target to preprocess a source file
 test_stochastic_pooling.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.i
 .PHONY : test_stochastic_pooling.cpp.i
 
 test_stochastic_pooling.s: test_stochastic_pooling.cpp.s
@@ -1679,7 +1679,7 @@ test_stochastic_pooling.s: test_stochastic_pooling.cpp.s
 
 # target to generate assembly for a file
 test_stochastic_pooling.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_stochastic_pooling.cpp.s
 .PHONY : test_stochastic_pooling.cpp.s
 
 test_syncedmem.o: test_syncedmem.cpp.o
@@ -1687,7 +1687,7 @@ test_syncedmem.o: test_syncedmem.cpp.o
 
 # target to build an object file
 test_syncedmem.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.o
 .PHONY : test_syncedmem.cpp.o
 
 test_syncedmem.i: test_syncedmem.cpp.i
@@ -1695,7 +1695,7 @@ test_syncedmem.i: test_syncedmem.cpp.i
 
 # target to preprocess a source file
 test_syncedmem.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.i
 .PHONY : test_syncedmem.cpp.i
 
 test_syncedmem.s: test_syncedmem.cpp.s
@@ -1703,7 +1703,7 @@ test_syncedmem.s: test_syncedmem.cpp.s
 
 # target to generate assembly for a file
 test_syncedmem.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_syncedmem.cpp.s
 .PHONY : test_syncedmem.cpp.s
 
 test_tanh_layer.o: test_tanh_layer.cpp.o
@@ -1711,7 +1711,7 @@ test_tanh_layer.o: test_tanh_layer.cpp.o
 
 # target to build an object file
 test_tanh_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.o
 .PHONY : test_tanh_layer.cpp.o
 
 test_tanh_layer.i: test_tanh_layer.cpp.i
@@ -1719,7 +1719,7 @@ test_tanh_layer.i: test_tanh_layer.cpp.i
 
 # target to preprocess a source file
 test_tanh_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.i
 .PHONY : test_tanh_layer.cpp.i
 
 test_tanh_layer.s: test_tanh_layer.cpp.s
@@ -1727,7 +1727,7 @@ test_tanh_layer.s: test_tanh_layer.cpp.s
 
 # target to generate assembly for a file
 test_tanh_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tanh_layer.cpp.s
 .PHONY : test_tanh_layer.cpp.s
 
 test_threshold_layer.o: test_threshold_layer.cpp.o
@@ -1735,7 +1735,7 @@ test_threshold_layer.o: test_threshold_layer.cpp.o
 
 # target to build an object file
 test_threshold_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.o
 .PHONY : test_threshold_layer.cpp.o
 
 test_threshold_layer.i: test_threshold_layer.cpp.i
@@ -1743,7 +1743,7 @@ test_threshold_layer.i: test_threshold_layer.cpp.i
 
 # target to preprocess a source file
 test_threshold_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.i
 .PHONY : test_threshold_layer.cpp.i
 
 test_threshold_layer.s: test_threshold_layer.cpp.s
@@ -1751,7 +1751,7 @@ test_threshold_layer.s: test_threshold_layer.cpp.s
 
 # target to generate assembly for a file
 test_threshold_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_threshold_layer.cpp.s
 .PHONY : test_threshold_layer.cpp.s
 
 test_tile_layer.o: test_tile_layer.cpp.o
@@ -1759,7 +1759,7 @@ test_tile_layer.o: test_tile_layer.cpp.o
 
 # target to build an object file
 test_tile_layer.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.o
 .PHONY : test_tile_layer.cpp.o
 
 test_tile_layer.i: test_tile_layer.cpp.i
@@ -1767,7 +1767,7 @@ test_tile_layer.i: test_tile_layer.cpp.i
 
 # target to preprocess a source file
 test_tile_layer.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.i
 .PHONY : test_tile_layer.cpp.i
 
 test_tile_layer.s: test_tile_layer.cpp.s
@@ -1775,7 +1775,7 @@ test_tile_layer.s: test_tile_layer.cpp.s
 
 # target to generate assembly for a file
 test_tile_layer.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_tile_layer.cpp.s
 .PHONY : test_tile_layer.cpp.s
 
 test_upgrade_proto.o: test_upgrade_proto.cpp.o
@@ -1783,7 +1783,7 @@ test_upgrade_proto.o: test_upgrade_proto.cpp.o
 
 # target to build an object file
 test_upgrade_proto.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.o
 .PHONY : test_upgrade_proto.cpp.o
 
 test_upgrade_proto.i: test_upgrade_proto.cpp.i
@@ -1791,7 +1791,7 @@ test_upgrade_proto.i: test_upgrade_proto.cpp.i
 
 # target to preprocess a source file
 test_upgrade_proto.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.i
 .PHONY : test_upgrade_proto.cpp.i
 
 test_upgrade_proto.s: test_upgrade_proto.cpp.s
@@ -1799,7 +1799,7 @@ test_upgrade_proto.s: test_upgrade_proto.cpp.s
 
 # target to generate assembly for a file
 test_upgrade_proto.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_upgrade_proto.cpp.s
 .PHONY : test_upgrade_proto.cpp.s
 
 test_util_blas.o: test_util_blas.cpp.o
@@ -1807,7 +1807,7 @@ test_util_blas.o: test_util_blas.cpp.o
 
 # target to build an object file
 test_util_blas.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.o
 .PHONY : test_util_blas.cpp.o
 
 test_util_blas.i: test_util_blas.cpp.i
@@ -1815,7 +1815,7 @@ test_util_blas.i: test_util_blas.cpp.i
 
 # target to preprocess a source file
 test_util_blas.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.i
 .PHONY : test_util_blas.cpp.i
 
 test_util_blas.s: test_util_blas.cpp.s
@@ -1823,7 +1823,7 @@ test_util_blas.s: test_util_blas.cpp.s
 
 # target to generate assembly for a file
 test_util_blas.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/caffe/test/CMakeFiles/test.testbin.dir/build.make src/caffe/test/CMakeFiles/test.testbin.dir/test_util_blas.cpp.s
 .PHONY : test_util_blas.cpp.s
 
 # Help Target
@@ -2058,6 +2058,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

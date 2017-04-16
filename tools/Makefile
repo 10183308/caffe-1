@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,14 +113,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/CMakeFiles/progress.marks
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/CMakeFiles/progress.marks
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/clean
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/clean
 .PHONY : clean
 
 # The main clean target
@@ -129,22 +129,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 tools/CMakeFiles/caffe.bin.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/caffe.bin.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/caffe.bin.dir/rule
 .PHONY : tools/CMakeFiles/caffe.bin.dir/rule
 
 # Convenience name for target.
@@ -153,12 +153,12 @@ caffe.bin: tools/CMakeFiles/caffe.bin.dir/rule
 
 # fast build rule for target.
 caffe.bin/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/build
 .PHONY : caffe.bin/fast
 
 # Convenience name for target.
 tools/CMakeFiles/compute_image_mean.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/compute_image_mean.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/compute_image_mean.dir/rule
 .PHONY : tools/CMakeFiles/compute_image_mean.dir/rule
 
 # Convenience name for target.
@@ -167,12 +167,12 @@ compute_image_mean: tools/CMakeFiles/compute_image_mean.dir/rule
 
 # fast build rule for target.
 compute_image_mean/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/build
 .PHONY : compute_image_mean/fast
 
 # Convenience name for target.
 tools/CMakeFiles/convert_imageset.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/convert_imageset.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/convert_imageset.dir/rule
 .PHONY : tools/CMakeFiles/convert_imageset.dir/rule
 
 # Convenience name for target.
@@ -181,12 +181,12 @@ convert_imageset: tools/CMakeFiles/convert_imageset.dir/rule
 
 # fast build rule for target.
 convert_imageset/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/build
 .PHONY : convert_imageset/fast
 
 # Convenience name for target.
 tools/CMakeFiles/device_query.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/device_query.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/device_query.dir/rule
 .PHONY : tools/CMakeFiles/device_query.dir/rule
 
 # Convenience name for target.
@@ -195,12 +195,12 @@ device_query: tools/CMakeFiles/device_query.dir/rule
 
 # fast build rule for target.
 device_query/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/build
 .PHONY : device_query/fast
 
 # Convenience name for target.
 tools/CMakeFiles/extract_features.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/extract_features.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/extract_features.dir/rule
 .PHONY : tools/CMakeFiles/extract_features.dir/rule
 
 # Convenience name for target.
@@ -209,12 +209,12 @@ extract_features: tools/CMakeFiles/extract_features.dir/rule
 
 # fast build rule for target.
 extract_features/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/build
 .PHONY : extract_features/fast
 
 # Convenience name for target.
 tools/CMakeFiles/finetune_net.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/finetune_net.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/finetune_net.dir/rule
 .PHONY : tools/CMakeFiles/finetune_net.dir/rule
 
 # Convenience name for target.
@@ -223,12 +223,12 @@ finetune_net: tools/CMakeFiles/finetune_net.dir/rule
 
 # fast build rule for target.
 finetune_net/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/build
 .PHONY : finetune_net/fast
 
 # Convenience name for target.
 tools/CMakeFiles/net_speed_benchmark.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/net_speed_benchmark.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/net_speed_benchmark.dir/rule
 .PHONY : tools/CMakeFiles/net_speed_benchmark.dir/rule
 
 # Convenience name for target.
@@ -237,12 +237,12 @@ net_speed_benchmark: tools/CMakeFiles/net_speed_benchmark.dir/rule
 
 # fast build rule for target.
 net_speed_benchmark/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/build
 .PHONY : net_speed_benchmark/fast
 
 # Convenience name for target.
 tools/CMakeFiles/test_net.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/test_net.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/test_net.dir/rule
 .PHONY : tools/CMakeFiles/test_net.dir/rule
 
 # Convenience name for target.
@@ -251,12 +251,12 @@ test_net: tools/CMakeFiles/test_net.dir/rule
 
 # fast build rule for target.
 test_net/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/build
 .PHONY : test_net/fast
 
 # Convenience name for target.
 tools/CMakeFiles/train_net.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/train_net.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/train_net.dir/rule
 .PHONY : tools/CMakeFiles/train_net.dir/rule
 
 # Convenience name for target.
@@ -265,12 +265,12 @@ train_net: tools/CMakeFiles/train_net.dir/rule
 
 # fast build rule for target.
 train_net/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/build
 .PHONY : train_net/fast
 
 # Convenience name for target.
 tools/CMakeFiles/upgrade_net_proto_binary.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_net_proto_binary.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_net_proto_binary.dir/rule
 .PHONY : tools/CMakeFiles/upgrade_net_proto_binary.dir/rule
 
 # Convenience name for target.
@@ -279,12 +279,12 @@ upgrade_net_proto_binary: tools/CMakeFiles/upgrade_net_proto_binary.dir/rule
 
 # fast build rule for target.
 upgrade_net_proto_binary/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/build
 .PHONY : upgrade_net_proto_binary/fast
 
 # Convenience name for target.
 tools/CMakeFiles/upgrade_net_proto_text.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_net_proto_text.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_net_proto_text.dir/rule
 .PHONY : tools/CMakeFiles/upgrade_net_proto_text.dir/rule
 
 # Convenience name for target.
@@ -293,12 +293,12 @@ upgrade_net_proto_text: tools/CMakeFiles/upgrade_net_proto_text.dir/rule
 
 # fast build rule for target.
 upgrade_net_proto_text/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/build
 .PHONY : upgrade_net_proto_text/fast
 
 # Convenience name for target.
 tools/CMakeFiles/upgrade_solver_proto_text.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_solver_proto_text.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 tools/CMakeFiles/upgrade_solver_proto_text.dir/rule
 .PHONY : tools/CMakeFiles/upgrade_solver_proto_text.dir/rule
 
 # Convenience name for target.
@@ -307,7 +307,7 @@ upgrade_solver_proto_text: tools/CMakeFiles/upgrade_solver_proto_text.dir/rule
 
 # fast build rule for target.
 upgrade_solver_proto_text/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/build
 .PHONY : upgrade_solver_proto_text/fast
 
 caffe.o: caffe.cpp.o
@@ -315,7 +315,7 @@ caffe.o: caffe.cpp.o
 
 # target to build an object file
 caffe.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.o
 .PHONY : caffe.cpp.o
 
 caffe.i: caffe.cpp.i
@@ -323,7 +323,7 @@ caffe.i: caffe.cpp.i
 
 # target to preprocess a source file
 caffe.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.i
 .PHONY : caffe.cpp.i
 
 caffe.s: caffe.cpp.s
@@ -331,7 +331,7 @@ caffe.s: caffe.cpp.s
 
 # target to generate assembly for a file
 caffe.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/caffe.bin.dir/build.make tools/CMakeFiles/caffe.bin.dir/caffe.cpp.s
 .PHONY : caffe.cpp.s
 
 compute_image_mean.o: compute_image_mean.cpp.o
@@ -339,7 +339,7 @@ compute_image_mean.o: compute_image_mean.cpp.o
 
 # target to build an object file
 compute_image_mean.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.o
 .PHONY : compute_image_mean.cpp.o
 
 compute_image_mean.i: compute_image_mean.cpp.i
@@ -347,7 +347,7 @@ compute_image_mean.i: compute_image_mean.cpp.i
 
 # target to preprocess a source file
 compute_image_mean.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.i
 .PHONY : compute_image_mean.cpp.i
 
 compute_image_mean.s: compute_image_mean.cpp.s
@@ -355,7 +355,7 @@ compute_image_mean.s: compute_image_mean.cpp.s
 
 # target to generate assembly for a file
 compute_image_mean.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/compute_image_mean.dir/build.make tools/CMakeFiles/compute_image_mean.dir/compute_image_mean.cpp.s
 .PHONY : compute_image_mean.cpp.s
 
 convert_imageset.o: convert_imageset.cpp.o
@@ -363,7 +363,7 @@ convert_imageset.o: convert_imageset.cpp.o
 
 # target to build an object file
 convert_imageset.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.o
 .PHONY : convert_imageset.cpp.o
 
 convert_imageset.i: convert_imageset.cpp.i
@@ -371,7 +371,7 @@ convert_imageset.i: convert_imageset.cpp.i
 
 # target to preprocess a source file
 convert_imageset.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.i
 .PHONY : convert_imageset.cpp.i
 
 convert_imageset.s: convert_imageset.cpp.s
@@ -379,7 +379,7 @@ convert_imageset.s: convert_imageset.cpp.s
 
 # target to generate assembly for a file
 convert_imageset.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/convert_imageset.dir/build.make tools/CMakeFiles/convert_imageset.dir/convert_imageset.cpp.s
 .PHONY : convert_imageset.cpp.s
 
 device_query.o: device_query.cpp.o
@@ -387,7 +387,7 @@ device_query.o: device_query.cpp.o
 
 # target to build an object file
 device_query.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.o
 .PHONY : device_query.cpp.o
 
 device_query.i: device_query.cpp.i
@@ -395,7 +395,7 @@ device_query.i: device_query.cpp.i
 
 # target to preprocess a source file
 device_query.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.i
 .PHONY : device_query.cpp.i
 
 device_query.s: device_query.cpp.s
@@ -403,7 +403,7 @@ device_query.s: device_query.cpp.s
 
 # target to generate assembly for a file
 device_query.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/device_query.dir/build.make tools/CMakeFiles/device_query.dir/device_query.cpp.s
 .PHONY : device_query.cpp.s
 
 extract_features.o: extract_features.cpp.o
@@ -411,7 +411,7 @@ extract_features.o: extract_features.cpp.o
 
 # target to build an object file
 extract_features.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.o
 .PHONY : extract_features.cpp.o
 
 extract_features.i: extract_features.cpp.i
@@ -419,7 +419,7 @@ extract_features.i: extract_features.cpp.i
 
 # target to preprocess a source file
 extract_features.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.i
 .PHONY : extract_features.cpp.i
 
 extract_features.s: extract_features.cpp.s
@@ -427,7 +427,7 @@ extract_features.s: extract_features.cpp.s
 
 # target to generate assembly for a file
 extract_features.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/extract_features.dir/build.make tools/CMakeFiles/extract_features.dir/extract_features.cpp.s
 .PHONY : extract_features.cpp.s
 
 finetune_net.o: finetune_net.cpp.o
@@ -435,7 +435,7 @@ finetune_net.o: finetune_net.cpp.o
 
 # target to build an object file
 finetune_net.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.o
 .PHONY : finetune_net.cpp.o
 
 finetune_net.i: finetune_net.cpp.i
@@ -443,7 +443,7 @@ finetune_net.i: finetune_net.cpp.i
 
 # target to preprocess a source file
 finetune_net.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.i
 .PHONY : finetune_net.cpp.i
 
 finetune_net.s: finetune_net.cpp.s
@@ -451,7 +451,7 @@ finetune_net.s: finetune_net.cpp.s
 
 # target to generate assembly for a file
 finetune_net.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/finetune_net.dir/build.make tools/CMakeFiles/finetune_net.dir/finetune_net.cpp.s
 .PHONY : finetune_net.cpp.s
 
 net_speed_benchmark.o: net_speed_benchmark.cpp.o
@@ -459,7 +459,7 @@ net_speed_benchmark.o: net_speed_benchmark.cpp.o
 
 # target to build an object file
 net_speed_benchmark.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.o
 .PHONY : net_speed_benchmark.cpp.o
 
 net_speed_benchmark.i: net_speed_benchmark.cpp.i
@@ -467,7 +467,7 @@ net_speed_benchmark.i: net_speed_benchmark.cpp.i
 
 # target to preprocess a source file
 net_speed_benchmark.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.i
 .PHONY : net_speed_benchmark.cpp.i
 
 net_speed_benchmark.s: net_speed_benchmark.cpp.s
@@ -475,7 +475,7 @@ net_speed_benchmark.s: net_speed_benchmark.cpp.s
 
 # target to generate assembly for a file
 net_speed_benchmark.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/net_speed_benchmark.dir/build.make tools/CMakeFiles/net_speed_benchmark.dir/net_speed_benchmark.cpp.s
 .PHONY : net_speed_benchmark.cpp.s
 
 test_net.o: test_net.cpp.o
@@ -483,7 +483,7 @@ test_net.o: test_net.cpp.o
 
 # target to build an object file
 test_net.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.o
 .PHONY : test_net.cpp.o
 
 test_net.i: test_net.cpp.i
@@ -491,7 +491,7 @@ test_net.i: test_net.cpp.i
 
 # target to preprocess a source file
 test_net.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.i
 .PHONY : test_net.cpp.i
 
 test_net.s: test_net.cpp.s
@@ -499,7 +499,7 @@ test_net.s: test_net.cpp.s
 
 # target to generate assembly for a file
 test_net.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/test_net.dir/build.make tools/CMakeFiles/test_net.dir/test_net.cpp.s
 .PHONY : test_net.cpp.s
 
 train_net.o: train_net.cpp.o
@@ -507,7 +507,7 @@ train_net.o: train_net.cpp.o
 
 # target to build an object file
 train_net.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.o
 .PHONY : train_net.cpp.o
 
 train_net.i: train_net.cpp.i
@@ -515,7 +515,7 @@ train_net.i: train_net.cpp.i
 
 # target to preprocess a source file
 train_net.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.i
 .PHONY : train_net.cpp.i
 
 train_net.s: train_net.cpp.s
@@ -523,7 +523,7 @@ train_net.s: train_net.cpp.s
 
 # target to generate assembly for a file
 train_net.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/train_net.dir/build.make tools/CMakeFiles/train_net.dir/train_net.cpp.s
 .PHONY : train_net.cpp.s
 
 upgrade_net_proto_binary.o: upgrade_net_proto_binary.cpp.o
@@ -531,7 +531,7 @@ upgrade_net_proto_binary.o: upgrade_net_proto_binary.cpp.o
 
 # target to build an object file
 upgrade_net_proto_binary.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o
 .PHONY : upgrade_net_proto_binary.cpp.o
 
 upgrade_net_proto_binary.i: upgrade_net_proto_binary.cpp.i
@@ -539,7 +539,7 @@ upgrade_net_proto_binary.i: upgrade_net_proto_binary.cpp.i
 
 # target to preprocess a source file
 upgrade_net_proto_binary.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i
 .PHONY : upgrade_net_proto_binary.cpp.i
 
 upgrade_net_proto_binary.s: upgrade_net_proto_binary.cpp.s
@@ -547,7 +547,7 @@ upgrade_net_proto_binary.s: upgrade_net_proto_binary.cpp.s
 
 # target to generate assembly for a file
 upgrade_net_proto_binary.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_binary.dir/build.make tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s
 .PHONY : upgrade_net_proto_binary.cpp.s
 
 upgrade_net_proto_text.o: upgrade_net_proto_text.cpp.o
@@ -555,7 +555,7 @@ upgrade_net_proto_text.o: upgrade_net_proto_text.cpp.o
 
 # target to build an object file
 upgrade_net_proto_text.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.o
 .PHONY : upgrade_net_proto_text.cpp.o
 
 upgrade_net_proto_text.i: upgrade_net_proto_text.cpp.i
@@ -563,7 +563,7 @@ upgrade_net_proto_text.i: upgrade_net_proto_text.cpp.i
 
 # target to preprocess a source file
 upgrade_net_proto_text.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.i
 .PHONY : upgrade_net_proto_text.cpp.i
 
 upgrade_net_proto_text.s: upgrade_net_proto_text.cpp.s
@@ -571,7 +571,7 @@ upgrade_net_proto_text.s: upgrade_net_proto_text.cpp.s
 
 # target to generate assembly for a file
 upgrade_net_proto_text.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_net_proto_text.dir/build.make tools/CMakeFiles/upgrade_net_proto_text.dir/upgrade_net_proto_text.cpp.s
 .PHONY : upgrade_net_proto_text.cpp.s
 
 upgrade_solver_proto_text.o: upgrade_solver_proto_text.cpp.o
@@ -579,7 +579,7 @@ upgrade_solver_proto_text.o: upgrade_solver_proto_text.cpp.o
 
 # target to build an object file
 upgrade_solver_proto_text.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.o
 .PHONY : upgrade_solver_proto_text.cpp.o
 
 upgrade_solver_proto_text.i: upgrade_solver_proto_text.cpp.i
@@ -587,7 +587,7 @@ upgrade_solver_proto_text.i: upgrade_solver_proto_text.cpp.i
 
 # target to preprocess a source file
 upgrade_solver_proto_text.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.i
 .PHONY : upgrade_solver_proto_text.cpp.i
 
 upgrade_solver_proto_text.s: upgrade_solver_proto_text.cpp.s
@@ -595,7 +595,7 @@ upgrade_solver_proto_text.s: upgrade_solver_proto_text.cpp.s
 
 # target to generate assembly for a file
 upgrade_solver_proto_text.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f tools/CMakeFiles/upgrade_solver_proto_text.dir/build.make tools/CMakeFiles/upgrade_solver_proto_text.dir/upgrade_solver_proto_text.cpp.s
 .PHONY : upgrade_solver_proto_text.cpp.s
 
 # Help Target
@@ -669,6 +669,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

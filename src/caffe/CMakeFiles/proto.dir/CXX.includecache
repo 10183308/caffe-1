@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.cc
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.cc
 caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.h
 algorithm
 -
 google/protobuf/stubs/common.h
@@ -28,7 +28,7 @@ google/protobuf/reflection_ops.h
 google/protobuf/wire_format.h
 -
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/include/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/include/caffe/proto/caffe.pb.h
 string
 -
 google/protobuf/stubs/common.h

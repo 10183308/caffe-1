@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/mnist/convert_mnist_data.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/mnist/convert_mnist_data.cpp
 gflags/gflags.h
 -
 glog/logging.h
@@ -28,13 +28,13 @@ fstream
 string
 -
 boost/scoped_ptr.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/mnist/boost/scoped_ptr.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/mnist/boost/scoped_ptr.hpp
 caffe/proto/caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/mnist/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/mnist/caffe/proto/caffe.pb.h
 caffe/util/db.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/mnist/caffe/util/db.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/mnist/caffe/util/db.hpp
 caffe/util/format.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/mnist/caffe/util/format.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/mnist/caffe/util/format.hpp
 
 /usr/local/cuda-8.0/include/builtin_types.h
 device_types.h

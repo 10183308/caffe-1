@@ -203,7 +203,6 @@ src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/cuda-8.0/inclu
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/data_transformer.cpp.o: /usr/local/include/opencv2/core.hpp
@@ -2729,7 +2728,6 @@ src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/cuda-8.0/incl
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/layers/data_layer.cpp.o: /usr/local/include/opencv2/core.hpp
@@ -4006,7 +4004,6 @@ src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/cuda-8.
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/layers/image_data_layer.cpp.o: /usr/local/include/opencv2/core.hpp
@@ -4836,7 +4833,6 @@ src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/cuda-8
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/layers/memory_data_layer.cpp.o: /usr/local/include/opencv2/core.hpp
@@ -6871,7 +6867,6 @@ src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/cuda-8
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/layers/window_data_layer.cpp.o: /usr/local/include/opencv2/core.hpp
@@ -8523,7 +8518,6 @@ src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/cuda-8.0/include/textur
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/cuda-8.0/include/vector_functions.h
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/cuda-8.0/include/vector_functions.hpp
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/cuda-8.0/include/vector_types.h
-src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/include/opencv/cxcore.h
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/include/opencv2/calib3d.hpp
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/include/opencv2/calib3d/calib3d_c.h
 src/caffe/CMakeFiles/caffe.dir/util/io.cpp.o: /usr/local/include/opencv2/core.hpp

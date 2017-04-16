@@ -42,10 +42,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -113,14 +113,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/src/gtest/CMakeFiles/progress.marks
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/src/gtest/CMakeFiles/progress.marks
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/clean
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/clean
 .PHONY : clean
 
 # The main clean target
@@ -129,22 +129,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/preinstall
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 src/gtest/CMakeFiles/gtest.dir/rule:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/CMakeFiles/gtest.dir/rule
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f CMakeFiles/Makefile2 src/gtest/CMakeFiles/gtest.dir/rule
 .PHONY : src/gtest/CMakeFiles/gtest.dir/rule
 
 # Convenience name for target.
@@ -153,7 +153,7 @@ gtest: src/gtest/CMakeFiles/gtest.dir/rule
 
 # fast build rule for target.
 gtest/fast:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/build
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/build
 .PHONY : gtest/fast
 
 gtest-all.o: gtest-all.cpp.o
@@ -161,7 +161,7 @@ gtest-all.o: gtest-all.cpp.o
 
 # target to build an object file
 gtest-all.cpp.o:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.o
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.o
 .PHONY : gtest-all.cpp.o
 
 gtest-all.i: gtest-all.cpp.i
@@ -169,7 +169,7 @@ gtest-all.i: gtest-all.cpp.i
 
 # target to preprocess a source file
 gtest-all.cpp.i:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.i
 .PHONY : gtest-all.cpp.i
 
 gtest-all.s: gtest-all.cpp.s
@@ -177,7 +177,7 @@ gtest-all.s: gtest-all.cpp.s
 
 # target to generate assembly for a file
 gtest-all.cpp.s:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(MAKE) -f src/gtest/CMakeFiles/gtest.dir/build.make src/gtest/CMakeFiles/gtest.dir/gtest-all.cpp.s
 .PHONY : gtest-all.cpp.s
 
 # Help Target
@@ -207,6 +207,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

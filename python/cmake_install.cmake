@@ -1,8 +1,8 @@
-# Install script for directory: /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/python
+# Install script for directory: /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/python
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  SET(CMAKE_INSTALL_PREFIX "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/install")
+  SET(CMAKE_INSTALL_PREFIX "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/install")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 STRING(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

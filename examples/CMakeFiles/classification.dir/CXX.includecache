@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/examples/cpp_classification/classification.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/examples/cpp_classification/classification.cpp
 caffe/caffe.hpp
 -
 opencv2/core/core.hpp
@@ -593,10 +593,6 @@ cuda_runtime.h
 -
 cuda_fp16.h
 -
-
-/usr/local/include/opencv/cxcore.h
-opencv2/core/core_c.h
-/usr/local/include/opencv/opencv2/core/core_c.h
 
 /usr/local/include/opencv2/calib3d.hpp
 opencv2/core.hpp

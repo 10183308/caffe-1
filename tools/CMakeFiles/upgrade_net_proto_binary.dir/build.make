@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Include any dependencies generated for this target.
 include tools/CMakeFiles/upgrade_net_proto_binary.dir/depend.make
@@ -54,17 +54,17 @@ include tools/CMakeFiles/upgrade_net_proto_binary.dir/flags.make
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o: tools/CMakeFiles/upgrade_net_proto_binary.dir/flags.make
 tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o: tools/upgrade_net_proto_binary.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o -c /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/upgrade_net_proto_binary.cpp
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o -c /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/upgrade_net_proto_binary.cpp
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/upgrade_net_proto_binary.cpp > CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/upgrade_net_proto_binary.cpp > CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.i
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/upgrade_net_proto_binary.cpp -o CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/upgrade_net_proto_binary.cpp -o CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.s
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o.requires:
 .PHONY : tools/CMakeFiles/upgrade_net_proto_binary.dir/upgrade_net_proto_binary.cpp.o.requires
@@ -106,15 +106,10 @@ tools/upgrade_net_proto_binary: /usr/local/cuda-8.0/lib64/libcudart.so
 tools/upgrade_net_proto_binary: /usr/local/cuda-8.0/lib64/libcurand.so
 tools/upgrade_net_proto_binary: /usr/local/cuda-8.0/lib64/libcublas.so
 tools/upgrade_net_proto_binary: /usr/local/cuda-8.0/lib64/libcudnn.so
-tools/upgrade_net_proto_binary: /usr/local/lib/libopencv_highgui.so.3.2.0
-tools/upgrade_net_proto_binary: /usr/local/lib/libopencv_imgcodecs.so.3.2.0
-tools/upgrade_net_proto_binary: /usr/local/lib/libopencv_imgproc.so.3.2.0
-tools/upgrade_net_proto_binary: /usr/local/lib/libopencv_core.so.3.2.0
-tools/upgrade_net_proto_binary: /usr/local/lib/libopencv_cudev.so.3.2.0
 tools/upgrade_net_proto_binary: /opt/OpenBLAS/lib/libopenblas.so
 tools/upgrade_net_proto_binary: tools/CMakeFiles/upgrade_net_proto_binary.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable upgrade_net_proto_binary"
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/upgrade_net_proto_binary.dir/link.txt --verbose=$(VERBOSE)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/upgrade_net_proto_binary.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 tools/CMakeFiles/upgrade_net_proto_binary.dir/build: tools/upgrade_net_proto_binary
@@ -124,10 +119,10 @@ tools/CMakeFiles/upgrade_net_proto_binary.dir/requires: tools/CMakeFiles/upgrade
 .PHONY : tools/CMakeFiles/upgrade_net_proto_binary.dir/requires
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/clean:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools && $(CMAKE_COMMAND) -P CMakeFiles/upgrade_net_proto_binary.dir/cmake_clean.cmake
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools && $(CMAKE_COMMAND) -P CMakeFiles/upgrade_net_proto_binary.dir/cmake_clean.cmake
 .PHONY : tools/CMakeFiles/upgrade_net_proto_binary.dir/clean
 
 tools/CMakeFiles/upgrade_net_proto_binary.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/CMakeFiles/upgrade_net_proto_binary.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/CMakeFiles/upgrade_net_proto_binary.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : tools/CMakeFiles/upgrade_net_proto_binary.dir/depend
 

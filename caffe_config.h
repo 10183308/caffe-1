@@ -1,8 +1,8 @@
 /* Sources directory */
-#define SOURCE_FOLDER "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe"
+#define SOURCE_FOLDER "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe"
 
 /* Binaries directory */
-#define BINARY_FOLDER "/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe"
+#define BINARY_FOLDER "/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe"
 
 /* NVIDA Cuda */
 #define HAVE_CUDA
@@ -32,7 +32,7 @@
 /* #undef HAVE_MATLAB */
 
 /* IO libraries */
-#define USE_OPENCV
+/* #undef USE_OPENCV */
 #define USE_LEVELDB
 #define USE_LMDB
 /* #undef ALLOW_LMDB_NOLOCK */

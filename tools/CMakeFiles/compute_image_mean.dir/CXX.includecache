@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/compute_image_mean.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/compute_image_mean.cpp
 stdint.h
 -
 algorithm
@@ -18,17 +18,17 @@ utility
 vector
 -
 boost/scoped_ptr.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/boost/scoped_ptr.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/boost/scoped_ptr.hpp
 gflags/gflags.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/gflags/gflags.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/gflags/gflags.h
 glog/logging.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/glog/logging.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/glog/logging.h
 caffe/proto/caffe.pb.h
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/proto/caffe.pb.h
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/proto/caffe.pb.h
 caffe/util/db.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/db.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/db.hpp
 caffe/util/io.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/util/io.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/util/io.hpp
 
 /usr/local/cuda-8.0/include/builtin_types.h
 device_types.h

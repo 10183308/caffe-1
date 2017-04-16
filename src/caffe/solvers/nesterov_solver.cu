@@ -7,11 +7,11 @@ template <typename Dtype>
 __global__ void NesterovUpdate(int N, Dtype* g, Dtype* h,
     Dtype momentum, Dtype local_rate) {
   CUDA_KERNEL_LOOP(i, N) {
-    //float hi = h[i];
-    //float hi_new = h[i] = momentum * hi + local_rate * g[i];
-    //g[i] = (1+momentum) * hi_new - momentum * hi;
-    h[i] = momentum*h[i] + g[i];
-    g[i] = local_rate*momentum*h[i] + local_rate*g[i];
+    float hi = h[i];
+    float hi_new = h[i] = momentum * hi + local_rate * g[i];
+    g[i] = (1+momentum) * hi_new - momentum * hi;
+    //h[i] = momentum*h[i] + g[i];
+    //g[i] = local_rate*momentum*h[i] + local_rate*g[i];
   }
 }
 template <typename Dtype>

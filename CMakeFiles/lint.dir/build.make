@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_SOURCE_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
+CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe
 
 # Utility rule file for lint.
 
@@ -49,7 +49,7 @@ CMAKE_BINARY_DIR = /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe
 include CMakeFiles/lint.dir/progress.make
 
 CMakeFiles/lint:
-	/usr/bin/cmake -P /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/cmake/lint.cmake
+	/usr/bin/cmake -P /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/cmake/lint.cmake
 
 lint: CMakeFiles/lint
 lint: CMakeFiles/lint.dir/build.make
@@ -64,6 +64,6 @@ CMakeFiles/lint.dir/clean:
 .PHONY : CMakeFiles/lint.dir/clean
 
 CMakeFiles/lint.dir/depend:
-	cd /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe /home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/CMakeFiles/lint.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe /home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/CMakeFiles/lint.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/lint.dir/depend
 

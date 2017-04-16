@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/device_query.cpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/device_query.cpp
 caffe/common.hpp
-/home/tl486/git_TCcaffe/caffe_solverOrthodox/caffe/tools/caffe/common.hpp
+/home/tl486/git_TCcaffe/caffe_solverOriginal/caffe/tools/caffe/common.hpp
 
 /usr/local/cuda-8.0/include/builtin_types.h
 device_types.h
